@@ -161,6 +161,16 @@ try {
   await page.goto(`${baseUrl}/?example=electronics`)
   await waitForModel('electronics')
   assert.match(await page.getByTestId('example-title').innerText(), /PCB|connector/i)
+  for (const width of [1440, 1024, 768, 390]) {
+    await page.setViewportSize({ width, height: 1024 })
+    if (width < 1024) await page.getByTestId('mobile-examples-toggle').click()
+    assert(await page.getByTestId('example-name').evaluateAll(names => names.every(name => name.clientWidth > 0 && name.scrollWidth <= name.clientWidth + 1)), `${width}px: full example names fit without clipping`)
+    if (width < 1024) await page.locator('#example-browser').getByRole('button', { name: 'Close example browser', exact: true }).click()
+    assert(await page.locator('[role="tabpanel"]').evaluate(panel => panel.scrollWidth <= panel.clientWidth + 1 && panel.scrollHeight <= panel.clientHeight + 1), `${width}px: the complete source fits its panel without clipping or nested scrolling`)
+    assert(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), `${width}px: layout has no horizontal overflow`)
+  }
+  await page.setViewportSize({ width: 1440, height: 1024 })
+  report.interactions.push('Unclipped example names and full source at desktop, tablet, and mobile widths')
   await page.screenshot({ path: resolve(artifacts, 'desktop.png'), fullPage: true })
 
   const search = page.getByTestId('example-search')
