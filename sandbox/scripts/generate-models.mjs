@@ -3,7 +3,7 @@
  * Rebuild the deployed gallery with the pinned native build123d/OpenCascade kernel.
  * Run from anywhere: node sandbox/scripts/generate-models.mjs
  * Prerequisites (repository root): npm ci && uv sync --extra test --frozen
- * No Python service is needed in production: every checked-in mesh is native CAD.
+ * Browsing uses checked-in meshes; editing calls the hosted native CAD service.
  */
 import { build } from 'esbuild'
 import { spawnSync } from 'node:child_process'

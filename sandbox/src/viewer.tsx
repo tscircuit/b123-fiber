@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
 import type { OrbitControls } from 'three/addons/controls/OrbitControls.js'
 import { createCadControls } from './controls'
-import { createCadGroup, disposeCadGroup, frameCadCamera, type CadView } from '../../lib/three'
+import { createCadGroup, disposeCadGroup, frameCadCamera, resizeCadCamera, type CadView } from '../../lib/three'
 import type { RenderResult } from '../../lib/types'
 
 type Stage = {
@@ -87,10 +87,7 @@ export function CadViewer({ model, modelId, title, view, edges, resetToken, scre
       const width = Math.max(container.clientWidth, 1)
       const height = Math.max(container.clientHeight, 1)
       renderer.setSize(width, height)
-      const halfHeight = (camera.top - camera.bottom) / 2
-      camera.left = -halfHeight * width / height
-      camera.right = halfHeight * width / height
-      camera.updateProjectionMatrix()
+      resizeCadCamera(camera, width / height)
       redraw()
     })
     observer.observe(container)

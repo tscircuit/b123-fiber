@@ -17,7 +17,7 @@ through [jscdn](https://jscdn.tscircuit.com). Install the versioned tarball with
 a GitHub token:
 
 ```sh
-npm install https://jscdn.tscircuit.com/@tscircuit/b123-fiber/0.1.0.tgz
+npm install https://jscdn.tscircuit.com/@tscircuit/b123-fiber/0.2.0.tgz
 ```
 
 The package includes the native service. Start it from your application's
@@ -34,7 +34,7 @@ For a browser without a bundler, use the dedicated CDN entry:
 <script type="module">
   import {
     React, createDOMRoot, Build123dView, BuildPart, Box,
-  } from 'https://jscdn.tscircuit.com/@tscircuit/b123-fiber/0.1.0/dist/cdn.js'
+  } from 'https://jscdn.tscircuit.com/@tscircuit/b123-fiber/0.2.0/dist/cdn.js'
 
   createDOMRoot(document.getElementById('app')).render(
     React.createElement(Build123dView, { style: { width: 760, height: 640 } },
@@ -76,9 +76,11 @@ with the kernel process's filesystem permissions.
 
 ## Example sandbox
 
-The [sandbox](sandbox/README.md) contains 58 examples with interactive 3D views,
-matching JSX source, native geometry statistics and downloadable plans/models.
-It uses checked-in OpenCascade meshes and can be hosted as a static Vercel site.
+The [sandbox](https://b123.tscircuit.com) contains 73 examples with interactive
+3D views, editable JSX and parameters, and CAD imports/downloads. Browsing uses
+checked-in OpenCascade meshes; regeneration calls the native service. The kernel
+URL can be changed to your local or container service. See the
+[sandbox guide](sandbox/README.md) and [compatibility matrix](docs/COMPATIBILITY.md).
 
 ```sh
 npm run sandbox:dev

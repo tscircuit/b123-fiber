@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from "vitest"
 import { NativeClient, NativeError, NativeHandle, expr } from "../lib/client"
 import { Align, Axis, native, values } from "../lib/generated/values"
-import { publicSymbols, symbolKinds } from "../lib/generated/symbols"
+import { publicSymbols, symbolKinds, auxiliarySymbols } from "../lib/generated/symbols"
 
 function stub(...responses: unknown[]) {
   const requests: { url: string; init: RequestInit; body?: any }[] = []
@@ -15,7 +15,7 @@ function stub(...responses: unknown[]) {
 describe("complete native API client", () => {
   it("exposes every native root export and dispatches constructor/function calls correctly", async () => {
     const { client, requests } = stub({ value: { $ref: "box", kind: "Box" } }, { value: [3, 4] })
-    expect(Object.keys(client.api)).toEqual([...publicSymbols])
+    expect(Object.keys(client.api)).toEqual([...publicSymbols, ...auxiliarySymbols])
     for (const name of publicSymbols) {
       if (symbolKinds[name] === "class" || symbolKinds[name] === "function") expect(typeof client.api[name]).toBe("function")
       else if (name in values) expect(client.api[name]).toEqual(values[name as keyof typeof values])
@@ -45,7 +45,7 @@ describe("complete native API client", () => {
 
   it("implements static methods, properties, methods, index/slice, operators and collection helpers", async () => {
     const { client, requests } = stub({ value: { $ref: "edges", kind: "ShapeList" } }, { value: null }, { value: null }, { value: null }, { value: null }, { value: 4 }, { value: true }, { value: [] })
-    const edges = await client.callStatic("Solid", "make_box", [1, 2, 3])
+    const edges = await client.callStatic<NativeHandle>("Solid", "make_box", [1, 2, 3])
     await edges.call("filter_by", [Axis.Z])
     await edges.set("label", "edges")
     await edges.at(-1)
@@ -97,12 +97,12 @@ describe("complete native API client", () => {
     expect(error).toBeInstanceOf(NativeError)
     expect(error).toMatchObject({ message: "Invalid radius", pythonType: "ValueError", status: 422, path: "rpc.construct.Sphere" })
     const html = new NativeClient({ fetch: vi.fn(async () => new Response("<html>bad gateway</html>", { status: 502 })) as unknown as typeof globalThis.fetch })
-    await expect(html.construct("Box")).rejects.toMatchObject({ name: "NativeError", status: 502 })
+    await expect(html.construct("Box", [1, 2, 3])).rejects.toMatchObject({ name: "NativeError", status: 502 })
     const missingValue = stub({ unexpected: true }).client
-    await expect(missingValue.construct("Box")).rejects.toThrow(/invalid RPC response/)
+    await expect(missingValue.construct("Box", [1, 2, 3])).rejects.toThrow(/invalid RPC response/)
     const cause = new Error("connection refused")
     const offline = new NativeClient({ fetch: vi.fn(async () => { throw cause }) as unknown as typeof globalThis.fetch })
-    await expect(offline.construct("Box")).rejects.toMatchObject({ name: "NativeError", cause })
+    await expect(offline.construct("Box", [1, 2, 3])).rejects.toMatchObject({ name: "NativeError", cause })
   })
 
   it("supports relative URLs, inventory reads, custom headers and cancellation signals", async () => {
@@ -151,13 +151,13 @@ describe("complete native API client", () => {
   it("rejects JSON lossy values before issuing a request and accepts repeated plain values", async () => {
     const { client, requests } = stub()
     for (const value of [NaN, Infinity, undefined, BigInt(1), Symbol("x"), () => 1, new Date()]) {
-      await expect(client.callFunction("add", [value])).rejects.toThrow(/finite|serializable|plain objects/)
+      await expect(client.callFunction<unknown>("add", [value])).rejects.toThrow(/finite|serializable|plain objects/)
     }
     const cycle: Record<string, unknown> = {}; cycle.self = cycle
-    await expect(client.callFunction("add", [cycle])).rejects.toThrow(/cycles/)
+    await expect(client.callFunction<unknown>("add", [cycle])).rejects.toThrow(/cycles/)
     expect(requests).toHaveLength(0)
     const point = { x: 1 }
-    await client.callFunction("add", [[point, point]])
+    await client.callFunction<unknown>("add", [[point, point]])
     expect(requests[0].body.args).toEqual([[{ x: 1 }, { x: 1 }]])
   })
 

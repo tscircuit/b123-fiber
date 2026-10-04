@@ -3,8 +3,8 @@
 The source repository is [tscircuit/b123-fiber](https://github.com/tscircuit/b123-fiber).
 The package is `@tscircuit/b123-fiber`, hosted in GitHub Packages. jscdn proxies
 GitHub Packages using its server-side token; package authors do not upload files
-to the CDN. The source repository stays private. Released package files are
-available through jscdn when its bot has read access to the linked package.
+to the CDN. Released package files are available through jscdn when its bot has
+read access to the linked package.
 
 ## Release workflow
 
@@ -30,14 +30,14 @@ current version; this also reruns validation. Published versions are immutable.
 
 ## CDN endpoints
 
-For version `0.1.0`:
+For version `0.2.0`:
 
 | Purpose | URL |
 | --- | --- |
-| Installable tarball | `https://jscdn.tscircuit.com/@tscircuit/b123-fiber/0.1.0.tgz` |
-| Package metadata | `https://jscdn.tscircuit.com/@tscircuit/b123-fiber/0.1.0/package.json` |
-| Browser module | `https://jscdn.tscircuit.com/@tscircuit/b123-fiber/0.1.0/dist/cdn.js` |
-| Browser declarations | `https://jscdn.tscircuit.com/@tscircuit/b123-fiber/0.1.0/dist/cdn.d.ts` |
+| Installable tarball | `https://jscdn.tscircuit.com/@tscircuit/b123-fiber/0.2.0.tgz` |
+| Package metadata | `https://jscdn.tscircuit.com/@tscircuit/b123-fiber/0.2.0/package.json` |
+| Browser module | `https://jscdn.tscircuit.com/@tscircuit/b123-fiber/0.2.0/dist/cdn.js` |
+| Browser declarations | `https://jscdn.tscircuit.com/@tscircuit/b123-fiber/0.2.0/dist/cdn.d.ts` |
 
 Use explicit versions for repeatable installations. jscdn also supports
 `latest`, cached for ten minutes. The dedicated `dist/cdn.js` browser module
@@ -57,7 +57,7 @@ the renderer and client; it does not host the geometry service.
 ```sh
 npm run build
 npm run test:cdn
-B123_CDN_BUNDLE_URL=https://jscdn.tscircuit.com/@tscircuit/b123-fiber/0.1.0/dist/cdn.js npm run test:cdn
+B123_CDN_BUNDLE_URL=https://jscdn.tscircuit.com/@tscircuit/b123-fiber/0.2.0/dist/cdn.js npm run test:cdn
 ```
 
 The browser check loads the actual pinned React CDN module and either the local

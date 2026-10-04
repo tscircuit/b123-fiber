@@ -13,6 +13,8 @@ export interface MeshData {
   vertices?: number[]
   color?: string | number[]
   name?: string
+  /** Native assembly ancestry; all mesh coordinates are already in world space. */
+  assemblyPath?: { name: string; index: number }[]
   volume: number
   area: number
   valid: boolean

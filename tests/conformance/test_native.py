@@ -285,7 +285,7 @@ class NativeConformance(unittest.TestCase):
                     self.assertIs(actual, expected)
 
     def test_runtime_and_generated_inventory_completeness(self):
-        generated = json.loads((ROOT / "docs/api-inventory.json").read_text())
+        generated = json.loads((ROOT / "docs/api-inventory.json").read_text(encoding="utf-8"))
         runtime = self.kernel.api()
         self.assertEqual(generated["exportCount"], 203)
         self.assertEqual(generated["build123dVersion"], b.__version__)

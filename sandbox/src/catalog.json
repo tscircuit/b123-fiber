@@ -3231,5 +3231,821 @@
       "triangles": 344,
       "valid": true
     }
+  },
+  {
+    "id": "airfoil",
+    "title": "Airfoil · NACA 2412",
+    "category": "curve",
+    "description": "Native Airfoil · NACA 2412 CAD example.",
+    "modelUrl": "/models/airfoil.json",
+    "thumbnailUrl": "/thumbnails/airfoil.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.Airfoil airfoil_code={\"2412\"} n_points={25} finite_te={true} />\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "Airfoil",
+          "props": {
+            "airfoil_code": "2412",
+            "n_points": 25,
+            "finite_te": true
+          },
+          "children": []
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    }
+  },
+  {
+    "id": "blend-curve",
+    "title": "BlendCurve · curvature continuity",
+    "category": "curve",
+    "description": "Native BlendCurve · curvature continuity CAD example.",
+    "modelUrl": "/models/blend-curve.json",
+    "thumbnailUrl": "/thumbnails/blend-curve.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BlendCurve\n      curve0={{ \"$call\": \"Line\", \"args\": [[0, 0], [2, 0]], \"kwargs\": {  } }}\n      curve1={{ \"$call\": \"Line\", \"args\": [[5, 3], [5, 5]], \"kwargs\": {  } }}\n     />\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BlendCurve",
+          "props": {
+            "curve0": {
+              "$call": "Line",
+              "args": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  2,
+                  0
+                ]
+              ],
+              "kwargs": {}
+            },
+            "curve1": {
+              "$call": "Line",
+              "args": [
+                [
+                  5,
+                  3
+                ],
+                [
+                  5,
+                  5
+                ]
+              ],
+              "kwargs": {}
+            }
+          },
+          "children": []
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    }
+  },
+  {
+    "id": "constrained-lines",
+    "title": "ConstrainedLines · circle tangents",
+    "category": "curve",
+    "description": "Native ConstrainedLines · circle tangents CAD example.",
+    "modelUrl": "/models/constrained-lines.json",
+    "thumbnailUrl": "/thumbnails/constrained-lines.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.ConstrainedLines\n      args={[{ \"$call\": \"CenterArc\", \"args\": [[-5, 0], 4, 0, 360], \"kwargs\": {  } }, { \"$call\": \"CenterArc\", \"args\": [[5, 0], 3, 0, 360], \"kwargs\": {  } }]}\n     />\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "ConstrainedLines",
+          "props": {
+            "args": [
+              {
+                "$call": "CenterArc",
+                "args": [
+                  [
+                    -5,
+                    0
+                  ],
+                  4,
+                  0,
+                  360
+                ],
+                "kwargs": {}
+              },
+              {
+                "$call": "CenterArc",
+                "args": [
+                  [
+                    5,
+                    0
+                  ],
+                  3,
+                  0,
+                  360
+                ],
+                "kwargs": {}
+              }
+            ]
+          },
+          "children": []
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    }
+  },
+  {
+    "id": "constrained-arcs",
+    "title": "ConstrainedArcs · radius constraint",
+    "category": "curve",
+    "description": "Native ConstrainedArcs · radius constraint CAD example.",
+    "modelUrl": "/models/constrained-arcs.json",
+    "thumbnailUrl": "/thumbnails/constrained-arcs.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.ConstrainedArcs args={[[0, 0], [4, 0]]} radius={3} sagitta={b.Sagitta.BOTH} />\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "ConstrainedArcs",
+          "props": {
+            "args": [
+              [
+                0,
+                0
+              ],
+              [
+                4,
+                0
+              ]
+            ],
+            "radius": 3,
+            "sagitta": {
+              "$enum": "Sagitta.BOTH"
+            }
+          },
+          "children": []
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    }
+  },
+  {
+    "id": "double-tangent",
+    "title": "DoubleTangentArc",
+    "category": "curve",
+    "description": "Native DoubleTangentArc CAD example.",
+    "modelUrl": "/models/double-tangent.json",
+    "thumbnailUrl": "/thumbnails/double-tangent.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.DoubleTangentArc pnt={[0, 0]} tangent={[1, 0]} other={{ \"$call\": \"Line\", \"args\": [[5, -5], [5, 5]], \"kwargs\": {  } }} />\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "DoubleTangentArc",
+          "props": {
+            "pnt": [
+              0,
+              0
+            ],
+            "tangent": [
+              1,
+              0
+            ],
+            "other": {
+              "$call": "Line",
+              "args": [
+                [
+                  5,
+                  -5
+                ],
+                [
+                  5,
+                  5
+                ]
+              ],
+              "kwargs": {}
+            }
+          },
+          "children": []
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    }
+  },
+  {
+    "id": "technical-drawing",
+    "title": "TechnicalDrawing · drawing sheet",
+    "category": "sketch",
+    "description": "Native TechnicalDrawing · drawing sheet CAD example.",
+    "modelUrl": "/models/technical-drawing.json",
+    "thumbnailUrl": "/thumbnails/technical-drawing.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.TechnicalDrawing\n      designed_by={\"Fixture\"}\n      design_date={{ \"$date\": \"2024-01-02\" }}\n      title={\"Bracket\"}\n      nominal_text_size={4}\n     />\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "TechnicalDrawing",
+          "props": {
+            "designed_by": "Fixture",
+            "design_date": {
+              "$date": "2024-01-02"
+            },
+            "title": "Bracket",
+            "nominal_text_size": 4
+          },
+          "children": []
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 2,
+      "volume": 0,
+      "area": 859.0661334908299,
+      "meshCount": 1,
+      "triangles": 7338,
+      "valid": true
+    }
+  },
+  {
+    "id": "dimension-line",
+    "title": "DimensionLine · tolerances",
+    "category": "sketch",
+    "description": "Native DimensionLine · tolerances CAD example.",
+    "modelUrl": "/models/dimension-line.json",
+    "thumbnailUrl": "/thumbnails/dimension-line.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.DimensionLine\n      path={[[0, 0], [30, 0]]}\n      draft={{ \"$call\": \"Draft\", \"args\": [], \"kwargs\": { \"font_size\": 2, \"arrow_length\": 1, \"font\": \"DejaVu Sans\" } }}\n      tolerance={[0.1, 0.2]}\n     />\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "DimensionLine",
+          "props": {
+            "path": [
+              [
+                0,
+                0
+              ],
+              [
+                30,
+                0
+              ]
+            ],
+            "draft": {
+              "$call": "Draft",
+              "args": [],
+              "kwargs": {
+                "font_size": 2,
+                "arrow_length": 1,
+                "font": "DejaVu Sans"
+              }
+            },
+            "tolerance": [
+              0.1,
+              0.2
+            ]
+          },
+          "children": []
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 2,
+      "volume": 0,
+      "area": 9.871487464272587,
+      "meshCount": 1,
+      "triangles": 1965,
+      "valid": true
+    }
+  },
+  {
+    "id": "extension-line",
+    "title": "ExtensionLine · outside dimension",
+    "category": "sketch",
+    "description": "Native ExtensionLine · outside dimension CAD example.",
+    "modelUrl": "/models/extension-line.json",
+    "thumbnailUrl": "/thumbnails/extension-line.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.ExtensionLine\n      border={[[0, 0], [30, 0]]}\n      offset={[0, 5]}\n      draft={{ \"$call\": \"Draft\", \"args\": [], \"kwargs\": { \"font_size\": 2, \"arrow_length\": 1, \"font\": \"DejaVu Sans\" } }}\n     />\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "ExtensionLine",
+          "props": {
+            "border": [
+              [
+                0,
+                0
+              ],
+              [
+                30,
+                0
+              ]
+            ],
+            "offset": [
+              0,
+              5
+            ],
+            "draft": {
+              "$call": "Draft",
+              "args": [],
+              "kwargs": {
+                "font_size": 2,
+                "arrow_length": 1,
+                "font": "DejaVu Sans"
+              }
+            }
+          },
+          "children": []
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 2,
+      "volume": 0,
+      "area": 17.00205895545807,
+      "meshCount": 1,
+      "triangles": 1120,
+      "valid": true
+    }
+  },
+  {
+    "id": "draft",
+    "title": "draft · tapered box",
+    "category": "operation",
+    "description": "Native draft · tapered box CAD example.",
+    "modelUrl": "/models/draft.json",
+    "thumbnailUrl": "/thumbnails/draft.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.draft\n      faces={{ \"$method\": { \"target\": { \"$method\": { \"target\": { \"$call\": \"Box\", \"args\": [8, 6, 10], \"kwargs\": {  } }, \"name\": \"faces\", \"args\": [], \"kwargs\": {  } } }, \"name\": \"filter_by\", \"args\": [b.Axis.Z], \"kwargs\": { \"reverse\": true } } }}\n      neutral_plane={{ \"$method\": { \"target\": b.Plane.XY, \"name\": \"offset\", \"args\": [-5], \"kwargs\": {  } } }}\n      angle={3}\n     />\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "draft",
+          "props": {
+            "faces": {
+              "$method": {
+                "target": {
+                  "$method": {
+                    "target": {
+                      "$call": "Box",
+                      "args": [
+                        8,
+                        6,
+                        10
+                      ],
+                      "kwargs": {}
+                    },
+                    "name": "faces",
+                    "args": [],
+                    "kwargs": {}
+                  }
+                },
+                "name": "filter_by",
+                "args": [
+                  {
+                    "$type": "Axis",
+                    "path": "Z"
+                  }
+                ],
+                "kwargs": {
+                  "reverse": true
+                }
+              }
+            },
+            "neutral_plane": {
+              "$method": {
+                "target": {
+                  "$type": "Plane",
+                  "path": "XY"
+                },
+                "name": "offset",
+                "args": [
+                  -5
+                ],
+                "kwargs": {}
+              }
+            },
+            "angle": 3
+          },
+          "children": []
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 410.2912094429157,
+      "area": 341.81682845623834,
+      "meshCount": 1,
+      "triangles": 12,
+      "valid": true
+    }
+  },
+  {
+    "id": "full-round",
+    "title": "full_round · rounded profile end",
+    "category": "operation",
+    "description": "Native full_round · rounded profile end CAD example.",
+    "modelUrl": "/models/full-round.json",
+    "thumbnailUrl": "/thumbnails/full-round.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.full_round\n      edge={{ \"$index\": { \"target\": { \"$method\": { \"target\": { \"$method\": { \"target\": { \"$call\": \"Rectangle\", \"args\": [8, 4], \"kwargs\": {  } }, \"name\": \"edges\", \"args\": [], \"kwargs\": {  } } }, \"name\": \"sort_by\", \"args\": [b.Axis.X], \"kwargs\": {  } } }, \"index\": -1 } }}\n      voronoi_point_count={30}\n     />\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "full_round",
+          "props": {
+            "edge": {
+              "$index": {
+                "target": {
+                  "$method": {
+                    "target": {
+                      "$method": {
+                        "target": {
+                          "$call": "Rectangle",
+                          "args": [
+                            8,
+                            4
+                          ],
+                          "kwargs": {}
+                        },
+                        "name": "edges",
+                        "args": [],
+                        "kwargs": {}
+                      }
+                    },
+                    "name": "sort_by",
+                    "args": [
+                      {
+                        "$type": "Axis",
+                        "path": "X"
+                      }
+                    ],
+                    "kwargs": {}
+                  }
+                },
+                "index": -1
+              }
+            },
+            "voronoi_point_count": 30
+          },
+          "children": []
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 2,
+      "volume": 0,
+      "area": 30.283186408381145,
+      "meshCount": 1,
+      "triangles": 43,
+      "valid": true
+    }
+  },
+  {
+    "id": "brake-formed",
+    "title": "make_brake_formed · bent sheet",
+    "category": "operation",
+    "description": "Native make_brake_formed · bent sheet CAD example.",
+    "modelUrl": "/models/brake-formed.json",
+    "thumbnailUrl": "/thumbnails/brake-formed.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.make_brake_formed\n      thickness={1}\n      station_widths={5}\n      line={{ \"$call\": \"Polyline\", \"args\": [[0, 0], [10, 0], [10, 5]], \"kwargs\": {  } }}\n     />\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "make_brake_formed",
+          "props": {
+            "thickness": 1,
+            "station_widths": 5,
+            "line": {
+              "$call": "Polyline",
+              "args": [
+                [
+                  0,
+                  0
+                ],
+                [
+                  10,
+                  0
+                ],
+                [
+                  10,
+                  5
+                ]
+              ],
+              "kwargs": {}
+            }
+          },
+          "children": []
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 35.000000000000014,
+      "area": 129.1459884464753,
+      "meshCount": 1,
+      "triangles": 12,
+      "valid": true
+    }
+  },
+  {
+    "id": "projection",
+    "title": "project · planar face",
+    "category": "operation",
+    "description": "Native project · planar face CAD example.",
+    "modelUrl": "/models/projection.json",
+    "thumbnailUrl": "/thumbnails/projection.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.project\n      objects={{ \"$method\": { \"target\": { \"$method\": { \"target\": { \"$call\": \"Rectangle\", \"args\": [4, 6], \"kwargs\": {  } }, \"name\": \"face\", \"args\": [], \"kwargs\": {  } } }, \"name\": \"moved\", \"args\": [{ \"$call\": \"Pos\", \"args\": [], \"kwargs\": { \"Z\": 5 } }], \"kwargs\": {  } } }}\n      workplane={b.Plane.XY}\n     />\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "project",
+          "props": {
+            "objects": {
+              "$method": {
+                "target": {
+                  "$method": {
+                    "target": {
+                      "$call": "Rectangle",
+                      "args": [
+                        4,
+                        6
+                      ],
+                      "kwargs": {}
+                    },
+                    "name": "face",
+                    "args": [],
+                    "kwargs": {}
+                  }
+                },
+                "name": "moved",
+                "args": [
+                  {
+                    "$call": "Pos",
+                    "args": [],
+                    "kwargs": {
+                      "Z": 5
+                    }
+                  }
+                ],
+                "kwargs": {}
+              }
+            },
+            "workplane": {
+              "$type": "Plane",
+              "path": "XY"
+            }
+          },
+          "children": []
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 2,
+      "volume": 0,
+      "area": 24,
+      "meshCount": 1,
+      "triangles": 2,
+      "valid": true
+    }
+  },
+  {
+    "id": "packed-parts",
+    "title": "pack · spaced parts",
+    "category": "assembly",
+    "description": "Native pack · spaced parts CAD example.",
+    "modelUrl": "/models/packed-parts.json",
+    "thumbnailUrl": "/thumbnails/packed-parts.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.pack\n      objects={[{ \"$call\": \"Box\", \"args\": [8, 6, 4], \"kwargs\": {  } }, { \"$call\": \"Cylinder\", \"args\": [2, 8], \"kwargs\": {  } }]}\n      padding={3}\n     />\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "pack",
+          "props": {
+            "objects": [
+              {
+                "$call": "Box",
+                "args": [
+                  8,
+                  6,
+                  4
+                ],
+                "kwargs": {}
+              },
+              {
+                "$call": "Cylinder",
+                "args": [
+                  2,
+                  8
+                ],
+                "kwargs": {}
+              }
+            ],
+            "padding": 3
+          },
+          "children": []
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 292.5309649148733,
+      "area": 333.66370614359175,
+      "meshCount": 2,
+      "triangles": 344,
+      "valid": true
+    }
+  },
+  {
+    "id": "native-assembly",
+    "title": "Compound · colored native parts",
+    "category": "assembly",
+    "description": "Native Compound · colored native parts CAD example.",
+    "modelUrl": "/models/native-assembly.json",
+    "thumbnailUrl": "/thumbnails/native-assembly.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.Compound\n      args={[null, \"Assembly\", null, null, null, null, [{ \"$call\": \"Solid\", \"args\": [], \"kwargs\": { \"obj\": { \"$get\": { \"target\": { \"$call\": \"Box\", \"args\": [8, 6, 4], \"kwargs\": {  } }, \"name\": \"wrapped\" } }, \"label\": \"Base\", \"color\": { \"$call\": \"Color\", \"args\": [\"red\"], \"kwargs\": {  } } } }, { \"$method\": { \"target\": { \"$call\": \"Solid\", \"args\": [], \"kwargs\": { \"obj\": { \"$get\": { \"target\": { \"$call\": \"Cylinder\", \"args\": [2, 8], \"kwargs\": {  } }, \"name\": \"wrapped\" } }, \"label\": \"Post\", \"color\": { \"$call\": \"Color\", \"args\": [\"blue\"], \"kwargs\": {  } } } }, \"name\": \"moved\", \"args\": [{ \"$call\": \"Location\", \"args\": [[12, 0, 0]], \"kwargs\": {  } }], \"kwargs\": {  } } }]]}\n     />\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "Compound",
+          "props": {
+            "args": [
+              null,
+              "Assembly",
+              null,
+              null,
+              null,
+              null,
+              [
+                {
+                  "$call": "Solid",
+                  "args": [],
+                  "kwargs": {
+                    "obj": {
+                      "$get": {
+                        "target": {
+                          "$call": "Box",
+                          "args": [
+                            8,
+                            6,
+                            4
+                          ],
+                          "kwargs": {}
+                        },
+                        "name": "wrapped"
+                      }
+                    },
+                    "label": "Base",
+                    "color": {
+                      "$call": "Color",
+                      "args": [
+                        "red"
+                      ],
+                      "kwargs": {}
+                    }
+                  }
+                },
+                {
+                  "$method": {
+                    "target": {
+                      "$call": "Solid",
+                      "args": [],
+                      "kwargs": {
+                        "obj": {
+                          "$get": {
+                            "target": {
+                              "$call": "Cylinder",
+                              "args": [
+                                2,
+                                8
+                              ],
+                              "kwargs": {}
+                            },
+                            "name": "wrapped"
+                          }
+                        },
+                        "label": "Post",
+                        "color": {
+                          "$call": "Color",
+                          "args": [
+                            "blue"
+                          ],
+                          "kwargs": {}
+                        }
+                      }
+                    },
+                    "name": "moved",
+                    "args": [
+                      {
+                        "$call": "Location",
+                        "args": [
+                          [
+                            12,
+                            0,
+                            0
+                          ]
+                        ],
+                        "kwargs": {}
+                      }
+                    ],
+                    "kwargs": {}
+                  }
+                }
+              ]
+            ]
+          },
+          "children": []
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 292.5309649148733,
+      "area": 333.66370614359175,
+      "meshCount": 2,
+      "triangles": 344,
+      "valid": true
+    }
+  },
+  {
+    "id": "compositional-section",
+    "title": "section · nested solid",
+    "category": "operation",
+    "description": "Native section · nested solid CAD example.",
+    "modelUrl": "/models/compositional-section.json",
+    "thumbnailUrl": "/thumbnails/compositional-section.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.section section_by={b.Plane.XY}>\n      <b.Box length={8} width={6} height={4} />\n    </b.section>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "section",
+          "props": {
+            "section_by": {
+              "$type": "Plane",
+              "path": "XY"
+            }
+          },
+          "children": [
+            {
+              "type": "Box",
+              "props": {
+                "length": 8,
+                "width": 6,
+                "height": 4
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 2,
+      "volume": 0,
+      "area": 48,
+      "meshCount": 1,
+      "triangles": 2,
+      "valid": true
+    }
   }
 ]

@@ -1,6 +1,6 @@
 {
   "name": "@tscircuit/b123-fiber",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "React CAD renderer for the complete build123d API, powered by OpenCascade",
   "type": "module",
   "license": "MIT",
@@ -59,7 +59,8 @@
     "sandbox:dev": "vite --config sandbox/vite.config.ts --host 127.0.0.1",
     "sandbox:build": "tsc --noEmit -p sandbox/tsconfig.json && vite build --config sandbox/vite.config.ts",
     "sandbox:generate": "node sandbox/scripts/generate-models.mjs",
-    "test:sandbox": "node --use-env-proxy scripts/test-sandbox.mjs"
+    "test:sandbox": "node --use-env-proxy scripts/test-sandbox.mjs",
+    "test:sandbox:editor": "node --use-env-proxy scripts/test-sandbox-editor.mjs"
   },
   "peerDependencies": {
     "react": "^19.2.0",
@@ -79,6 +80,7 @@
     "@types/three": "^0.180.0",
     "@vitejs/plugin-react": "^5.0.0",
     "esbuild": "0.27.7",
+    "esbuild-wasm": "0.27.7",
     "pixelmatch": "^7.1.0",
     "pngjs": "^7.0.0",
     "react": "^19.2.0",

@@ -46,7 +46,7 @@ const hostContext = Object.freeze({})
 // This renderer manages a plan tree only. Geometry is executed by the service
 // after React commits, so speculative renders cannot create native CAD objects.
 const reconciler = Reconciler({
-  rendererVersion: '0.1.0',
+  rendererVersion: '0.2.0',
   rendererPackageName: '@tscircuit/b123-fiber',
   extraDevToolsConfig: null,
   bindToConsole: (_method: string, args: unknown[]) => () => console.log(...args),

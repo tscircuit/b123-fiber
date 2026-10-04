@@ -13,4 +13,6 @@ playwright-report/
 .playwright/
 .DS_Store
 exports/
+.uploads/
+.b123-fiber-files/
 .env*

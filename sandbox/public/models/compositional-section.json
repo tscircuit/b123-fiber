@@ -1,0 +1,1 @@
+{"meshes":[{"positions":[-4,3,0,4,3,0,-4,-3,0,4,-3,0],"normals":[0,0,1,0,0,1,0,0,1,0,0,1],"indices":[3,0,2,1,0,3],"edges":[[4,3,0,-4,3,0],[4,-3,0,4,3,0],[-4,-3,0,4,-3,0],[-4,3,0,-4,-3,0]],"vertices":[],"volume":0,"area":48,"valid":true,"kind":"Sketch"}],"bounds":{"min":[-4,-3,0],"max":[4,3,0]},"kernel":"build123d 0.13.0 / OpenCascade"}

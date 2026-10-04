@@ -1,0 +1,1 @@
+{"meshes":[{"positions":[],"normals":[],"indices":[],"edges":[[-4.6,-3.97995,0,5.3,-2.984962,0],[-2.2,2.856571,0,2.9,-2.142429,0],[-4.6,3.97995,0,5.3,2.984962,0],[-2.2,-2.856571,0,2.9,2.142429,0]],"vertices":[],"volume":0,"area":0,"valid":true,"kind":"ConstrainedLines"}],"bounds":{"min":[-4.6,-3.97995,0],"max":[5.3,3.97995,0]},"kernel":"build123d 0.13.0 / OpenCascade"}

@@ -1,6 +1,7 @@
 import type { Build123dPlan, PlanNode, WireValue } from './types.js'
 import { componentSymbols } from './generated/symbols.js'
 import { NativeHandle } from './client.js'
+import type { NativeCallValue } from './generated/runtime.js'
 
 export type { Build123dPlan, PlanNode, WireValue } from './types.js'
 export type Plan = Build123dPlan
@@ -67,11 +68,11 @@ export function clonePlan(plan: Build123dPlan): Build123dPlan {
 }
 
 /** Defer a native function or a selector until a real builder context is active. */
-export function call(symbol: string, args: readonly unknown[] = [], kwargs: Record<string, unknown> = {}): WireValue {
-  return serializeValue({ $call: symbol, args, kwargs })
+export function call(symbol: string, args: readonly unknown[] = [], kwargs: Record<string, unknown> = {}): NativeCallValue {
+  return serializeValue({ $call: symbol, args, kwargs }) as unknown as NativeCallValue
 }
 
 /** Reference a previously captured plan result (`id` on a CAD node). */
-export function reference(id: string): WireValue {
+export function reference(id: string): Readonly<{ $ref: string }> {
   return { $ref: id }
 }

@@ -4,7 +4,7 @@
   "tolerance": 0.12,
   "angularTolerance": 0.15,
   "coordinatePrecision": 0.000001,
-  "fixtureCount": 58,
+  "fixtureCount": 73,
   "thumbnails": "Reviewed isometric screenshots from tests/visual/baselines",
   "models": [
     {
@@ -527,6 +527,141 @@
       "area": 1000.9203070318035,
       "meshCount": 2,
       "triangles": 344,
+      "valid": true
+    },
+    {
+      "id": "airfoil",
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    },
+    {
+      "id": "blend-curve",
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    },
+    {
+      "id": "constrained-lines",
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    },
+    {
+      "id": "constrained-arcs",
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    },
+    {
+      "id": "double-tangent",
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    },
+    {
+      "id": "technical-drawing",
+      "dimension": 2,
+      "volume": 0,
+      "area": 859.0661334908299,
+      "meshCount": 1,
+      "triangles": 7338,
+      "valid": true
+    },
+    {
+      "id": "dimension-line",
+      "dimension": 2,
+      "volume": 0,
+      "area": 9.871487464272587,
+      "meshCount": 1,
+      "triangles": 1965,
+      "valid": true
+    },
+    {
+      "id": "extension-line",
+      "dimension": 2,
+      "volume": 0,
+      "area": 17.00205895545807,
+      "meshCount": 1,
+      "triangles": 1120,
+      "valid": true
+    },
+    {
+      "id": "draft",
+      "dimension": 3,
+      "volume": 410.2912094429157,
+      "area": 341.81682845623834,
+      "meshCount": 1,
+      "triangles": 12,
+      "valid": true
+    },
+    {
+      "id": "full-round",
+      "dimension": 2,
+      "volume": 0,
+      "area": 30.283186408381145,
+      "meshCount": 1,
+      "triangles": 43,
+      "valid": true
+    },
+    {
+      "id": "brake-formed",
+      "dimension": 3,
+      "volume": 35.000000000000014,
+      "area": 129.1459884464753,
+      "meshCount": 1,
+      "triangles": 12,
+      "valid": true
+    },
+    {
+      "id": "projection",
+      "dimension": 2,
+      "volume": 0,
+      "area": 24,
+      "meshCount": 1,
+      "triangles": 2,
+      "valid": true
+    },
+    {
+      "id": "packed-parts",
+      "dimension": 3,
+      "volume": 292.5309649148733,
+      "area": 333.66370614359175,
+      "meshCount": 2,
+      "triangles": 344,
+      "valid": true
+    },
+    {
+      "id": "native-assembly",
+      "dimension": 3,
+      "volume": 292.5309649148733,
+      "area": 333.66370614359175,
+      "meshCount": 2,
+      "triangles": 344,
+      "valid": true
+    },
+    {
+      "id": "compositional-section",
+      "dimension": 2,
+      "volume": 0,
+      "area": 48,
+      "meshCount": 1,
+      "triangles": 2,
       "valid": true
     }
   ]

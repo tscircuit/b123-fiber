@@ -1,0 +1,65 @@
+[
+  {
+    "filename": "libmd.so.0",
+    "package": "libmd0",
+    "source": "Debian bookworm amd64, python:3.12-slim-bookworm",
+    "sha256": "9e8462f7650da0b39ecfe1680fa87fe393f0710b324250931ab36fa0135b14cc",
+    "license": "licenses/libmd0.txt"
+  },
+  {
+    "filename": "libbsd.so.0",
+    "package": "libbsd0",
+    "source": "Debian bookworm amd64, python:3.12-slim-bookworm",
+    "sha256": "c34693b27401e6e74d7ac32184c79bfb0cca936d3b1be990d435124a6a5686f5",
+    "license": "licenses/libbsd0.txt"
+  },
+  {
+    "filename": "libXau.so.6",
+    "package": "libxau6",
+    "source": "Debian bookworm amd64, python:3.12-slim-bookworm",
+    "sha256": "833aa73cf8f645330907d5923fcbf380e0895ab2551d522b41b0308747a51e27",
+    "license": "licenses/libxau6.txt"
+  },
+  {
+    "filename": "libXdmcp.so.6",
+    "package": "libxdmcp6",
+    "source": "Debian bookworm amd64, python:3.12-slim-bookworm",
+    "sha256": "911ecd1cf42f310e788652f2719803bb4632e077b6e292af31b876c836bba264",
+    "license": "licenses/libxdmcp6.txt"
+  },
+  {
+    "filename": "libxcb.so.1",
+    "package": "libxcb1",
+    "source": "Debian bookworm amd64, python:3.12-slim-bookworm",
+    "sha256": "35e218293d7c1f65b765337b92c6425f3495e80f5973058d8847fa08258cb97e",
+    "license": "licenses/libxcb1.txt"
+  },
+  {
+    "filename": "libX11.so.6",
+    "package": "libx11-6",
+    "source": "Debian bookworm amd64, python:3.12-slim-bookworm",
+    "sha256": "688d7edc1a02a0e7993722d57a42821b22435e249071554625a5ec4784787d3d",
+    "license": "licenses/libx11-6.txt"
+  },
+  {
+    "filename": "libGLdispatch.so.0",
+    "package": "libglvnd0",
+    "source": "Debian bookworm amd64, python:3.12-slim-bookworm",
+    "sha256": "53c73f15a1cbd61649ab26e03246f14fcea94f81686cff79dc79361c328c5190",
+    "license": "licenses/libglvnd0.txt"
+  },
+  {
+    "filename": "libGLX.so.0",
+    "package": "libglx0",
+    "source": "Debian bookworm amd64, python:3.12-slim-bookworm",
+    "sha256": "b702c46681f3d2fc6b95aaacc289dbe6b1bc1271cee3d51c5ab9ff1a812c6705",
+    "license": "licenses/libglx0.txt"
+  },
+  {
+    "filename": "libGL.so.1",
+    "package": "libgl1",
+    "source": "Debian bookworm amd64, python:3.12-slim-bookworm",
+    "sha256": "b278058f0d4148e312a56f06b4632a7d7a67dacb150a0dde34601c579d2f894b",
+    "license": "licenses/libgl1.txt"
+  }
+]

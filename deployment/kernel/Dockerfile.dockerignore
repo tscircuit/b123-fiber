@@ -1,0 +1,12 @@
+node_modules
+.venv
+.git
+.vercel
+.playwright
+dist
+sandbox
+tests
+artifacts
+__pycache__
+*.pyc
+.env*

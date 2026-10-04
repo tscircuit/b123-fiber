@@ -19,7 +19,7 @@ const fixtureBundle = await build({
 })
 const { visualFixtures } = await import(`data:text/javascript;base64,${Buffer.from(fixtureBundle.outputFiles[0].text).toString('base64')}`)
 const catalog = JSON.parse(await readFile(resolve(root, 'sandbox/src/catalog.json'), 'utf8'))
-assert.equal(catalog.length, 58, 'Sandbox must offer all 58 native examples')
+assert.equal(catalog.length, visualFixtures.length, 'Sandbox must offer every native visual example')
 assert.deepEqual(new Set(catalog.map(example => example.id)), new Set(visualFixtures.map(example => example.id)))
 await mkdir(artifacts, { recursive: true })
 
@@ -167,6 +167,8 @@ try {
     assert(await page.getByTestId('example-name').evaluateAll(names => names.every(name => name.clientWidth > 0 && name.scrollWidth <= name.clientWidth + 1)), `${width}px: full example names fit without clipping`)
     if (width < 1024) await page.locator('#example-browser').getByRole('button', { name: 'Close example browser', exact: true }).click()
     assert(await page.locator('[role="tabpanel"]').evaluate(panel => panel.scrollWidth <= panel.clientWidth + 1 && panel.scrollHeight <= panel.clientHeight + 1), `${width}px: the complete source fits its panel without clipping or nested scrolling`)
+    await page.evaluate(() => new Promise(resolve => requestAnimationFrame(() => requestAnimationFrame(resolve))))
+    assert(await page.getByTestId('jsx-editor').evaluate(field => field.scrollHeight <= field.clientHeight + 2 && field.scrollWidth <= field.clientWidth + 1), `${width}px: complete editable source fits without hidden lines or horizontal clipping`)
     assert(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1), `${width}px: layout has no horizontal overflow`)
   }
   await page.setViewportSize({ width: 1440, height: 1024 })
@@ -180,9 +182,9 @@ try {
   await page.getByTestId('search-empty').waitFor({ state: 'visible' })
   assert.equal(await page.getByTestId('example-card').count(), 0)
   await search.fill('')
-  assert.equal(await page.getByTestId('example-card').count(), 58)
+  assert.equal(await page.getByTestId('example-card').count(), catalog.length)
   await page.getByRole('button', { name: 'Assemblies', exact: true }).click()
-  assert.equal(await page.getByTestId('example-card').count(), 3, 'Category filtering exposes the three complete assemblies')
+  assert.deepEqual(await page.getByTestId('example-card').evaluateAll(cards => cards.map(card => card.getAttribute('data-example-id')).sort()), catalog.filter(example => example.category === 'assembly').map(example => example.id).sort(), 'Category filtering exposes every complete assembly')
   await page.getByRole('button', { name: 'All', exact: true }).click()
   report.interactions.push('Search, category filtering, and empty state')
 
@@ -191,11 +193,12 @@ try {
     await waitForModel(example.id)
     assert.equal(new URL(page.url()).searchParams.get('example'), example.id, `${example.id}: shareable example URL`)
     assert.equal(Number(await page.locator('.cad-viewer').getAttribute('data-mesh-count')), example.stats.meshCount)
+    assert(await page.getByTestId('jsx-editor').evaluate(field => field.scrollHeight <= field.clientHeight + 2 && field.scrollWidth <= field.clientWidth + 1), `${example.id}: full editable example source fits without internal clipping`)
     const image = await screenshotCanvas(example.id)
     screenshots.push({ id: example.id, title: example.title, image })
     if ((index + 1) % 10 === 0 || index + 1 === catalog.length) console.log(`Rendered and photographed ${index + 1}/${catalog.length} native examples`)
   }
-  report.interactions.push('All 58 examples selected through the gallery')
+  report.interactions.push(`All ${catalog.length} examples selected through the gallery`)
 
   for (const id of ['electronics', 'fillet']) {
     await page.locator(`[data-testid="example-card"][data-example-id="${id}"]`).click()
@@ -234,7 +237,7 @@ try {
   report.interactions.push('Edge toggle, orbit drag, and reset')
 
   await page.getByRole('tab', { name: 'Plan', exact: true }).click()
-  assert.match(await page.locator('[role="tabpanel"]').innerText(), /BuildPart|fillet/)
+  assert.match(await page.getByTestId('plan-editor').inputValue(), /BuildPart|fillet/)
   await context.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: new URL(baseUrl).origin })
   await page.getByRole('button', { name: 'Copy source', exact: true }).click()
   const copiedPlan = JSON.parse(await page.evaluate(() => navigator.clipboard.readText()))

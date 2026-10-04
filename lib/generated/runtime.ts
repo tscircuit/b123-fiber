@@ -1,11 +1,23 @@
 /** JSON values understood by the native build123d service. */
 export type NativeEnumValue = Readonly<{ $enum: string }>
-export type NativeTypeValue = Readonly<{ $type: string; path?: string }>
-export type NativeCallValue = Readonly<{
+export type NativeTypeValue<Result = never> = Readonly<{ $type: string; path?: string; /** Type-only result marker. */ __nativeResult?: Result }>
+export type NativeCallValue<Result = never> = Readonly<{
   $call: string
   args: readonly unknown[]
   kwargs: Readonly<Record<string, unknown>>
+  /** Type-only result marker; never written to the wire. */
+  __nativeResult?: Result
 }>
+export type NativeDateValue = Readonly<{ $date: string }>
+export type NativeUuidValue = Readonly<{ $uuid: string }>
+export type NativeBytesValue = Readonly<{ $bytes: string }>
+export type NativeFileValue = Readonly<{ $file: Readonly<{ name: string; base64: string }> }>
+export type NativeLambdaValue = Readonly<{ $lambda: unknown }>
+export type NativeDeferredValue = NativeCallValue | NativeTypeValue
+  | Readonly<{ $ref: string }> | Readonly<{ $method: unknown }> | Readonly<{ $get: unknown }>
+  | Readonly<{ $index: unknown }> | Readonly<{ $operator: unknown }> | Readonly<{ $if: unknown }>
+  | Readonly<{ $apply: unknown }>
+  | Readonly<{ $arg: number }>
 
 export function lambdaExpression(body: (...args: Readonly<{ $arg: number }>[]) => unknown): Readonly<{ $lambda: unknown }>
 export function lambdaExpression(body: unknown): Readonly<{ $lambda: unknown }>
@@ -24,10 +36,20 @@ export const expr = Object.freeze({
   type(name: string, path?: string) {
     return path === undefined ? { $type: name } as const : { $type: name, path } as const
   },
-  enum(name: string) { return { $enum: name } as const },
+  enum<const Name extends string>(name: Name) { return { $enum: name } as const },
+  /** ISO calendar date or datetime; native datetime arguments use an ISO datetime. */
+  date(iso: string): NativeDateValue { return { $date: iso } },
+  uuid(value: string): NativeUuidValue { return { $uuid: value } },
+  /** Base64 binary data, preserving bytes through the JSON protocol. */
+  bytes(base64: string): NativeBytesValue { return { $bytes: base64 } },
+  file(name: string, base64: string): NativeFileValue { return { $file: { name, base64 } } },
   ref(id: string) { return { $ref: id } as const },
   method(target: unknown, name: string, args: readonly unknown[] = [], kwargs: Readonly<Record<string, unknown>> = {}) {
     return { $method: { target, name, args, kwargs } } as const
+  },
+  /** Invoke a retained native callable, including selector keys returned by native APIs. */
+  apply(target: unknown, args: readonly unknown[] = [], kwargs: Readonly<Record<string, unknown>> = {}) {
+    return { $apply: { target, args, kwargs } } as const
   },
   get(target: unknown, name: string) { return { $get: { target, name } } as const },
   index(target: unknown, index: unknown) { return { $index: { target, index } } as const },

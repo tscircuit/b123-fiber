@@ -7,11 +7,16 @@ ordinary recursive AST evaluation silently changes those native semantics.
 
 from __future__ import annotations
 
+import base64
+import copy
+import hashlib
 import inspect
+import io
 import math
 import operator
 import threading
 import uuid
+from datetime import date, datetime
 from enum import Enum
 from pathlib import Path
 from typing import Any
@@ -32,12 +37,17 @@ class KernelError(Exception):
 METADATA = {"args", "children", "color", "position", "name", "ref", "id"}
 BUILDERS = {"BuildPart": b.BuildPart, "BuildSketch": b.BuildSketch, "BuildLine": b.BuildLine}
 LOCATIONS = {"Locations", "GridLocations", "PolarLocations", "HexLocations"}
+AUXILIARY_SYMBOLS = {"Shape": b.Shape, "ColorIndex": b.ColorIndex, "BytesIO": io.BytesIO, "StringIO": io.StringIO}
+MAX_FILE_BYTES = 32 * 1024 * 1024
 CHILD_OPERATIONS = {
     "extrude": "to_extrude", "revolve": "profiles", "loft": "sections",
     "sweep": "sections", "thicken": "to_thicken", "fillet": "objects",
     "chamfer": "objects", "offset": "objects", "mirror": "objects",
     "scale": "objects", "split": "objects", "make_face": "edges",
     "make_hull": "edges", "trace": "lines", "add": "objects", "insert": "objects",
+    "section": "obj", "project": "objects", "draft": "faces",
+    "full_round": "edge", "make_brake_formed": "line", "bounding_box": "objects",
+    "pack": "objects", "edges_to_wires": "edges",
 }
 OPERATORS = {
     "add": operator.add, "+": operator.add,
@@ -62,6 +72,8 @@ OPERATORS = {
     "rshift": operator.rshift, ">>": operator.rshift,
     "floordiv": operator.floordiv, "//": operator.floordiv,
     "divmod": divmod, "abs": abs, "bool": bool, "int": int, "float": float,
+    "round": round, "reversed": reversed, "next": next,
+    "setitem": operator.setitem, "delitem": operator.delitem,
 }
 
 
@@ -82,9 +94,9 @@ class Kernel:
         self.lock = threading.RLock()
         self.objects: dict[str, Any] = {}
         self.public = {name: getattr(b, name) for name in b.__all__}
-        # Shape is the native base class used by returned objects, and is also
-        # useful for topology-only consumers although absent from __all__.
-        self.public["Shape"] = b.Shape
+        # Some supported signatures refer to public types omitted by __all__.
+        # Register these explicitly rather than exposing arbitrary imported code.
+        self.public.update(AUXILIARY_SYMBOLS)
 
     def resolve(self, name: str) -> Any:
         if not isinstance(name, str):
@@ -113,6 +125,33 @@ class Kernel:
             if isinstance(value, float) and not math.isfinite(value):
                 raise ValueError("Numbers must be finite")
             return value
+        if "$bytes" in value:
+            return self._decode_bytes(value["$bytes"])
+        if "$date" in value:
+            iso = value["$date"]
+            if not isinstance(iso, str):
+                raise ValueError("$date requires an ISO date or datetime string")
+            return datetime.fromisoformat(iso) if "T" in iso or " " in iso else date.fromisoformat(iso)
+        if "$uuid" in value:
+            if not isinstance(value["$uuid"], str):
+                raise ValueError("$uuid requires a UUID string")
+            return uuid.UUID(value["$uuid"])
+        if "$file" in value:
+            file = value["$file"]
+            if not isinstance(file, dict):
+                raise ValueError("$file requires {name, base64}")
+            name = file.get("name")
+            if not isinstance(name, str) or not name or len(name) > 255 or name in {".", ".."} or Path(name).name != name or "\\" in name or "\x00" in name:
+                raise ValueError("$file.name must be a filename without directory components")
+            data = self._decode_bytes(file.get("base64"))
+            directory = self.workspace_root / ".uploads"
+            directory.mkdir(parents=True, exist_ok=True)
+            path = directory / f"{hashlib.sha256(data).hexdigest()}{Path(name).suffix}"
+            if not path.resolve().is_relative_to(self.workspace_root):
+                raise ValueError("$file must stay inside the kernel workspace")
+            if not path.exists() or path.read_bytes() != data:
+                path.write_bytes(data)
+            return str(path)
         if "$ref" in value:
             key = value["$ref"]
             if key in local:
@@ -152,6 +191,10 @@ class Kernel:
             expression = value["$method"]
             function = self.member(self.decode(expression["target"], local), expression["name"])
             return self.invoke(function, self.decode(expression.get("args", []), local), self.decode(expression.get("kwargs", {}), local))
+        if "$apply" in value:
+            expression = value["$apply"]
+            function = self.decode(expression["target"], local)
+            return self.invoke(function, self.decode(expression.get("args", []), local), self.decode(expression.get("kwargs", {}), local))
         if "$get" in value:
             expression = value["$get"]
             return self.member(self.decode(expression["target"], local), expression["name"])
@@ -184,7 +227,27 @@ class Kernel:
             return selected
         return {key: self.decode(item, local) for key, item in value.items()}
 
+    @staticmethod
+    def _decode_bytes(encoded: Any) -> bytes:
+        if not isinstance(encoded, str):
+            raise ValueError("$bytes/base64 requires a base64 string")
+        if len(encoded) > 4 * ((MAX_FILE_BYTES + 2) // 3):
+            raise ValueError("Binary payload must be at most 32 MiB")
+        try:
+            data = base64.b64decode(encoded, validate=True)
+        except (ValueError, UnicodeEncodeError) as exc:
+            raise ValueError("Binary payload must contain valid base64") from exc
+        if len(data) > MAX_FILE_BYTES:
+            raise ValueError("Binary payload must be at most 32 MiB")
+        return data
+
     def encode(self, value: Any) -> Any:
+        if isinstance(value, (bytes, bytearray, memoryview)):
+            return {"$bytes": base64.b64encode(value).decode("ascii")}
+        if isinstance(value, (datetime, date)):
+            return {"$date": value.isoformat()}
+        if isinstance(value, uuid.UUID):
+            return {"$uuid": str(value)}
         if isinstance(value, Enum):
             return {"$enum": f"{type(value).__name__}.{value.name}"}
         if value is None or isinstance(value, (str, bool, int)):
@@ -274,6 +337,8 @@ class Kernel:
                     name = request.get("name")
                     if op == "method":
                         result = self.invoke(self.member(target, name), args, kwargs)
+                    elif op == "invoke":
+                        result = self.invoke(target, args, kwargs)
                     elif op == "get":
                         result = self.member(target, name) if name else target
                     elif op == "set":
@@ -285,6 +350,14 @@ class Kernel:
                         if isinstance(key, dict) and "$slice" in key:
                             key = slice(*key["$slice"])
                         result = target[key]
+                    elif op == "setitem":
+                        key = self.decode(request.get("index", args[0] if args else None))
+                        operator.setitem(target, key, self.decode(request.get("value")))
+                        result = target
+                    elif op == "delitem":
+                        key = self.decode(request.get("index", request.get("value", args[0] if args else None)))
+                        operator.delitem(target, key)
+                        result = target
                     elif op == "operator":
                         function = OPERATORS.get(name)
                         if function is None:
@@ -322,7 +395,8 @@ class Kernel:
                 if isinstance(value, (str, bool, int, float, dict)):
                     entry["value"] = value
             symbols[name] = entry
-        return {"version": b.__version__, "kernel": "build123d/OpenCascade", "symbols": symbols, "exports": list(b.__all__)}
+        return {"version": b.__version__, "kernel": "build123d/OpenCascade", "symbols": symbols,
+                "exports": list(b.__all__), "auxiliarySymbols": list(AUXILIARY_SYMBOLS)}
 
     @staticmethod
     def _native_dimension(node: dict) -> type[Builder]:
@@ -350,12 +424,55 @@ class Kernel:
         # accepts only edges/faces/solids. Keep them as operands without trying
         # to publish them to a dimensional builder product.
         if Builder._get_context(log=False) is not None and shape._dim != 0:
-            return b.insert(shape, mode=mode)
+            product = b.insert(shape, mode=mode)
+            if not getattr(shape, "children", ()):
+                return product
+            # Insertion may combine topology, but its return value no longer
+            # carries the source assembly tree. Retain that tree for rendering.
         locations = LocationList._get_context()
         if locations is None:
             return shape
         placed = [shape.moved(location) for location in locations.locations]
         return placed[0] if len(placed) == 1 else b.Compound(placed)
+
+    @staticmethod
+    def _shape_values(value: Any, points: bool = False):
+        """Extract geometry from native results without iterating shapes/points.
+
+        ShapeList inherits list. Tuples may mix topology lists and diagnostics
+        (detect_primitives), so nongeometry values remain captured but unrendered.
+        """
+        if isinstance(value, b.Shape):
+            yield value
+        elif points and isinstance(value, b.Vector):
+            yield b.Vertex(value)
+        elif isinstance(value, (list, tuple)):
+            for item in value:
+                yield from Kernel._shape_values(item, points=True)
+
+    def _place_existing_value(self, value: Any, mode: b.Mode = b.Mode.ADD) -> Any:
+        if isinstance(value, b.Shape):
+            return self._place_existing_shape(value, mode)
+        if isinstance(value, b.ShapeList):
+            return b.ShapeList(self._place_existing_value(item, mode) for item in value)
+        if isinstance(value, (list, tuple)):
+            return type(value)(self._place_existing_value(item, mode) for item in value)
+        return value
+
+    @staticmethod
+    def _assembly_leaves(shape: b.Shape, root_index: int, path: list | None = None):
+        path = path or []
+        children = getattr(shape, "children", ())
+        if children:
+            path = [*path, {"name": shape.label, "index": root_index}]
+            for index, child in enumerate(children):
+                yield from Kernel._assembly_leaves(child, index, path)
+        elif path:
+            # Native children are stored relative to their assembly. The native
+            # global_location composes every ancestor, including rotations.
+            yield shape.located(shape.global_location), path
+        else:
+            yield shape, []
 
     def evaluate(self, plan: dict) -> list[tuple[b.Shape, dict]]:
         if not isinstance(plan, dict) or plan.get("version") != 1 or not isinstance(plan.get("children"), list):
@@ -372,6 +489,26 @@ class Kernel:
                 node = frame["node"]
                 if frame["event"] == "done":
                     context = frame.get("context")
+                    if frame.get("assembly"):
+                        child_shapes = []
+                        for shape, child_metadata in frame["results"]:
+                            child = copy.deepcopy(shape)
+                            if "color" in child_metadata:
+                                child.color = child_metadata["color"]
+                            if "name" in child_metadata:
+                                child.label = child_metadata["name"]
+                            child_shapes.append(child)
+                        assembly_args = self.decode(node.get("props", {}).get("args", []), local)
+                        assembly_kwargs = self.decode({key: value for key, value in node.get("props", {}).items() if key not in METADATA}, local)
+                        bound = inspect.signature(b.Compound).bind_partial(*assembly_args, **assembly_kwargs)
+                        if "children" not in bound.arguments:
+                            assembly_kwargs["children"] = child_shapes
+                        frame["result"] = self.invoke(b.Compound, assembly_args, assembly_kwargs)
+                        # Private child builders have already applied outer
+                        # Locations. Applying them again moves the assembly
+                        # twice. Publish only when this is a real builder input.
+                        if Builder._get_context(log=False) is not None and not frame.get("assembly_operand"):
+                            b.insert(frame["result"])
                     if frame.get("boolean"):
                         operands = [shape for shape, _ in frame["results"]]
                         product = operands[0] if operands else None
@@ -410,7 +547,8 @@ class Kernel:
                         operand = CHILD_OPERATIONS[operation]
                         # Explicit operands always take precedence. Positional
                         # arguments begin with the native operand as well.
-                        if operand not in operation_kwargs and not operation_args:
+                        bound = inspect.signature(self.resolve(operation)).bind_partial(*operation_args, **operation_kwargs)
+                        if operand not in bound.arguments:
                             if operation in {"fillet", "chamfer"}:
                                 target = context._obj
                                 operation_kwargs[operand] = target.edges() if target._dim == 3 else target.vertices()
@@ -421,12 +559,32 @@ class Kernel:
                                     operation_kwargs["path"] = child_shapes[-1]
                                     child_shapes = child_shapes[:-1]
                                 operation_kwargs[operand] = child_shapes[0] if len(child_shapes) == 1 else child_shapes
+                            elif operation == "draft":
+                                operation_kwargs[operand] = [face for shape in child_shapes for face in shape.faces()]
+                            elif operation == "full_round":
+                                edges = [edge for shape in child_shapes for edge in shape.edges()]
+                                if len(edges) != 1:
+                                    raise ValueError("full_round children require an explicit single edge selection")
+                                operation_kwargs[operand] = edges[0]
+                            elif operation == "project":
+                                projected = [item for shape in child_shapes for item in
+                                             (shape.faces() if shape._dim == 2 else shape.edges() if shape._dim == 1 else shape.vertices() if shape._dim == 0 else [])]
+                                operation_kwargs[operand] = projected
+                            elif operation == "section":
+                                operation_kwargs[operand] = child_shapes[0] if len(child_shapes) == 1 else b.Compound(child_shapes)
+                            elif operation == "edges_to_wires":
+                                operation_kwargs[operand] = [edge for shape in child_shapes for edge in shape.edges()]
                             else:
                                 operation_kwargs[operand] = child_shapes[0] if len(child_shapes) == 1 else child_shapes
                         frame["result"] = self.invoke(self.resolve(operation), operation_args, operation_kwargs)
                     if context is not None:
                         context.__exit__(None, None, None)
                         active_contexts.pop()
+                    if frame.get("return_result") and Builder._get_context(log=False) is not None:
+                        signature = inspect.signature(self.resolve(node["type"]))
+                        mode_parameter = signature.parameters.get("mode")
+                        default_mode = mode_parameter.default if mode_parameter is not None else b.Mode.ADD
+                        frame["result"] = self._place_existing_value(frame["result"], operation_kwargs.get("mode", default_mode))
                     if frame.get("boolean") and frame["result"] is not None and bool(frame["result"]):
                         frame["result"] = self._place_existing_shape(frame["result"], frame["publication_mode"])
                     placement = frame.get("placement")
@@ -435,6 +593,14 @@ class Kernel:
                         active_contexts.pop()
                     if frame.get("boolean"):
                         result = frame["result"]
+                    elif frame.get("return_result"):
+                        result = frame.get("result")
+                    elif frame.get("preserve_child_metadata") and len(frame["results"]) == 1 and getattr(frame["results"][0][0], "children", ()):
+                        child = frame["results"][0][0]
+                        placed = [child.moved(publication * output)
+                                  for publication in frame["publication_locations"]
+                                  for output in context.output_placements]
+                        result = placed[0] if len(placed) == 1 else b.Compound(children=placed)
                     elif isinstance(context, Builder):
                         # The public product carries workplane placements and
                         # outer Locations; _obj is only local construction data.
@@ -450,7 +616,17 @@ class Kernel:
                     elif result is None and isinstance(context, Builder):
                         results = [(shape, metadata) for shape, metadata in frame["results"] if shape._dim == 0]
                     else:
-                        results = [(result, frame["metadata"])] if isinstance(result, b.Shape) else []
+                        results = [(shape, frame["metadata"]) for shape in self._shape_values(result)]
+                    if frame.get("preserve_child_metadata") and results:
+                        # A private child builder performs native placement but
+                        # should not erase the wrapped part's JSX appearance.
+                        child_metadata = [metadata for _, metadata in frame["results"]]
+                        metadata = dict(frame["metadata"])
+                        for key in ("color", "name"):
+                            values = [item[key] for item in child_metadata if key in item]
+                            if values and all(value == values[0] for value in values):
+                                metadata[key] = values[0]
+                        results = [(shape, metadata) for shape, _ in results]
                     props = node.get("props", {})
                     capture = props.get("id", props.get("ref"))
                     if capture:
@@ -480,22 +656,34 @@ class Kernel:
                     placement.__enter__()
                     active_contexts.append(placement)
                 done["placement"] = placement
+                assembly = kind == "Compound" and bool(children)
                 deferred = kind in CHILD_OPERATIONS and bool(children)
-                args = () if deferred else self.decode(props.get("args", []), local)
-                kwargs = {} if deferred else self.decode({key: value for key, value in props.items() if key not in METADATA}, local)
+                done["assembly"] = assembly
+                args = () if deferred or assembly else self.decode(props.get("args", []), local)
+                kwargs = {} if deferred or assembly else self.decode({key: value for key, value in props.items() if key not in METADATA}, local)
                 context, result = None, None
                 # Position metadata is interpreted as a placement context so
                 # operations inside a builder participate at the correct place.
                 # A native Translate wrapper is preferable for nested placement.
-                if deferred:
-                    if kind in {"extrude", "revolve", "loft", "sweep", "thicken"}:
+                if assembly:
+                    # Evaluate every child in a private native builder. This
+                    # keeps transforms and workplanes while avoiding fusion or
+                    # premature publication into an enclosing builder.
+                    pass
+                elif deferred:
+                    if kind in {"extrude", "revolve", "loft", "sweep", "thicken", "draft", "make_brake_formed", "section"}:
                         cls = b.BuildPart
-                    elif kind in {"make_face", "make_hull", "trace"}:
+                    elif kind in {"make_face", "make_hull", "trace", "full_round"}:
                         cls = b.BuildSketch
                     else:
                         cls = self._native_dimension(children[0])
                     context = cls(mode=self.decode(props.get("mode", {"$enum": "Mode.ADD"}), local))
                     done.update(deferred=True, operation_props=props, operation_native_mode=node.get("props", {}).get("mode"))
+                    if kind in {"section", "project", "bounding_box", "pack", "edges_to_wires"}:
+                        # These functions can return a different dimension or a
+                        # collection; the input builder product is not output.
+                        context.mode = b.Mode.PRIVATE
+                        done["return_result"] = True
                 elif kind in BUILDERS:
                     context = self.invoke(BUILDERS[kind], args, kwargs)
                 elif kind in LOCATIONS:
@@ -520,9 +708,9 @@ class Kernel:
                     pass
                 elif kind == "Shape":
                     result = self.decode(props.get("shape", props.get("value", args[0] if args else None)), local)
-                    if not isinstance(result, b.Shape):
-                        raise TypeError("Shape requires shape/value containing a native shape reference")
-                    result = self._place_existing_shape(result, kwargs.get("mode", b.Mode.ADD))
+                    if not list(self._shape_values(result)):
+                        raise TypeError("Shape requires a native shape or collection of native shapes")
+                    result = self._place_existing_value(result, kwargs.get("mode", b.Mode.ADD))
                 elif kind == "Call":
                     symbol = props.get("symbol", props.get("function", props.get("name")))
                     target = props.get("target")
@@ -533,19 +721,21 @@ class Kernel:
                         if "mode" in signature.parameters or any(parameter.kind == inspect.Parameter.VAR_KEYWORD for parameter in signature.parameters.values()):
                             call_kwargs["mode"] = self.decode(props["mode"], local)
                     result = self.invoke(function, args, call_kwargs)
-                    if isinstance(result, b.Shape) and getattr(function, "__module__", "").startswith("build123d.topology"):
-                        result = self._place_existing_shape(result, self.decode(props.get("mode", {"$enum": "Mode.ADD"}), local))
+                    if getattr(function, "__module__", "").startswith("build123d.topology") or isinstance(result, (list, tuple)):
+                        result = self._place_existing_value(result, self.decode(props.get("mode", {"$enum": "Mode.ADD"}), local))
                 else:
                     function = self.resolve(kind)
                     result = self.invoke(function, args, kwargs)
-                    if isinstance(result, b.Shape) and getattr(function, "__module__", "").startswith("build123d.topology"):
-                        result = self._place_existing_shape(result)
+                    if getattr(function, "__module__", "").startswith("build123d.topology") or isinstance(result, (list, tuple)):
+                        result = self._place_existing_value(result)
                 if context is not None:
                     if isinstance(context, Builder):
                         # Native parent detection is frame-based. Construction
                         # via invoke adds a frame, so align it with this single
                         # interpreter frame before entering native scope.
                         context._python_frame = inspect.currentframe()
+                        locations = LocationList._get_context()
+                        done["publication_locations"] = tuple(locations.locations) if locations is not None else (b.Location(),)
                     context.__enter__()
                     active_contexts.append(context)
                     capture = props.get("id", props.get("ref"))
@@ -557,7 +747,10 @@ class Kernel:
                     local[capture] = result
                 stack.append(done)
                 for i, child in reversed(list(enumerate(children))):
-                    if kind in {"Union", "Subtract", "Intersect"}:
+                    if assembly:
+                        child_cls = self._native_dimension(child)
+                        child = {"type": child_cls.__name__, "props": {"mode": {"$enum": "Mode.PRIVATE"}}, "children": [child]}
+                    elif kind in {"Union", "Subtract", "Intersect"}:
                         child = {"type": type(context).__name__, "props": {"mode": {"$enum": "Mode.PRIVATE"}}, "children": [child]}
                     elif deferred and child.get("type") not in {*BUILDERS, "Vertex"}:
                         child_cls = self._native_dimension(child)
@@ -565,6 +758,10 @@ class Kernel:
                     item = {"event": "visit", "node": child, "path": f"{current_path}.children[{i}]", "parent": done, "metadata": metadata}
                     if kind in {"Union", "Subtract", "Intersect"}:
                         item["boolean_operand"] = True
+                    if assembly:
+                        item["preserve_child_metadata"] = True
+                    if frame.get("preserve_child_metadata"):
+                        item["assembly_operand"] = True
                     if "force_mode" in frame and (kind in {"Group", "Translate", "Rotate"} or kind in LOCATIONS):
                         item["force_mode"] = frame["force_mode"]
                     stack.append(item)
@@ -625,7 +822,7 @@ class Kernel:
             "volume": float(shape.volume), "area": float(shape.area),
             "valid": bool(shape.is_valid), "kind": type(shape).__name__,
             **attributes,
-            **{key: value for key, value in metadata.items() if key in {"color", "name"}},
+            **{key: value for key, value in metadata.items() if key in {"color", "name", "assemblyPath"}},
         }
 
     def render(self, request: dict) -> dict:
@@ -638,7 +835,10 @@ class Kernel:
                 raise KernelError("angularTolerance must be a positive finite number", "angularTolerance")
             shapes = self.evaluate(request.get("plan"))
             meshes, minimum, maximum = [], [math.inf]*3, [-math.inf]*3
-            for index, (shape, metadata) in enumerate(shapes):
+            leaves = [(leaf, {**metadata, **({"assemblyPath": path} if path else {})})
+                      for index, (shape, metadata) in enumerate(shapes)
+                      for leaf, path in self._assembly_leaves(shape, index)]
+            for index, (shape, metadata) in enumerate(leaves):
                 if not bool(shape):
                     continue
                 try:

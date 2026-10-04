@@ -17,7 +17,7 @@ export function createCadGroup(result: RenderResult, showEdges = true): THREE.Gr
     const opacity = Array.isArray(data.color) ? Math.min(1, Math.max(0, data.color[3] ?? 1)) : 1
     const transparency = { opacity, transparent: opacity < 1 }
     part.name = data.name ?? `part-${index}`
-    part.userData = { volume: data.volume, area: data.area, valid: data.valid, kind: data.kind }
+    part.userData = { volume: data.volume, area: data.area, valid: data.valid, kind: data.kind, assemblyPath: data.assemblyPath }
     if (data.positions.length && data.indices.length) {
       const geometry = new THREE.BufferGeometry()
       geometry.setAttribute('position', new THREE.Float32BufferAttribute(data.positions, 3))
@@ -79,6 +79,15 @@ export function frameCadCamera(camera: THREE.OrthographicCamera, bounds: RenderR
   camera.far = diagonal * 10
   camera.updateProjectionMatrix()
   return center
+}
+
+/** Change viewport aspect without changing orbit, pan, or zoom. */
+export function resizeCadCamera(camera: THREE.OrthographicCamera, aspect: number): void {
+  const halfHeight = (camera.top - camera.bottom) / 2
+  const centerX = (camera.left + camera.right) / 2
+  camera.left = centerX - halfHeight * Math.max(aspect, 0.01)
+  camera.right = centerX + halfHeight * Math.max(aspect, 0.01)
+  camera.updateProjectionMatrix()
 }
 
 /** Frees all GPU resources, including edge materials, after rerender/unmount. */

@@ -1,6 +1,11 @@
 import { test, expect } from '@playwright/test'
 import { PNG } from 'pngjs'
 import { visualFixtures } from '../../examples/gallery/fixtures'
+import { checkPackagedViewerControls } from '../../scripts/check-cad-controls.mjs'
+
+test('packaged viewer orbits in the framed up-axis and preserves pan/zoom through edges and resize', async ({ context }) => {
+  await checkPackagedViewerControls(context)
+})
 
 test('viewer preserves React hooks and context across parent updates; orbit and resize work', async ({ page }) => {
   const errors: string[] = []

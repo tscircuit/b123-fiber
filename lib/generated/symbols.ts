@@ -205,6 +205,8 @@ export const publicSymbols = [
   "export_obj",
   "export_to_pcbway"
 ] as const
+export const auxiliarySymbols = ["Shape", "ColorIndex", "BytesIO", "StringIO"] as const
+export const auxiliarySymbolKinds = { Shape: 'class', ColorIndex: 'enum', BytesIO: 'class', StringIO: 'class' } as const
 export const classSymbols = [
   "HexLocations",
   "PolarLocations",
@@ -754,3 +756,4 @@ export const symbolKinds = {
 export type PublicSymbol = (typeof publicSymbols)[number]
 export type ClassSymbol = (typeof classSymbols)[number]
 export type FunctionSymbol = (typeof functionSymbols)[number]
+export type AuxiliarySymbol = (typeof auxiliarySymbols)[number]

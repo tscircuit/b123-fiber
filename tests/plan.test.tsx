@@ -10,7 +10,7 @@ describe('static React plan compiler', () => {
   it('preserves native builder nesting, enums, constants and symbolic values', () => {
     const plan = renderToBuild123dPlan(
       <BuildPart name="plate">
-        <BuildSketch plane={build123d.Plane.XY}>
+        <BuildSketch args={[build123d.Plane.XY]}>
           <Circle radius={5 * build123d.MM} align={build123d.Align.CENTER} />
         </BuildSketch>
         <Extrude amount={2} />
@@ -18,7 +18,7 @@ describe('static React plan compiler', () => {
     )
     expect(plan).toEqual({ version: 1, children: [{
       type: 'BuildPart', props: { name: 'plate' }, children: [
-        { type: 'BuildSketch', props: { plane: { $type: 'Plane', path: 'XY' } }, children: [
+        { type: 'BuildSketch', props: { args: [{ $type: 'Plane', path: 'XY' }] }, children: [
           { type: 'Circle', props: { radius: 5, align: { $enum: 'Align.CENTER' } }, children: [] },
         ] },
         { type: 'extrude', props: { amount: 2 }, children: [] },
@@ -41,6 +41,7 @@ describe('static React plan compiler', () => {
       const plan = renderToBuild123dPlan(createElement(Component, { args: [] }))
       expect(plan.children[0].type).toBe(symbol)
     }
+    // @ts-expect-error This tests raw node serialization before native argument validation.
     expect(renderToBuild123dPlan(<NativeNode type="make_brake_formed" args={[]} />).children[0].type).toBe('make_brake_formed')
     expect(renderToBuild123dPlan(<build123d.Box length={1} width={2} height={3} />).children[0].type).toBe('Box')
   })
@@ -85,6 +86,7 @@ describe('static React plan compiler', () => {
 
   it('rejects non-JSON values with the native parameter path', () => {
     expect(() => renderToBuild123dPlan(<Box length={NaN} width={1} height={1} />)).toThrow(/Box.length must be finite/)
+    // @ts-expect-error Intentionally invalid CAD prop, also rejected by the runtime compiler.
     expect(() => renderToBuild123dPlan(<Box length={1} width={1} height={1} edges={() => []} />)).toThrow(/Box.edges is not serializable/)
     const cycle: Record<string, unknown> = {}; cycle.self = cycle
     expect(() => serializeValue(cycle, 'Box.input')).toThrow(/Box.input.self contains a circular/)

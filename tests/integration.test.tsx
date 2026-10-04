@@ -163,3 +163,32 @@ test('concurrent requests retain independent native objects and released refs fa
   await boxes[0]!.release()
   await expect(boxes[0]!.get('volume')).rejects.toThrow('released')
 })
+
+test('auxiliary native streams and ColorIndex are exposed as callable/value helpers', async () => {
+  expect(client.api.ColorIndex.RED).toEqual({ $enum: 'ColorIndex.RED' })
+  const bytes = await client.api.BytesIO({ initial_bytes: expr.bytes('aGVsbG8=') })
+  const text = await client.api.StringIO({ initial_value: 'native' })
+  try {
+    expect(await bytes.call('getvalue')).toEqual(new Uint8Array([104, 101, 108, 108, 111]))
+    expect(await text.call('getvalue')).toBe('native')
+    expect(await bytes.get('closed')).toBe(false)
+  } finally {
+    await Promise.all([bytes.release(), text.release()])
+  }
+})
+
+test('native selector keys can be invoked directly and embedded as expressions', async () => {
+  const box = await client.api.Box({ length: 2, width: 3, height: 4 })
+  const faces = await box.call('faces')
+  const reference = await faces.at(0)
+  const distance = await client.api.topo_distance_to({ other: reference })
+  try {
+    expect(await distance.invoke([reference])).toBe(0)
+    expect(await client.invoke(distance, [reference])).toBe(0)
+    const result = await client.render(renderToBuild123dPlan(<Box length={expr.operator(expr.apply(distance, [reference]), 'add', [2])} width={3} height={4} />))
+    expect(result.meshes[0]!.volume).toBeCloseTo(24)
+    await expect(reference.invoke([])).rejects.toMatchObject({ pythonType: 'TypeError' })
+  } finally {
+    await Promise.all([box.release(), faces.release(), reference.release(), distance.release()])
+  }
+})

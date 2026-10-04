@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
 import * as THREE from 'three'
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+import type { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+import { createCadControls } from './controls'
 import { createBuild123dRoot, type Build123dRoot } from './renderer'
-import { CAD_BACKGROUND, createCadGroup, disposeCadGroup, frameCadCamera, type CadView } from './three'
+import { CAD_BACKGROUND, createCadGroup, disposeCadGroup, frameCadCamera, resizeCadCamera, type CadView } from './three'
 import type { Build123dPlan, RenderResult } from './types'
 
 export interface Build123dViewProps {
@@ -21,7 +22,7 @@ export interface Build123dViewProps {
   onError?: (error: Error) => void
 }
 
-type Stage = { renderer: THREE.WebGLRenderer; scene: THREE.Scene; camera: THREE.OrthographicCamera; controls: OrbitControls; group: THREE.Group | null; resize: () => void }
+type Stage = { renderer: THREE.WebGLRenderer; scene: THREE.Scene; camera: THREE.OrthographicCamera; controls: OrbitControls; group: THREE.Group | null; resize: () => void; frame: () => void; redraw: () => void }
 
 /** Interactive Z-up viewer for build123d's native OpenCascade tessellations. */
 export function Build123dView({ children, plan, result, backendUrl = 'http://127.0.0.1:8765', headers, tolerance = 0.1, angularTolerance = 0.1, view = 'iso', showEdges = true, className, style, onLoad, onError }: Build123dViewProps) {
@@ -106,6 +107,7 @@ export function Build123dView({ children, plan, result, backendUrl = 'http://127
     renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2))
     renderer.setClearColor(CAD_BACKGROUND)
     renderer.outputColorSpace = THREE.SRGBColorSpace
+    renderer.domElement.tabIndex = 0
     renderer.domElement.setAttribute('aria-label', 'Interactive build123d CAD model')
     container.appendChild(renderer.domElement)
     const scene = new THREE.Scene()
@@ -117,19 +119,31 @@ export function Build123dView({ children, plan, result, backendUrl = 'http://127
     fill.position.set(-3, 2, 1)
     scene.add(fill)
     const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.01, 1000)
-    const controls = new OrbitControls(camera, renderer.domElement)
-    controls.enableDamping = false
-    const state: Stage = { renderer, scene, camera, controls, group: null, resize: () => {
+    const initialTarget = frameCadCamera(camera, current.current.rendered?.bounds ?? null, current.current.view, Math.max(container.clientWidth, 1) / Math.max(container.clientHeight, 1))
+    let controls = createCadControls(camera, renderer.domElement, initialTarget)
+    const redraw = () => renderer.render(scene, camera)
+    const state: Stage = { renderer, scene, camera, controls, group: null, redraw, resize: () => {
       const width = Math.max(container.clientWidth, 1), height = Math.max(container.clientHeight, 1)
       renderer.setSize(width, height)
-      controls.target.copy(frameCadCamera(camera, current.current.rendered?.bounds ?? null, current.current.view, width / height))
-      controls.update()
-      renderer.render(scene, camera)
+      resizeCadCamera(camera, width / height)
+      redraw()
+    }, frame: () => {
+      const width = Math.max(container.clientWidth, 1), height = Math.max(container.clientHeight, 1)
+      renderer.setSize(width, height)
+      camera.zoom = 1
+      controls.removeEventListener('change', redraw)
+      controls.dispose()
+      const target = frameCadCamera(camera, current.current.rendered?.bounds ?? null, current.current.view, width / height)
+      // Top view uses a different up-axis, so recreate rather than reusing the
+      // quaternion cached by the previous controls instance.
+      controls = createCadControls(camera, renderer.domElement, target)
+      controls.addEventListener('change', redraw)
+      state.controls = controls
+      redraw()
     } }
     stage.current = state
     const observer = new ResizeObserver(state.resize)
     observer.observe(container)
-    const redraw = () => renderer.render(scene, camera)
     controls.addEventListener('change', redraw)
     state.resize()
     return () => {
@@ -145,8 +159,10 @@ export function Build123dView({ children, plan, result, backendUrl = 'http://127
     if (state.group) { state.scene.remove(state.group); disposeCadGroup(state.group) }
     state.group = rendered ? createCadGroup(rendered, showEdges) : null
     if (state.group) state.scene.add(state.group)
-    state.resize()
-  }, [rendered, showEdges, view])
+    state.redraw()
+  }, [rendered, showEdges])
+
+  useEffect(() => { stage.current?.frame() }, [rendered, view])
 
   const visibleStatus = graphicsError ? 'error' : status
   return <div className={className} style={{ position: 'relative', width: '100%', height: 480, ...style }} data-cad-status={visibleStatus} data-cad-view={view}>

@@ -1,4 +1,5 @@
 import type { Build123dPlan, PlanNode, WireValue } from '../../lib/types'
+import { advancedVisualFixtures } from './advanced-fixtures'
 
 export interface VisualFixture {
   id: string
@@ -79,4 +80,5 @@ export const visualFixtures: VisualFixture[] = [
   fixture('motor-spacer', 'Motor spacer · four mounting posts', 'assembly', [node('Subtract', { color: '#db9463' }, node('Union', {}, node('Box', { length: 42, width: 42, height: 4, align: centeredMin }), ...[-15.5, 15.5].flatMap(x => [-15.5, 15.5].map(y => node('Cylinder', { radius: 4, height: 10, align: centeredMin, position: [x, y, 0] })))), node('Cylinder', { radius: 15, height: 16, position: [0, 0, 5] }), ...[-15.5, 15.5].flatMap(x => [-15.5, 15.5].map(y => node('Cylinder', { radius: 1.6, height: 16, position: [x, y, 5] }))))]),
   fixture('electronics', 'PCB · connector assembly', 'assembly', [node('Group', {}, node('Subtract', { color: '#347357', name: 'PCB' }, node('Box', { length: 48, width: 32, height: 1.6 }), ...[-20, 20].flatMap(x => [-12, 12].map(y => node('Cylinder', { radius: 1.6, height: 4, position: [x, y, 0] })))), node('Box', { length: 17, width: 10, height: 4, color: '#353c49', name: 'Controller', position: [0, 0, 2.8] }), node('Box', { length: 12, width: 10, height: 7, color: '#9da5af', name: 'USB shell', position: [19, 0, 4.3] }), ...[-1, 1].flatMap(side => Array.from({ length: 8 }, (_, i) => node('Box', { length: 1.4, width: 1.4, height: 8, color: '#dbc37c', name: `Pin ${side}-${i}`, position: [-14 + i * 4, side * 11, 4.8] }))))], 3, { minMeshes: 19 }),
   fixture('transforms', 'Translate / Rotate · assembly', 'assembly', [node('Group', {}, node('Translate', { offset: [-10, 0, 0] }, node('Box', { length: 10, width: 8, height: 8, color: '#ca8470' })), node('Rotate', { angles: [0, 30, 30] }, node('Cylinder', { radius: 4, height: 18, color: '#698daf', position: [8, 0, 0] })))], 3, { minMeshes: 2 }),
+  ...advancedVisualFixtures,
 ]

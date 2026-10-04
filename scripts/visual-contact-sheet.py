@@ -10,7 +10,10 @@ font = ImageFont.truetype(font_path, 14)
 small_font = ImageFont.truetype(font_path, 11)
 columns, width, height = 6, 250, 242
 for view in ('iso', 'top', 'front', 'right'):
-    images = sorted(path for path in source.glob(f'*-{view}.png') if not path.name.startswith('contact-sheet'))
+    images = sorted(
+        path for path in source.glob(f'*-{view}.png')
+        if (source / f'{path.stem[:-(len(view) + 1)]}.geometry.json').exists()
+    )
     if not images:
         continue
     sheet = Image.new('RGB', (columns * width, ((len(images) + columns - 1) // columns) * height + 66), '#e8edf3')

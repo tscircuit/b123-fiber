@@ -50,6 +50,8 @@ for (const fixture of visualFixtures) {
       await page.getByTestId(`view-${view}`).click()
       await expect(page.locator('[data-cad-view]')).toHaveAttribute('data-cad-view', view)
       await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))))
+      await expect(page.locator('[data-cad-status]')).toHaveAttribute('data-cad-status', 'ready')
+      await expect(page.getByRole('status')).toHaveCount(0)
       const canvas = page.locator('canvas')
       const screenshot = await canvas.screenshot()
       writeFileSync(join(artifacts, `${fixture.id}-${view}.png`), screenshot)

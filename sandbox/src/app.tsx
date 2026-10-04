@@ -1,9 +1,12 @@
-import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react'
 import { createRoot } from 'react-dom/client'
 import type { Build123dPlan, RenderResult } from '../../lib/types'
 import type { CadView } from '../../lib/three'
 import rawCatalog from './catalog.json'
 import { CadViewer } from './viewer'
+import { NativeClient, NativeError, NativeHandle } from '../../lib/client'
+import { compileSource } from './compile'
+import { changeParameter, planParameters, planToSource, type PlanParameter } from './plan-source'
 import './style.css'
 
 interface Example {
@@ -69,16 +72,50 @@ function download(name: string, value: unknown) {
   setTimeout(() => URL.revokeObjectURL(url), 1000)
 }
 
-function highlight(line: string) {
-  const tokens = line.split(/(\/\/[^\n]*|"(?:[^"\\]|\\.)*"|'(?:[^'\\]|\\.)*'|<\/?[\w.]+|\b(?:import|from|export|default|function|return|const|true|false|null)\b|\b\d+(?:\.\d+)?\b)/g)
-  return tokens.map((token, index) => {
-    const kind = token.startsWith('//') ? 'comment' : /^["']/.test(token) ? 'string' : token.startsWith('<') ? 'tag' : /^\d/.test(token) ? 'number' : /^(import|from|export|default|function|return|const|true|false|null)$/.test(token) ? 'keyword' : undefined
-    return kind ? <span key={index} className={{ comment: "text-gray-400", string: "text-green-700", tag: "text-blue-700", number: "text-orange-700", keyword: "text-purple-700" }[kind]}>{token}</span> : token
-  })
+function EditableSource({ source, language, onChange, onRun }: { source: string; language: 'jsx' | 'plan'; onChange: (value: string) => void; onRun: () => void }) {
+  const field = useRef<HTMLTextAreaElement>(null)
+  const large = source.length > 100000
+  const size = useRef(() => {})
+  size.current = () => {
+    const textarea = field.current
+    if (!textarea) return
+    if (large) { textarea.style.height = '32rem'; return }
+    textarea.style.height = '0px'
+    textarea.style.height = `${textarea.scrollHeight + 2}px`
+  }
+  useLayoutEffect(() => size.current(), [source, language, large])
+  useEffect(() => {
+    let width = -1
+    const observer = new ResizeObserver(entries => {
+      const nextWidth = entries[0]?.contentRect.width ?? 0
+      if (Math.abs(nextWidth - width) > 0.5) { width = nextWidth; size.current() }
+    })
+    if (field.current) observer.observe(field.current)
+    return () => observer.disconnect()
+  }, [])
+  return <><textarea ref={field} className="block min-h-80 w-full resize-y border-0 p-4 font-mono text-sm leading-6 focus:outline-2 focus:outline-blue-600" style={{ overflowY: large ? 'auto' : 'hidden' }} aria-label={language === 'jsx' ? 'JSX source' : 'Plan source'} data-testid={language === 'jsx' ? 'jsx-editor' : 'plan-editor'} rows={14} value={source} spellCheck={false} autoCapitalize="off" autoCorrect="off" wrap="soft" onChange={event => onChange(event.target.value)} onKeyDown={event => {
+    if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') { event.preventDefault(); onRun() }
+    if (event.key === 'Tab' && !event.shiftKey) {
+      event.preventDefault()
+      const target = event.currentTarget
+      const start = target.selectionStart
+      const end = target.selectionEnd
+      onChange(source.slice(0, start) + '  ' + source.slice(end))
+      requestAnimationFrame(() => target.setSelectionRange(start + 2, start + 2))
+    }
+    if (event.key === 'Escape') { event.preventDefault(); document.querySelector<HTMLButtonElement>('[data-testid="run-source"]')?.focus() }
+  }} />{large && <p className="px-4 pb-3 text-xs text-gray-500">Large source; scroll inside the editor.</p>}</>
 }
 
-function SourceCode({ source }: { source: string }) {
-  return <pre className="min-w-0 whitespace-pre-wrap p-4 font-mono text-sm leading-6" tabIndex={0}><code>{source.split('\n').map((line, index) => <span className="flex min-w-0 items-start" key={index}><span className="mr-4 w-6 shrink-0 text-right text-gray-400" aria-hidden="true">{index + 1}</span><span className="min-w-0 flex-1 whitespace-pre-wrap wrap-anywhere">{highlight(line) || ' '}</span></span>)}</code></pre>
+function ParameterField({ parameter, onChange }: { parameter: PlanParameter; onChange: (value: PlanParameter['value']) => void }) {
+  const [text, setText] = useState(String(parameter.value))
+  useEffect(() => setText(String(parameter.value)), [parameter.value])
+  return <label className="flex min-w-0 flex-col gap-1 text-sm"><span className="whitespace-normal wrap-anywhere">{parameter.label}</span>{typeof parameter.value === 'boolean' ? <input type="checkbox" className="size-4" checked={parameter.value} onChange={event => onChange(event.target.checked)} /> : <input className="w-full rounded-md border border-gray-300 px-3 py-2" type={typeof parameter.value === 'number' ? 'number' : 'text'} step="any" value={text} onChange={event => { setText(event.target.value); if (typeof parameter.value === 'number') { if (event.target.value.trim() && Number.isFinite(Number(event.target.value))) onChange(Number(event.target.value)) } else onChange(event.target.value) }} onBlur={() => { if (typeof parameter.value === 'number' && !text.trim()) setText(String(parameter.value)) }} />}</label>
+}
+
+function defaultKernelUrl() {
+  try { return sessionStorage.getItem('b123-fiber.kernel-url') ?? import.meta.env.VITE_KERNEL_URL ?? 'https://b123-fiber-kernel.vercel.app' }
+  catch { return import.meta.env.VITE_KERNEL_URL ?? 'https://b123-fiber-kernel.vercel.app' }
 }
 
 function App() {
@@ -89,7 +126,7 @@ function App() {
   const [edges, setEdges] = useState(true)
   const [resetToken, setResetToken] = useState(0)
   const [screenshotToken, setScreenshotToken] = useState(0)
-  const [tab, setTab] = useState<'jsx' | 'plan' | 'details'>('jsx')
+  const [tab, setTab] = useState<'jsx' | 'plan' | 'parameters' | 'details'>('jsx')
   const [loadedModel, setModel] = useState<RenderResult | null>(null)
   const [modelId, setModelId] = useState('')
   const [loading, setLoading] = useState(true)
@@ -97,10 +134,39 @@ function App() {
   const [retryToken, setRetryToken] = useState(0)
   const [browserOpen, setBrowserOpen] = useState(false)
   const [notice, setNotice] = useState('')
+  const initial = examples.find(example => example.id === getInitialExample())!
+  const [draftSource, setDraftSource] = useState(initial.source)
+  const [draftPlan, setDraftPlan] = useState(initial.plan)
+  const [planText, setPlanText] = useState(JSON.stringify(initial.plan, null, 2))
+  const [activePlan, setActivePlan] = useState(initial.plan)
+  const [renderedSource, setRenderedSource] = useState(initial.source)
+  const [customTitle, setCustomTitle] = useState<string>()
+  const [kernelUrl, setKernelUrl] = useState(defaultKernelUrl)
+  const [kernelToken, setKernelToken] = useState('')
+  const [kernelOpen, setKernelOpen] = useState(false)
+  const [kernelStatus, setKernelStatus] = useState<'idle' | 'connected' | 'error'>('idle')
+  const [runStatus, setRunStatus] = useState<'idle' | 'compiling' | 'rendering' | 'connecting' | 'importing' | 'exporting'>('idle')
+  const [runError, setRunError] = useState<{ stage: string; message: string; settings?: boolean }>()
+  const [exportFormat, setExportFormat] = useState<'step' | 'stl' | 'brep' | 'svg' | 'dxf'>('step')
+  const runController = useRef<AbortController | null>(null)
+  const staticController = useRef<AbortController | null>(null)
   const searchRef = useRef<HTMLInputElement>(null)
   const noticeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const selected = examples.find(example => example.id === selectedId) ?? examples[0]!
   const model = modelId === selected.id ? loadedModel : null
+  const busy = runStatus !== 'idle'
+  const title = customTitle ?? displayTitle(selected.title)
+  const client = useMemo(() => new NativeClient({ url: kernelUrl.trim(), headers: kernelToken ? { Authorization: `Bearer ${kernelToken}` } : undefined }), [kernelUrl, kernelToken])
+  const parameters = useMemo(() => planParameters(draftPlan), [draftPlan])
+  const stats = model ? {
+    ...selected.stats,
+    dimension: model.meshes.some(part => part.volume > 1e-10) ? 3 : model.meshes.some(part => part.area > 0) ? 2 : model.meshes.some(part => part.edges.length > 0) ? 1 : 0,
+    volume: model.meshes.reduce((sum, part) => sum + part.volume, 0),
+    area: model.meshes.reduce((sum, part) => sum + part.area, 0),
+    meshCount: model.meshes.length,
+    triangles: model.meshes.reduce((sum, part) => sum + part.indices.length / 3, 0),
+    valid: model.meshes.every(part => part.valid),
+  } : selected.stats
   const filtered = useMemo(() => examples.filter(example => {
     const matchesCategory = category === 'all' || example.category === category
     const haystack = `${example.title} ${example.category} ${example.description} ${example.id}`.toLowerCase()
@@ -128,10 +194,21 @@ function App() {
 
   useEffect(() => {
     document.title = `${displayTitle(selected.title)} · b123-fiber sandbox`
+    runController.current?.abort()
+    runController.current = null
+    setRunStatus('idle')
+    setRunError(undefined)
+    setCustomTitle(undefined)
+    setDraftSource(selected.source)
+    setRenderedSource(selected.source)
+    setDraftPlan(selected.plan)
+    setActivePlan(selected.plan)
+    setPlanText(JSON.stringify(selected.plan, null, 2))
     const cached = modelCache.get(selected.id)
     setLoadError(undefined)
     if (cached) { setModel(cached); setModelId(selected.id); setLoading(false); return }
     const controller = new AbortController()
+    staticController.current = controller
     setModel(null)
     setModelId('')
     setLoading(true)
@@ -156,6 +233,175 @@ function App() {
     return () => controller.abort()
   }, [selected, retryToken])
 
+  useEffect(() => {
+    try { sessionStorage.setItem('b123-fiber.kernel-url', kernelUrl) } catch { /* Session storage is optional. */ }
+    setKernelStatus('idle')
+  }, [kernelUrl, kernelToken])
+
+  useEffect(() => () => runController.current?.abort(), [])
+
+  const source = tab === 'plan' ? planText : draftSource
+
+  function errorMessage(error: unknown) {
+    return error instanceof Error ? error.message : String(error)
+  }
+
+  async function connectKernel() {
+    if (busy) return
+    const controller = new AbortController()
+    runController.current = controller
+    setRunStatus('connecting')
+    setRunError(undefined)
+    const timeout = setTimeout(() => controller.abort(), 15000)
+    try {
+      const response = await fetch(`${client.url}/health`, { headers: kernelToken ? { Authorization: `Bearer ${kernelToken}` } : undefined, signal: controller.signal })
+      const data = await response.json()
+      if (!response.ok) throw new Error(data.error?.message ?? `Kernel returned HTTP ${response.status}`)
+      if (data.status !== 'ok') throw new Error('This endpoint did not return a kernel health response.')
+      setKernelStatus('connected')
+      feedback('Kernel connected')
+    } catch (error) {
+      if (runController.current !== controller) return
+      setKernelStatus('error')
+      setRunError({ stage: 'Connection', message: controller.signal.aborted ? 'Connection timed out.' : `${errorMessage(error)} (${client.url})`, settings: true })
+    } finally {
+      clearTimeout(timeout)
+      if (runController.current === controller) setRunStatus('idle')
+    }
+  }
+
+  async function preparePlan(signal: AbortSignal): Promise<Build123dPlan> {
+    if (tab === 'plan') {
+      const parsed = JSON.parse(planText) as Build123dPlan
+      if (parsed.version !== 1 || !Array.isArray(parsed.children)) throw new Error('A plan needs version: 1 and a children array.')
+      setDraftPlan(parsed)
+      setDraftSource(planToSource(parsed))
+      return parsed
+    }
+    const plan = await compileSource(draftSource, signal)
+    setDraftPlan(plan)
+    setPlanText(JSON.stringify(plan, null, 2))
+    return plan
+  }
+
+  async function runDraft() {
+    if (busy) return
+    const controller = new AbortController()
+    runController.current = controller
+    setRunError(undefined)
+    setRunStatus('compiling')
+    let stage = 'Compilation'
+    try {
+      const plan = await preparePlan(controller.signal)
+      if (controller.signal.aborted) return
+      stage = 'Kernel'
+      setRunStatus('rendering')
+      const result = await client.render(plan, { tolerance: 0.12, angularTolerance: 0.15, signal: controller.signal })
+      if (controller.signal.aborted) return
+      staticController.current?.abort()
+      setModel(result)
+      setModelId(selected.id)
+      setActivePlan(plan)
+      setRenderedSource(tab === 'plan' ? planToSource(plan) : draftSource)
+      setKernelStatus('connected')
+      setLoading(false)
+      setLoadError(undefined)
+    } catch (error) {
+      if (!controller.signal.aborted) {
+        const connectionError = error instanceof NativeError && (error.status === 0 || error.status === 401 || error.status === 403)
+        setRunError({ stage, message: errorMessage(error), settings: stage === 'Kernel' && connectionError })
+        if (stage === 'Kernel') setKernelStatus(connectionError ? 'error' : 'connected')
+      }
+    } finally {
+      if (runController.current === controller) setRunStatus('idle')
+    }
+  }
+
+  function updateParameter(parameter: PlanParameter, value: PlanParameter['value']) {
+    const plan = changeParameter(draftPlan, parameter, value)
+    setDraftPlan(plan)
+    setPlanText(JSON.stringify(plan, null, 2))
+    setDraftSource(planToSource(plan))
+  }
+
+  function resetExample() {
+    runController.current?.abort()
+    runController.current = null
+    setRunStatus('idle')
+    setRunError(undefined)
+    setCustomTitle(undefined)
+    setDraftSource(selected.source)
+    setRenderedSource(selected.source)
+    setDraftPlan(selected.plan)
+    setActivePlan(selected.plan)
+    setPlanText(JSON.stringify(selected.plan, null, 2))
+    const cached = modelCache.get(selected.id)
+    if (cached) { setModel(cached); setModelId(selected.id) }
+    else setRetryToken(value => value + 1)
+    setResetToken(value => value + 1)
+  }
+
+  async function importCad(file: File) {
+    if (busy) return
+    if (new URL(client.url, window.location.href).hostname === 'b123-fiber-kernel.vercel.app' && file.size > 2 * 1024 * 1024) {
+      setRunError({ stage: 'Import', message: 'Hosted kernel accepts CAD files up to 2 MiB. Use a local kernel for larger files.', settings: true })
+      return
+    }
+    const controller = new AbortController()
+    runController.current = controller
+    setRunStatus('importing')
+    setRunError(undefined)
+    try {
+      const imported = await client.importFile(file, { filename: file.name, signal: controller.signal })
+      const release = (value: unknown): void => {
+        if (value instanceof NativeHandle) void value.release().catch(() => {})
+        else if (Array.isArray(value)) value.forEach(release)
+      }
+      release(imported.value)
+      if (controller.signal.aborted) return
+      staticController.current?.abort()
+      const source = planToSource(imported.plan)
+      setDraftSource(source)
+      setRenderedSource(source)
+      setDraftPlan(imported.plan)
+      setActivePlan(imported.plan)
+      setPlanText(JSON.stringify(imported.plan, null, 2))
+      setModel(imported.result)
+      setModelId(selected.id)
+      setCustomTitle(file.name)
+      setKernelStatus('connected')
+      setLoading(false)
+      setLoadError(undefined)
+      setTab('jsx')
+    } catch (error) { if (!controller.signal.aborted) setRunError({ stage: 'Import', message: errorMessage(error), settings: error instanceof NativeError && (error.status === 0 || error.status === 401 || error.status === 403) }) }
+    finally { if (runController.current === controller) setRunStatus('idle') }
+  }
+
+  async function exportCad() {
+    if (busy) return
+    const controller = new AbortController()
+    runController.current = controller
+    setRunStatus('compiling')
+    setRunError(undefined)
+    let stage = 'Compilation'
+    try {
+      const plan = await preparePlan(controller.signal)
+      stage = 'Export'
+      setRunStatus('exporting')
+      const filename = `${(customTitle?.replace(/\.[^.]+$/, '') ?? selected.id)}.${exportFormat}`
+      const file = await client.exportFile(plan, exportFormat, { filename, signal: controller.signal })
+      if (controller.signal.aborted) return
+      const url = URL.createObjectURL(file)
+      const link = document.createElement('a')
+      link.href = url
+      link.download = filename
+      link.click()
+      setTimeout(() => URL.revokeObjectURL(url), 1000)
+      setKernelStatus('connected')
+    } catch (error) { if (!controller.signal.aborted) setRunError({ stage, message: errorMessage(error), settings: error instanceof NativeError && (error.status === 0 || error.status === 401 || error.status === 403) }) }
+    finally { if (runController.current === controller) setRunStatus('idle') }
+  }
+
   function choose(example: Example) {
     if (example.id !== selectedId) {
       const url = new URL(window.location.href)
@@ -178,19 +424,20 @@ function App() {
     catch { feedback('Clipboard unavailable. Select the source text to copy it.') }
   }
 
-  const source = tab === 'plan' ? JSON.stringify(selected.plan, null, 2) : selected.source
   const bounds = model?.bounds
   const dimensions = bounds ? bounds.max.map((value, index) => Math.max(0, value - bounds.min[index]!)) : null
-  const geometryKind = ['Point', 'Curve', 'Sketch', 'Solid'][selected.stats.dimension] ?? 'Geometry'
+  const geometryKind = customTitle ? 'Imported' : ['Point', 'Curve', 'Sketch', 'Solid'][stats.dimension] ?? 'Geometry'
   const button = 'inline-flex items-center justify-center gap-2 rounded-md border border-gray-300 bg-white px-3 py-2 text-sm hover:bg-gray-100 focus-visible:outline-2 focus-visible:outline-blue-600 disabled:opacity-50'
+  const primaryButton = 'inline-flex items-center justify-center gap-2 rounded-md border border-blue-600 bg-blue-600 px-3 py-2 text-sm text-white hover:bg-blue-700 focus-visible:outline-2 focus-visible:outline-blue-600 disabled:opacity-50'
   const active = 'aria-pressed:bg-blue-50 aria-pressed:text-blue-700 aria-pressed:border-blue-300 aria-selected:bg-blue-50 aria-selected:text-blue-700 aria-selected:border-blue-300'
 
   return <div className="min-h-screen bg-gray-50 font-sans text-gray-900">
     <header className="flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3">
       <a href="?example=electronics" className="font-semibold" onClick={event => { event.preventDefault(); choose(examples.find(example => example.id === 'electronics')!) }}>b123-fiber sandbox</a>
-      <nav className="flex gap-4 text-sm" aria-label="Project links"><a className="text-blue-600 hover:underline" href="https://build123d.readthedocs.io/en/latest/" target="_blank" rel="noreferrer">Docs</a><a className="text-blue-600 hover:underline" href="https://github.com/tscircuit/b123-fiber" target="_blank" rel="noreferrer">GitHub</a></nav>
+      <nav className="flex items-center gap-4 text-sm" aria-label="Project links"><button className={`${button} ${kernelStatus === 'connected' ? 'text-green-700' : ''}`} aria-expanded={kernelOpen} aria-controls="kernel-settings" data-testid="kernel-settings-toggle" onClick={() => setKernelOpen(!kernelOpen)}>Kernel{kernelStatus === 'connected' ? ' connected' : ''}</button><a className="text-blue-600 hover:underline" href="https://build123d.readthedocs.io/en/latest/" target="_blank" rel="noreferrer">Docs</a><a className="text-blue-600 hover:underline" href="https://github.com/tscircuit/b123-fiber" target="_blank" rel="noreferrer">GitHub</a></nav>
     </header>
     <div className="p-4">
+      {kernelOpen && <section id="kernel-settings" className="mb-4 space-y-3 rounded-lg border border-gray-200 bg-white p-4" aria-label="Kernel settings"><div className="grid gap-3 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_auto]"><label className="min-w-0 space-y-1 text-sm"><span>Kernel URL</span><input className="w-full rounded-md border border-gray-300 px-3 py-2" type="url" value={kernelUrl} onChange={event => setKernelUrl(event.target.value)} disabled={busy} data-testid="kernel-url" placeholder="http://127.0.0.1:8765" /></label><label className="min-w-0 space-y-1 text-sm"><span>Token (optional)</span><input className="w-full rounded-md border border-gray-300 px-3 py-2" type="password" autoComplete="off" value={kernelToken} onChange={event => setKernelToken(event.target.value)} disabled={busy} data-testid="kernel-token" /></label><button className={`${button} self-end`} data-testid="kernel-connect" onClick={() => void connectKernel()} disabled={busy || !kernelUrl.trim()}>{runStatus === 'connecting' ? 'Connecting…' : 'Connect'}</button></div><p className="text-sm text-gray-500">Run locally: <code className="whitespace-normal font-mono wrap-anywhere">uv run build123d-fiber-kernel --origin {window.location.origin}</code></p></section>}
       <button className={`${button} mb-4 lg:hidden`} data-testid="mobile-examples-toggle" aria-expanded={browserOpen} aria-controls="example-browser" onClick={() => setBrowserOpen(!browserOpen)}><Icon name="menu" />Examples ({examples.length})</button>
       {browserOpen && <button className="fixed inset-0 z-20 bg-black/30 lg:hidden" aria-label="Close example browser" onClick={() => setBrowserOpen(false)} />}
       <main className="workbench grid min-w-0 items-start gap-4 lg:grid-cols-[20rem_minmax(0,1fr)]">
@@ -201,22 +448,24 @@ function App() {
           <div className="min-h-0 overflow-y-auto">{filtered.length ? filtered.map(example => <button key={example.id} className={`my-1 flex w-full items-center gap-2 rounded-md p-2 text-left text-sm ${selected.id === example.id ? 'bg-blue-50 text-blue-700' : 'hover:bg-gray-100'}`} data-testid="example-card" data-example-id={example.id} aria-pressed={selected.id === example.id} onClick={() => choose(example)}><img className="h-12 w-14 shrink-0 rounded object-contain" src={example.thumbnailUrl} alt="" width="72" height="58" loading="lazy" /><span className="min-w-0 flex-1 whitespace-normal wrap-anywhere" data-testid="example-name">{displayTitle(example.title)}</span></button>) : <div className="space-y-3 py-4 text-sm" data-testid="search-empty"><p>No matching examples</p><button className={button} onClick={() => { setQuery(''); setCategory('all') }}>Clear filters</button></div>}</div>
         </aside>
         <section className="model-workspace min-w-0 overflow-hidden rounded-lg border border-gray-200 bg-white" data-example-id={selected.id} aria-label="Selected example">
-          <header className="flex items-center justify-between gap-3 border-b border-gray-200 p-4"><h2 className="min-w-0 flex-1 font-semibold wrap-anywhere" data-testid="example-title">{displayTitle(selected.title)}</h2><button className={button} aria-label="Copy example link" title="Copy example link" onClick={() => void copy(window.location.href, 'Example link copied')}><Icon name="external" /></button></header>
+          <header className="flex items-center justify-between gap-3 border-b border-gray-200 p-4"><h2 className="min-w-0 flex-1 font-semibold wrap-anywhere" data-testid="example-title">{title}</h2><button className={button} aria-label="Copy example link" title="Copy example link" onClick={() => { const url = new URL(window.location.href); url.searchParams.set('example', selected.id); void copy(url.toString(), 'Example link copied') }}><Icon name="external" /></button></header>
           <div className="viewer-toolbar flex flex-wrap justify-between gap-2 border-b border-gray-200 p-2">
             <div className="flex gap-1" aria-label="Camera view">{(['iso', 'top', 'front', 'right'] as CadView[]).map(item => <button className={`${button} ${view === item ? active : ''}`} key={item} data-testid={`view-${item}`} aria-pressed={view === item} onClick={() => setView(item)}>{item === 'iso' ? 'Iso' : viewLabels[item]}</button>)}</div>
             <div className="flex gap-1"><button className={`${button} ${edges ? active : ''}`} data-testid="toggle-edges" aria-label="Show topology edges" aria-pressed={edges} title="Toggle topology edges" onClick={() => setEdges(!edges)}><Icon name="edges" /></button><button className={button} data-testid="reset-view" aria-label="Fit model to view" title="Fit model to view" onClick={() => setResetToken(token => token + 1)}><Icon name="reset" /></button><button className={button} aria-label="Download view image" title="Download view image" disabled={!model} onClick={() => setScreenshotToken(token => token + 1)}><Icon name="camera" /></button></div>
           </div>
           <div className="relative h-80 bg-gray-50 sm:h-[32rem]">
-            <CadViewer model={model} modelId={modelId} title={displayTitle(selected.title)} view={view} edges={edges} resetToken={resetToken} screenshotToken={screenshotToken} />
+            <CadViewer model={model} modelId={modelId} title={title} view={view} edges={edges} resetToken={resetToken} screenshotToken={screenshotToken} />
             {loading && <div className="absolute inset-0 flex items-center justify-center text-sm text-gray-500" role="status" data-testid="model-loading">Loading…</div>}
             {loadError && <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 p-4 text-sm" role="alert"><p>{loadError}</p><button className={button} onClick={() => setRetryToken(token => token + 1)}>Try again</button></div>}
           </div>
-          <div className="flex flex-wrap gap-x-6 gap-y-2 border-t border-gray-200 p-4 text-xs text-gray-600"><span>{count(selected.stats.meshCount)} parts</span><span>{count(selected.stats.triangles)} triangles</span><span>{measure(selected.stats.dimension === 3 ? selected.stats.volume : selected.stats.area)} mm{selected.stats.dimension === 3 ? '³' : '²'}</span></div>
+          <div className="flex flex-wrap gap-x-6 gap-y-2 border-t border-gray-200 p-4 text-xs text-gray-600" data-testid="model-stats" data-volume={stats.volume} data-area={stats.area}><span>{count(stats.meshCount)} parts</span><span>{count(stats.triangles)} triangles</span><span>{measure(stats.dimension === 3 ? stats.volume : stats.area)} mm{stats.dimension === 3 ? '³' : '²'}</span><span>{stats.valid ? 'Valid' : 'Invalid'} topology</span></div>
         </section>
         <aside className="min-w-0 overflow-hidden rounded-lg border border-gray-200 bg-white lg:col-start-2" aria-label="Example source and metadata">
-          <div className="flex items-center gap-1 border-b border-gray-200 p-2" role="tablist" aria-label="Example details">{(['jsx', 'plan', 'details'] as const).map(item => <button className={`${button} ${tab === item ? active : ''}`} id={`tab-${item}`} key={item} role="tab" aria-selected={tab === item} aria-controls="code-content" onClick={() => setTab(item)}>{item === 'jsx' ? 'JSX' : item === 'plan' ? 'Plan' : 'Details'}</button>)}<button className={`${button} ml-auto`} aria-label={tab === 'details' ? 'Copy model metadata' : 'Copy source'} title="Copy to clipboard" onClick={() => void copy(tab === 'details' ? JSON.stringify({ ...selected.stats, bounds: model?.bounds, kernel: model?.kernel }, null, 2) : source)}><Icon name="copy" /></button></div>
-          <div className="min-w-0" role="tabpanel" id="code-content" aria-labelledby={`tab-${tab}`} tabIndex={0}>{tab !== 'details' ? <SourceCode source={source} /> : <dl className="space-y-4 p-4 text-sm">{[['Kernel', model?.kernel ?? 'OpenCascade'], ['Units', 'Millimeters'], ['Dimension', `${selected.stats.dimension}D · ${geometryKind}`], ['Surface area', `${measure(selected.stats.area)} mm²`], ['Bounding size', dimensions ? dimensions.map(measure).join(' × ') + ' mm' : 'Loading…'], ['Topology', selected.stats.valid ? 'Valid' : 'Invalid']].map(([label, value]) => <div key={label}><dt className="text-gray-500">{label}</dt><dd>{value}</dd></div>)}</dl>}</div>
-          <div className="flex gap-2 border-t border-gray-200 p-3"><button className={button} onClick={() => download(`${selected.id}.plan.json`, selected.plan)}><Icon name="download" size={14} />Plan JSON</button><button className={button} disabled={!model} onClick={() => model && download(`${selected.id}.mesh.json`, model)}><Icon name="download" size={14} />Mesh JSON</button></div>
+          <div className="flex flex-wrap items-center gap-1 border-b border-gray-200 p-2" role="tablist" aria-label="Example details">{(['jsx', 'plan', 'parameters', 'details'] as const).map(item => <button className={`${button} ${tab === item ? active : ''}`} id={`tab-${item}`} key={item} role="tab" aria-selected={tab === item} aria-controls="code-content" onClick={() => setTab(item)}>{item === 'jsx' ? 'JSX' : item === 'plan' ? 'Plan' : item === 'parameters' ? 'Parameters' : 'Details'}</button>)}<button className={`${button} ml-auto`} aria-label={tab === 'details' ? 'Copy model metadata' : 'Copy source'} title="Copy to clipboard" onClick={() => void copy(tab === 'details' ? JSON.stringify({ ...stats, bounds: model?.bounds, kernel: model?.kernel }, null, 2) : source)}><Icon name="copy" /></button></div>
+          <div className="flex flex-wrap items-center gap-2 border-b border-gray-200 p-3"><button className={primaryButton} data-testid="run-source" onClick={() => void runDraft()} disabled={busy}>{runStatus === 'compiling' ? 'Compiling…' : runStatus === 'rendering' ? 'Rendering…' : 'Run'}</button><button className={button} onClick={resetExample} disabled={busy}>Reset example</button><span className="text-xs text-gray-500" role="status" data-testid="run-status">{runStatus === 'idle' ? (draftSource !== renderedSource || planText !== JSON.stringify(activePlan, null, 2) ? 'Edited' : '') : runStatus === 'connecting' ? 'Connecting…' : runStatus === 'importing' ? 'Importing…' : runStatus === 'exporting' ? 'Exporting…' : ''}</span></div>
+          {runError && <div className="border-b border-red-200 bg-red-50 p-3 text-sm text-red-700" role="alert" data-testid="editor-error"><strong>{runError.stage} error</strong><pre className="mt-1 whitespace-pre-wrap font-mono wrap-anywhere">{runError.message}</pre>{runError.settings && <button className="mt-2 text-blue-700 underline" onClick={() => setKernelOpen(true)}>Kernel settings</button>}</div>}
+          <div className="min-w-0" role="tabpanel" id="code-content" aria-labelledby={`tab-${tab}`} tabIndex={0}>{tab === 'jsx' || tab === 'plan' ? <EditableSource source={source} language={tab} onChange={value => tab === 'jsx' ? setDraftSource(value) : setPlanText(value)} onRun={() => void runDraft()} /> : tab === 'parameters' ? <div className="grid gap-4 p-4 sm:grid-cols-2">{parameters.length ? parameters.map(parameter => <ParameterField key={parameter.path.join('.')} parameter={parameter} onChange={value => updateParameter(parameter, value)} />) : <p className="text-sm text-gray-500">Edit the JSX to add parameters.</p>}</div> : <dl className="space-y-4 p-4 text-sm">{[['Kernel', model?.kernel ?? 'OpenCascade'], ['Units', 'Millimeters'], ['Dimension', `${stats.dimension}D · ${geometryKind}`], ['Surface area', `${measure(stats.area)} mm²`], ['Bounding size', dimensions ? dimensions.map(measure).join(' × ') + ' mm' : 'Loading…'], ['Topology', stats.valid ? 'Valid' : 'Invalid']].map(([label, value]) => <div key={label}><dt className="text-gray-500">{label}</dt><dd>{value}</dd></div>)}</dl>}</div>
+          <div className="flex flex-wrap gap-2 border-t border-gray-200 p-3"><button className={button} onClick={() => download(`${selected.id}.plan.json`, activePlan)}><Icon name="download" size={14} />Plan JSON</button><button className={button} disabled={!model} onClick={() => model && download(`${selected.id}.mesh.json`, model)}><Icon name="download" size={14} />Mesh JSON</button><label className={button}><Icon name="download" size={14} />Import CAD<input className="sr-only" data-testid="cad-file-input" type="file" accept=".step,.stp,.stl,.brep,.brp,.svg,.dxf" disabled={busy} onChange={event => { const file = event.currentTarget.files?.[0]; event.currentTarget.value = ''; if (file) void importCad(file) }} /></label><select className="rounded-md border border-gray-300 px-3 py-2 text-sm" aria-label="CAD export format" value={exportFormat} onChange={event => setExportFormat(event.target.value as typeof exportFormat)} disabled={busy}>{['step', 'stl', 'brep', 'svg', 'dxf'].map(format => <option key={format} value={format}>{format.toUpperCase()}</option>)}</select><button className={button} data-testid="export-cad" onClick={() => void exportCad()} disabled={busy}><Icon name="download" size={14} />Download CAD</button></div>
         </aside>
       </main>
     </div>

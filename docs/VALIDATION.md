@@ -10,11 +10,13 @@ The final checks cover:
 | Check | Result |
 | --- | --- |
 | TypeScript type checking and distributable build | Pass |
-| TypeScript compiler, React, client and actual HTTP integration tests | 37 tests pass |
-| Native backend, conformance and independent regression tests | 199 tests and 437 subtests pass |
-| Chromium geometry and viewer behavior checks | 62 checks pass |
-| Visual regression matrix | 58 fixtures × 4 views = 232 screenshots |
-| Screenshot comparison | Zero changed pixels; zero browser errors |
+| TypeScript compiler, React, client and actual HTTP integration tests | 45 tests pass; 29 negative compile cases |
+| Native backend, conformance and independent regression tests | 276 tests and 437 subtests pass |
+| Chromium geometry and viewer behavior checks | 78 checks pass |
+| Visual regression matrix | 73 fixtures × 4 views = 292 screenshots |
+| Screenshot comparison | Zero changed pixels against reviewed baselines; zero browser errors |
+| Static sandbox catalog and responsive layout | 73 models and 86 screenshots pass |
+| Editable sandbox, worker isolation and browser CAD transfer | 15 browser checks pass |
 | npm package contents | Verified source, declarations, native service and documentation |
 | CDN browser module | Shared React hooks and context, native volume 24 → 60, visible geometry; zero browser errors |
 | Installed release tarball | JavaScript exports load; locked native kernel imports successfully |
@@ -37,12 +39,15 @@ The dedicated CDN browser module is checked in Chromium using the actual pinned
 React module from jscdn. Both the CAD reconciler and ReactDOM update hook state;
 context changes a native box from 24 to 60 mm³, and the viewer displays its mesh.
 This check verifies visible pixels and saves before/after screenshots in
-`artifacts/cdn/`; it adds no screenshot baseline to the 232-image matrix.
+`artifacts/cdn/`; it adds no screenshot baseline to the 292-image matrix.
 
 Visual fixtures include curves, sketches, primitives and sectors, booleans,
 extrusions, tapered extrusions, lofts, revolve, sweep, fillets, chamfers, hole
 patterns, text, transformed assemblies, a motor spacer and a 19-part electronics
-assembly. Every fixture is captured in isometric, top, front and right views.
+assembly. Advanced fixtures add airfoils, constrained curves, technical drawings,
+dimensions, draft, full round, sheet metal, projection, packing, native assemblies
+and nested section operations. Every fixture is captured in isometric, top,
+front and right views.
 The [contact sheet](visual-baseline.png) shows actual browser captures; the
 [baseline manifest](../tests/visual/baselines/manifest.json) records the complete
 matrix and environment.
@@ -54,9 +59,15 @@ comparison threshold and permitted changed pixel count are both zero. Run
 `artifacts/visual/`. Browser versions, fonts or graphics settings can change
 pixels, so use the locked browser for regression comparisons.
 
+The 0.2.0 camera correction required reviewing 18 existing front-view baselines.
+Removing the previous Y-up spherical pole clamp changed 549 comparison pixels
+in total, at most 201 of 486,400 pixels in one image. The other 274 images were
+unchanged. Side-by-side camera comparisons confirmed that geometry was preserved.
+
 Coverage of the API dispatch mechanism is broader than semantic test coverage.
 These checks do not exercise every overload or every possible argument
 combination. The pinned native API's restrictions and behavior are preserved;
 unreleased development-branch additions and arbitrary JavaScript/Python code
 are outside the compatibility surface. See [API usage](API.md) and the
-[conformance notes](../tests/conformance/README.md).
+[conformance notes](../tests/conformance/README.md), and the
+[support matrix](COMPATIBILITY.md).
