@@ -26,7 +26,9 @@ npm run test:sandbox
 
 The production build goes to `sandbox/dist`. Browser checks validate all 58
 native models, render every example, and exercise desktop and mobile controls.
-Screenshots and reports are written to `artifacts/sandbox`.
+Screenshots and reports are written to `artifacts/sandbox`. Controls also have
+direction checks for horizontal and vertical drags in all four engineering views.
+The UI uses Tailwind defaults with system fonts.
 
 ## Update example geometry
 

@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import * as THREE from 'three'
-import { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+import type { OrbitControls } from 'three/addons/controls/OrbitControls.js'
+import { createCadControls } from './controls'
 import { createCadGroup, disposeCadGroup, frameCadCamera, type CadView } from '../../lib/three'
 import type { RenderResult } from '../../lib/types'
 
@@ -56,20 +57,20 @@ export function CadViewer({ model, modelId, title, view, edges, resetToken, scre
     fill.position.set(-3, 2, 1)
     scene.add(fill)
     const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0.001, 1000)
-    const controls = new OrbitControls(camera, canvas)
-    controls.enableDamping = false
-    controls.screenSpacePanning = true
-    controls.listenToKeyEvents(canvas)
-    controls.minZoom = 0.15
-    controls.maxZoom = 20
+    const initialTarget = frameCadCamera(camera, current.current.model?.bounds ?? null, current.current.view, container.clientWidth / Math.max(container.clientHeight, 1))
+    let controls = createCadControls(camera, canvas, initialTarget)
     const redraw = () => renderer.render(scene, camera)
     const fit = () => {
       const width = Math.max(container.clientWidth, 1)
       const height = Math.max(container.clientHeight, 1)
       renderer.setSize(width, height)
       camera.zoom = 1
-      controls.target.copy(frameCadCamera(camera, current.current.model?.bounds ?? null, current.current.view, width / height))
-      controls.update()
+      controls.removeEventListener('change', redraw)
+      controls.dispose()
+      const target = frameCadCamera(camera, current.current.model?.bounds ?? null, current.current.view, width / height)
+      controls = createCadControls(camera, canvas, target)
+      controls.addEventListener('change', redraw)
+      if (stage.current) stage.current.controls = controls
       redraw()
     }
     stage.current = { renderer, scene, camera, controls, fit, redraw }
@@ -82,7 +83,16 @@ export function CadViewer({ model, modelId, title, view, edges, resetToken, scre
       redraw()
     }
     canvas.addEventListener('keydown', onKey)
-    const observer = new ResizeObserver(fit)
+    const observer = new ResizeObserver(() => {
+      const width = Math.max(container.clientWidth, 1)
+      const height = Math.max(container.clientHeight, 1)
+      renderer.setSize(width, height)
+      const halfHeight = (camera.top - camera.bottom) / 2
+      camera.left = -halfHeight * width / height
+      camera.right = halfHeight * width / height
+      camera.updateProjectionMatrix()
+      redraw()
+    })
     observer.observe(container)
     fit()
     return () => {
@@ -124,7 +134,7 @@ export function CadViewer({ model, modelId, title, view, edges, resetToken, scre
     }, 'image/png')
   }, [screenshotToken])
 
-  return <div className="cad-viewer" ref={host} data-view={view} data-model-ready={Boolean(model)} data-model-id={model ? modelId : ''} data-mesh-count={model?.meshes.length ?? 0}>
-    {error && <div className="canvas-error" role="alert">{error}</div>}
+  return <div className="cad-viewer relative h-full w-full [&>canvas]:block [&>canvas]:h-full [&>canvas]:w-full" ref={host} data-view={view} data-model-ready={Boolean(model)} data-model-id={model ? modelId : ''} data-mesh-count={model?.meshes.length ?? 0}>
+    {error && <div className="absolute inset-0 flex items-center justify-center p-4 text-sm text-red-600" role="alert">{error}</div>}
   </div>
 }

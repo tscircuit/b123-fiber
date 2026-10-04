@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import assert from 'node:assert/strict'
+import { checkCadControls } from './check-cad-controls.mjs'
 import { createHash } from 'node:crypto'
 import { createServer } from 'node:http'
 import { mkdir, readFile, stat, writeFile } from 'node:fs/promises'
@@ -112,12 +113,7 @@ function visiblePixels(buffer) {
 }
 
 async function screenshotCanvas(name) {
-  // Overlay labels and the axis widget are DOM siblings over the canvas.
-  // Hide them only while capturing geometry so their text cannot make an
-  // empty WebGL canvas pass the native shape visibility assertion.
-  const image = await page.getByTestId('sandbox-canvas').screenshot({
-    style: '.axis-widget, .canvas-hint, .canvas-unit, .viewer-toolbar { visibility: hidden !important; }',
-  })
+  const image = await page.getByTestId('sandbox-canvas').screenshot()
   const foreground = visiblePixels(image)
   await writeFile(resolve(artifacts, `${name}.png`), image)
   report.screenshots.push({ name, foreground })
@@ -142,6 +138,8 @@ try {
   })
   report.browser = browser.version()
   context = await browser.newContext({ viewport: { width: 1440, height: 1024 }, deviceScaleFactor: 1 })
+  await checkCadControls(context)
+  report.interactions.push('Cursor rotation direction in all four engineering views')
   page = await context.newPage()
   if (transport) {
     // Chromium does not inherit the managed environment's proxy CA. Node
