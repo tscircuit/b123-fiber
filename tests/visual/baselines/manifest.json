@@ -1,5 +1,12 @@
 {
   "kernel": "build123d 0.13.0 / OpenCascade",
+  "nativeFont": {
+    "family": "DejaVu Sans",
+    "file": "deployment/kernel/fonts/DejaVuSans.ttf",
+    "sha256": "57f73e11f51999432bf7ab22ce55b6f945d5eca1bf824404cfa9ec2e3718c84e",
+    "defaultArialFallback": "DejaVu Sans",
+    "registry": "isolated visual-test kernel; only the bundled font is registered"
+  },
   "playwright": "1.63.0",
   "chromium": "153.0.8010.12",
   "chromiumRevision": "1243",

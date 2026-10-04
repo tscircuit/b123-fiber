@@ -37,6 +37,10 @@ which Vercel's minimal Python runtime does not provide. These are native shared
 libraries for Linux amd64; `native-libs/manifest.json` records their hashes and
 upstream package names, with license notices in `native-libs/licenses`. The
 OpenCascade and build123d wheels retain all their original modules and APIs.
+The entrypoint registers the bundled font directly with OCCT before importing
+build123d, so default Arial text resolves to DejaVu Sans even when system fonts
+are absent. build123d then registers its own bundled Relief SingleLine CAD font
+normally. The container uses the same startup configuration.
 
 ## Container
 

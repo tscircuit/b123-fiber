@@ -11,7 +11,7 @@ The final checks cover:
 | --- | --- |
 | TypeScript type checking and distributable build | Pass |
 | TypeScript compiler, React, client and actual HTTP integration tests | 45 tests pass; 29 negative compile cases |
-| Native backend, conformance and independent regression tests | 276 tests and 437 subtests pass |
+| Native backend, conformance and independent regression tests | 277 tests and 437 subtests pass |
 | Chromium geometry and viewer behavior checks | 78 checks pass |
 | Visual regression matrix | 73 fixtures × 4 views = 292 screenshots |
 | Screenshot comparison | Zero changed pixels against reviewed baselines; zero browser errors |
@@ -58,6 +58,11 @@ comparison threshold and permitted changed pixel count are both zero. Run
 `npm run test:visual` to recreate reports and four labeled contact sheets in
 `artifacts/visual/`. Browser versions, fonts or graphics settings can change
 pixels, so use the locked browser for regression comparisons.
+
+The visual runner registers the bundled DejaVu Sans font directly with OCCT
+before starting its isolated kernel. Native drawing text's default Arial alias
+resolves to that same file. Host-installed fonts therefore cannot change the
+tested glyph geometry; the baseline manifest records the font's SHA-256.
 
 The 0.2.0 camera correction required reviewing 18 existing front-view baselines.
 Removing the previous Y-up spherical pole clamp changed 549 comparison pixels

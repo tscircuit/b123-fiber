@@ -60,7 +60,8 @@ combination has a separate test.
   pass existing native attributes directly between supported calls.
 - Static headless compilation requires pure synchronous components. The live
   React renderer supports hooks, context and component state.
-- Native text needs an installed font. The hosted kernel includes DejaVu Sans.
+- Native text needs an installed font. The hosted kernel registers bundled
+  DejaVu Sans and maps native drawing text's Arial default to that font.
   Fonts absent on the host follow build123d's native fallback/error behavior.
 - Primitive detection needs a topological triangle mesh, such as
   `Mesher.read(...)`. Native `import_stl` returns a triangulated OCCT Face, on

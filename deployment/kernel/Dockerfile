@@ -20,6 +20,7 @@ RUN --mount=type=secret,id=proxy_ca \
     && uv sync --frozen --no-dev \
     && rm -rf /tmp/uv-cache
 COPY deployment/kernel/app.py ./app.py
+COPY deployment/kernel/fonts ./fonts
 RUN useradd --system --uid 10001 --create-home kernel \
     && mkdir -p /data \
     && chown kernel:kernel /data \

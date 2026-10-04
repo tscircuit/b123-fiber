@@ -47,12 +47,36 @@ def configure_fonts(workspace: Path) -> None:
     os.environ.setdefault("FONTCONFIG_FILE", str(config))
 
 
+def register_bundled_fonts() -> None:
+    """Register the hosted font in OCCT before build123d initializes its manager.
+
+    build123d's FontManager resets FONTCONFIG_FILE, so fontconfig alone cannot
+    make the TTF available on a minimal runtime. CheckFont retains its real
+    family name, unlike FontManager.register_font's display-name conversion.
+    """
+    font_path = Path(__file__).parent / "fonts" / "DejaVuSans.ttf"
+    if not font_path.is_file():
+        return
+    from OCP.Font import Font_FontMgr
+    from OCP.TCollection import TCollection_AsciiString
+
+    manager = Font_FontMgr.GetInstance_s()
+    font = manager.CheckFont(str(font_path.resolve()))
+    if font is None:
+        raise RuntimeError("OCCT cannot load the bundled DejaVu Sans font")
+    manager.ClearFontDataBase()
+    if not manager.RegisterFont(font, True):
+        raise RuntimeError("OCCT cannot register the bundled DejaVu Sans font")
+    manager.AddFontAlias(TCollection_AsciiString("Arial"), font.FontName())
+
+
 workspace = Path(os.environ.get("BUILD123D_FIBER_WORKSPACE", tempfile.gettempdir() + "/build123d-fiber"))
 workspace.mkdir(parents=True, exist_ok=True)
 configure_fonts(workspace)
 load_native_libraries()
+register_bundled_fonts()
 
-# Native OpenCascade discovers fonts during import, after the configuration above.
+# build123d can now add its upstream single-line fonts and canary alias normally.
 from build123d_fiber.server import create_app  # noqa: E402
 
 
