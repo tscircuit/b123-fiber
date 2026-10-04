@@ -1,0 +1,533 @@
+{
+  "kernel": "build123d 0.13.0 / OpenCascade",
+  "generator": "sandbox/scripts/generate-models.mjs",
+  "tolerance": 0.12,
+  "angularTolerance": 0.15,
+  "coordinatePrecision": 0.000001,
+  "fixtureCount": 58,
+  "thumbnails": "Reviewed isometric screenshots from tests/visual/baselines",
+  "models": [
+    {
+      "id": "vertex",
+      "dimension": 0,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    },
+    {
+      "id": "box",
+      "dimension": 3,
+      "volume": 1728,
+      "area": 912,
+      "meshCount": 1,
+      "triangles": 12,
+      "valid": true
+    },
+    {
+      "id": "cylinder",
+      "dimension": 3,
+      "volume": 1847.256480310799,
+      "area": 835.6636458548851,
+      "meshCount": 1,
+      "triangles": 332,
+      "valid": true
+    },
+    {
+      "id": "cone",
+      "dimension": 3,
+      "volume": 1231.504320207199,
+      "area": 692.1414372598814,
+      "meshCount": 1,
+      "triangles": 752,
+      "valid": true
+    },
+    {
+      "id": "sphere",
+      "dimension": 3,
+      "volume": 2144.6605848506324,
+      "area": 804.247719318987,
+      "meshCount": 1,
+      "triangles": 3536,
+      "valid": true
+    },
+    {
+      "id": "torus",
+      "dimension": 3,
+      "volume": 1776.5287921960844,
+      "area": 1184.352528130723,
+      "meshCount": 1,
+      "triangles": 14112,
+      "valid": true
+    },
+    {
+      "id": "wedge",
+      "dimension": 3,
+      "volume": 1272,
+      "area": 734.2127216051551,
+      "meshCount": 1,
+      "triangles": 12,
+      "valid": true
+    },
+    {
+      "id": "sector-cylinder",
+      "dimension": 3,
+      "volume": 1466.076571675237,
+      "area": 819.7344572538566,
+      "meshCount": 1,
+      "triangles": 200,
+      "valid": true
+    },
+    {
+      "id": "sector-torus",
+      "dimension": 3,
+      "volume": 904.7137367665242,
+      "area": 763.040897583092,
+      "meshCount": 1,
+      "triangles": 9572,
+      "valid": true
+    },
+    {
+      "id": "hemisphere",
+      "dimension": 3,
+      "volume": 1526.8140296446395,
+      "area": 763.4070148223198,
+      "meshCount": 1,
+      "triangles": 1873,
+      "valid": true
+    },
+    {
+      "id": "rotated-box",
+      "dimension": 3,
+      "volume": 864,
+      "area": 600,
+      "meshCount": 1,
+      "triangles": 12,
+      "valid": true
+    },
+    {
+      "id": "circle",
+      "dimension": 2,
+      "volume": 0,
+      "area": 254.46900494077323,
+      "meshCount": 1,
+      "triangles": 82,
+      "valid": true
+    },
+    {
+      "id": "ellipse",
+      "dimension": 2,
+      "volume": 0,
+      "area": 263.89378290154264,
+      "meshCount": 1,
+      "triangles": 102,
+      "valid": true
+    },
+    {
+      "id": "rectangle",
+      "dimension": 2,
+      "volume": 0,
+      "area": 239.99999999999994,
+      "meshCount": 1,
+      "triangles": 2,
+      "valid": true
+    },
+    {
+      "id": "rounded-rectangle",
+      "dimension": 2,
+      "volume": 0,
+      "area": 300.2743338823081,
+      "meshCount": 1,
+      "triangles": 86,
+      "valid": true
+    },
+    {
+      "id": "polygon",
+      "dimension": 2,
+      "volume": 0,
+      "area": 263,
+      "meshCount": 1,
+      "triangles": 3,
+      "valid": true
+    },
+    {
+      "id": "hexagon",
+      "dimension": 2,
+      "volume": 0,
+      "area": 259.80762113533154,
+      "meshCount": 1,
+      "triangles": 4,
+      "valid": true
+    },
+    {
+      "id": "octagon",
+      "dimension": 2,
+      "volume": 0,
+      "area": 282.842712474619,
+      "meshCount": 1,
+      "triangles": 6,
+      "valid": true
+    },
+    {
+      "id": "trapezoid",
+      "dimension": 2,
+      "volume": 0,
+      "area": 203.28715747069398,
+      "meshCount": 1,
+      "triangles": 2,
+      "valid": true
+    },
+    {
+      "id": "slot-center-to-center",
+      "dimension": 2,
+      "volume": 0,
+      "area": 136.48451000647498,
+      "meshCount": 1,
+      "triangles": 84,
+      "valid": true
+    },
+    {
+      "id": "slot-overall",
+      "dimension": 2,
+      "volume": 0,
+      "area": 157.48451000647492,
+      "meshCount": 1,
+      "triangles": 84,
+      "valid": true
+    },
+    {
+      "id": "slot-center-point",
+      "dimension": 2,
+      "volume": 0,
+      "area": 180.06366157039037,
+      "meshCount": 1,
+      "triangles": 84,
+      "valid": true
+    },
+    {
+      "id": "text",
+      "dimension": 2,
+      "volume": 0,
+      "area": 70.70768264928705,
+      "meshCount": 1,
+      "triangles": 272,
+      "valid": true
+    },
+    {
+      "id": "line",
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    },
+    {
+      "id": "polyline",
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    },
+    {
+      "id": "closed-polyline",
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    },
+    {
+      "id": "spline",
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    },
+    {
+      "id": "bezier",
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    },
+    {
+      "id": "center-arc",
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    },
+    {
+      "id": "radius-arc",
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    },
+    {
+      "id": "three-point-arc",
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    },
+    {
+      "id": "sagitta-arc",
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    },
+    {
+      "id": "polar-line",
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    },
+    {
+      "id": "helix",
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    },
+    {
+      "id": "compositional-extrude",
+      "dimension": 3,
+      "volume": 1608.495438637974,
+      "area": 1206.3715789784806,
+      "meshCount": 1,
+      "triangles": 672,
+      "valid": true
+    },
+    {
+      "id": "compositional-fillet",
+      "dimension": 3,
+      "volume": 1943.2632545290421,
+      "area": 910.4424506661588,
+      "meshCount": 1,
+      "triangles": 4260,
+      "valid": true
+    },
+    {
+      "id": "extrude-circle",
+      "dimension": 3,
+      "volume": 1847.256480310799,
+      "area": 835.6636458548851,
+      "meshCount": 1,
+      "triangles": 332,
+      "valid": true
+    },
+    {
+      "id": "extrude-taper",
+      "dimension": 3,
+      "volume": 2417.995877050304,
+      "area": 1049.9620392930851,
+      "meshCount": 1,
+      "triangles": 20,
+      "valid": true
+    },
+    {
+      "id": "extrude-both",
+      "dimension": 3,
+      "volume": 1782.6548245743668,
+      "area": 927.8583772020568,
+      "meshCount": 1,
+      "triangles": 340,
+      "valid": true
+    },
+    {
+      "id": "extrude-ring",
+      "dimension": 3,
+      "volume": 1608.495438637974,
+      "area": 1206.3715789784806,
+      "meshCount": 1,
+      "triangles": 672,
+      "valid": true
+    },
+    {
+      "id": "revolve",
+      "dimension": 3,
+      "volume": 2597.0499269675624,
+      "area": 1368.5081957621453,
+      "meshCount": 1,
+      "triangles": 1176,
+      "valid": true
+    },
+    {
+      "id": "revolve-partial",
+      "dimension": 3,
+      "volume": 1759.2918860102843,
+      "area": 1058.2890058721514,
+      "meshCount": 1,
+      "triangles": 452,
+      "valid": true
+    },
+    {
+      "id": "loft",
+      "dimension": 3,
+      "volume": 2971.1126426604937,
+      "area": 1203.2308386155923,
+      "meshCount": 1,
+      "triangles": 804,
+      "valid": true
+    },
+    {
+      "id": "loft-ruled",
+      "dimension": 3,
+      "volume": 2869.640461006964,
+      "area": 1207.914936902808,
+      "meshCount": 1,
+      "triangles": 200,
+      "valid": true
+    },
+    {
+      "id": "sweep",
+      "dimension": 3,
+      "volume": 298.74985536174887,
+      "area": 350.4810135007408,
+      "meshCount": 1,
+      "triangles": 5470,
+      "valid": true
+    },
+    {
+      "id": "fillet",
+      "dimension": 3,
+      "volume": 2659.6341812977835,
+      "area": 1084.3893421169303,
+      "meshCount": 1,
+      "triangles": 4260,
+      "valid": true
+    },
+    {
+      "id": "chamfer",
+      "dimension": 3,
+      "volume": 2620.0000000000005,
+      "area": 1078.5733053664699,
+      "meshCount": 1,
+      "triangles": 44,
+      "valid": true
+    },
+    {
+      "id": "union",
+      "dimension": 3,
+      "volume": 2845.593426113058,
+      "area": 1209.2093066780747,
+      "meshCount": 1,
+      "triangles": 580,
+      "valid": true
+    },
+    {
+      "id": "subtract",
+      "dimension": 3,
+      "volume": 2187.681469282041,
+      "area": 1406.247779607694,
+      "meshCount": 1,
+      "triangles": 352,
+      "valid": true
+    },
+    {
+      "id": "intersect",
+      "dimension": 3,
+      "volume": 1959.8111144948598,
+      "area": 941.4728391080996,
+      "meshCount": 1,
+      "triangles": 644,
+      "valid": true
+    },
+    {
+      "id": "grid-locations",
+      "dimension": 3,
+      "volume": 1357.1680263507906,
+      "area": 1244.0706908215582,
+      "meshCount": 1,
+      "triangles": 1992,
+      "valid": true
+    },
+    {
+      "id": "polar-locations",
+      "dimension": 3,
+      "volume": 1357.1680263507903,
+      "area": 1244.0706908215582,
+      "meshCount": 1,
+      "triangles": 1992,
+      "valid": true
+    },
+    {
+      "id": "counterbore",
+      "dimension": 3,
+      "volume": 3782.7876562361457,
+      "area": 1892.4955592153876,
+      "meshCount": 1,
+      "triangles": 688,
+      "valid": true
+    },
+    {
+      "id": "countersink",
+      "dimension": 3,
+      "volume": 3924.159325647686,
+      "area": 1814.5330613695064,
+      "meshCount": 1,
+      "triangles": 772,
+      "valid": true
+    },
+    {
+      "id": "text-extrude",
+      "dimension": 3,
+      "volume": 212.12508353282476,
+      "area": 539.3101347667274,
+      "meshCount": 1,
+      "triangles": 1842,
+      "valid": true
+    },
+    {
+      "id": "motor-spacer",
+      "dimension": 3,
+      "volume": 5113.23910302007,
+      "area": 4104.244255918583,
+      "meshCount": 1,
+      "triangles": 3056,
+      "valid": true
+    },
+    {
+      "id": "electronics",
+      "dimension": 3,
+      "volume": 4177.008145963585,
+      "area": 5211.520000000004,
+      "meshCount": 19,
+      "triangles": 1588,
+      "valid": true
+    },
+    {
+      "id": "transforms",
+      "dimension": 3,
+      "volume": 1544.77868423386,
+      "area": 1000.9203070318035,
+      "meshCount": 2,
+      "triangles": 344,
+      "valid": true
+    }
+  ]
+}

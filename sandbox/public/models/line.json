@@ -1,0 +1,1 @@
+{"meshes":[{"positions":[],"normals":[],"indices":[],"edges":[[-10,-6,0,10,6,8]],"vertices":[],"volume":0,"area":0,"valid":true,"kind":"Curve","color":"#254e77"}],"bounds":{"min":[-10,-6,0],"max":[10,6,8]},"kernel":"build123d 0.13.0 / OpenCascade"}

@@ -55,7 +55,11 @@
     "test:cdn": "node --use-env-proxy tests/cdn.browser.mjs",
     "generate:api": ".venv/bin/python scripts/generate-api.py",
     "dev": "vite --host 127.0.0.1",
-    "kernel": ".venv/bin/python -m build123d_fiber"
+    "kernel": ".venv/bin/python -m build123d_fiber",
+    "sandbox:dev": "vite --config sandbox/vite.config.ts --host 127.0.0.1",
+    "sandbox:build": "tsc --noEmit -p sandbox/tsconfig.json && vite build --config sandbox/vite.config.ts",
+    "sandbox:generate": "node sandbox/scripts/generate-models.mjs",
+    "test:sandbox": "node --use-env-proxy scripts/test-sandbox.mjs"
   },
   "peerDependencies": {
     "react": "^19.2.0",

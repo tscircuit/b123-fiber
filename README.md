@@ -74,6 +74,18 @@ The kernel listens at `http://127.0.0.1:8765`. The Vite terminal prints the gall
 URL. Keep the kernel on a trusted local machine; file import/export functions act
 with the kernel process's filesystem permissions.
 
+## Example sandbox
+
+The [sandbox](sandbox/README.md) contains 58 examples with interactive 3D views,
+matching JSX source, native geometry statistics and downloadable plans/models.
+It uses checked-in OpenCascade meshes and can be hosted as a static Vercel site.
+
+```sh
+npm run sandbox:dev
+npm run sandbox:build
+npm run test:sandbox
+```
+
 ## Model with React
 
 ```tsx

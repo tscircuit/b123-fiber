@@ -1,0 +1,3235 @@
+[
+  {
+    "id": "vertex",
+    "title": "Vertex · native point topology",
+    "category": "curve",
+    "description": "A single native vertex, rendered as point topology.",
+    "modelUrl": "/models/vertex.json",
+    "thumbnailUrl": "/thumbnails/vertex.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.Vertex args={[1, 2, 3]} color={\"#254e77\"} />\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "Vertex",
+          "props": {
+            "args": [
+              1,
+              2,
+              3
+            ],
+            "color": "#254e77"
+          },
+          "children": []
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 0,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    }
+  },
+  {
+    "id": "box",
+    "title": "Box · centered",
+    "category": "solid",
+    "description": "A centered rectangular solid with exact planar faces.",
+    "modelUrl": "/models/box.json",
+    "thumbnailUrl": "/thumbnails/box.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.Box length={18} width={12} height={8} />\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "Box",
+          "props": {
+            "length": 18,
+            "width": 12,
+            "height": 8
+          },
+          "children": []
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 1728,
+      "area": 912,
+      "meshCount": 1,
+      "triangles": 12,
+      "valid": true
+    }
+  },
+  {
+    "id": "cylinder",
+    "title": "Cylinder",
+    "category": "solid",
+    "description": "A cylindrical solid with circular caps and a continuous side.",
+    "modelUrl": "/models/cylinder.json",
+    "thumbnailUrl": "/thumbnails/cylinder.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.Cylinder radius={7} height={12} />\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "Cylinder",
+          "props": {
+            "radius": 7,
+            "height": 12
+          },
+          "children": []
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 1847.256480310799,
+      "area": 835.6636458548851,
+      "meshCount": 1,
+      "triangles": 332,
+      "valid": true
+    }
+  },
+  {
+    "id": "cone",
+    "title": "Cone",
+    "category": "solid",
+    "description": "A tapered cone between two circular radii.",
+    "modelUrl": "/models/cone.json",
+    "thumbnailUrl": "/thumbnails/cone.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.Cone bottom_radius={8} top_radius={2} height={14} />\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "Cone",
+          "props": {
+            "bottom_radius": 8,
+            "top_radius": 2,
+            "height": 14
+          },
+          "children": []
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 1231.504320207199,
+      "area": 692.1414372598814,
+      "meshCount": 1,
+      "triangles": 752,
+      "valid": true
+    }
+  },
+  {
+    "id": "sphere",
+    "title": "Sphere",
+    "category": "solid",
+    "description": "A smooth sphere tessellated directly by OpenCascade.",
+    "modelUrl": "/models/sphere.json",
+    "thumbnailUrl": "/thumbnails/sphere.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.Sphere radius={8} />\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "Sphere",
+          "props": {
+            "radius": 8
+          },
+          "children": []
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 2144.6605848506324,
+      "area": 804.247719318987,
+      "meshCount": 1,
+      "triangles": 3536,
+      "valid": true
+    }
+  },
+  {
+    "id": "torus",
+    "title": "Torus",
+    "category": "solid",
+    "description": "A ring-shaped solid with a circular tube profile.",
+    "modelUrl": "/models/torus.json",
+    "thumbnailUrl": "/thumbnails/torus.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.Torus major_radius={10} minor_radius={3} />\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "Torus",
+          "props": {
+            "major_radius": 10,
+            "minor_radius": 3
+          },
+          "children": []
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 1776.5287921960844,
+      "area": 1184.352528130723,
+      "meshCount": 1,
+      "triangles": 14112,
+      "valid": true
+    }
+  },
+  {
+    "id": "wedge",
+    "title": "Wedge",
+    "category": "solid",
+    "description": "A wedge bounded by a combination of sloped and planar faces.",
+    "modelUrl": "/models/wedge.json",
+    "thumbnailUrl": "/thumbnails/wedge.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.Wedge xsize={16} ysize={12} zsize={10} xmin={3} zmin={2} xmax={13} zmax={8} />\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "Wedge",
+          "props": {
+            "xsize": 16,
+            "ysize": 12,
+            "zsize": 10,
+            "xmin": 3,
+            "zmin": 2,
+            "xmax": 13,
+            "zmax": 8
+          },
+          "children": []
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 1272,
+      "area": 734.2127216051551,
+      "meshCount": 1,
+      "triangles": 12,
+      "valid": true
+    }
+  },
+  {
+    "id": "sector-cylinder",
+    "title": "Cylinder · 210° sector",
+    "category": "solid",
+    "description": "A partial cylinder with a 210° sweep.",
+    "modelUrl": "/models/sector-cylinder.json",
+    "thumbnailUrl": "/thumbnails/sector-cylinder.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.Cylinder radius={10} height={8} arc_size={210} />\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "Cylinder",
+          "props": {
+            "radius": 10,
+            "height": 8,
+            "arc_size": 210
+          },
+          "children": []
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 1466.076571675237,
+      "area": 819.7344572538566,
+      "meshCount": 1,
+      "triangles": 200,
+      "valid": true
+    }
+  },
+  {
+    "id": "sector-torus",
+    "title": "Torus · 240° sector",
+    "category": "solid",
+    "description": "A torus with an open 240° sweep.",
+    "modelUrl": "/models/sector-torus.json",
+    "thumbnailUrl": "/thumbnails/sector-torus.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.Torus major_radius={11} minor_radius={2.5} major_angle={240} />\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "Torus",
+          "props": {
+            "major_radius": 11,
+            "minor_radius": 2.5,
+            "major_angle": 240
+          },
+          "children": []
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 904.7137367665242,
+      "area": 763.040897583092,
+      "meshCount": 1,
+      "triangles": 9572,
+      "valid": true
+    }
+  },
+  {
+    "id": "hemisphere",
+    "title": "Sphere · hemisphere",
+    "category": "solid",
+    "description": "Half a sphere with a flat equatorial face.",
+    "modelUrl": "/models/hemisphere.json",
+    "thumbnailUrl": "/thumbnails/hemisphere.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.Sphere radius={9} arc_size1={0} arc_size2={90} />\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "Sphere",
+          "props": {
+            "radius": 9,
+            "arc_size1": 0,
+            "arc_size2": 90
+          },
+          "children": []
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 1526.8140296446395,
+      "area": 763.4070148223198,
+      "meshCount": 1,
+      "triangles": 1873,
+      "valid": true
+    }
+  },
+  {
+    "id": "rotated-box",
+    "title": "Box · Euler rotation",
+    "category": "solid",
+    "description": "A box rotated around its local Euler axes.",
+    "modelUrl": "/models/rotated-box.json",
+    "thumbnailUrl": "/thumbnails/rotated-box.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.Box length={18} width={8} height={6} rotation={[20, 30, 35]} />\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "Box",
+          "props": {
+            "length": 18,
+            "width": 8,
+            "height": 6,
+            "rotation": [
+              20,
+              30,
+              35
+            ]
+          },
+          "children": []
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 864,
+      "area": 600,
+      "meshCount": 1,
+      "triangles": 12,
+      "valid": true
+    }
+  },
+  {
+    "id": "circle",
+    "title": "Circle",
+    "category": "sketch",
+    "description": "A circular sketch face on the XY workplane.",
+    "modelUrl": "/models/circle.json",
+    "thumbnailUrl": "/thumbnails/circle.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildSketch>\n      <b.Circle radius={9} />\n    </b.BuildSketch>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildSketch",
+          "props": {},
+          "children": [
+            {
+              "type": "Circle",
+              "props": {
+                "radius": 9
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 2,
+      "volume": 0,
+      "area": 254.46900494077323,
+      "meshCount": 1,
+      "triangles": 82,
+      "valid": true
+    }
+  },
+  {
+    "id": "ellipse",
+    "title": "Ellipse",
+    "category": "sketch",
+    "description": "An elliptical sketch face with independent axis radii.",
+    "modelUrl": "/models/ellipse.json",
+    "thumbnailUrl": "/thumbnails/ellipse.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildSketch>\n      <b.Ellipse x_radius={12} y_radius={7} />\n    </b.BuildSketch>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildSketch",
+          "props": {},
+          "children": [
+            {
+              "type": "Ellipse",
+              "props": {
+                "x_radius": 12,
+                "y_radius": 7
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 2,
+      "volume": 0,
+      "area": 263.89378290154264,
+      "meshCount": 1,
+      "triangles": 102,
+      "valid": true
+    }
+  },
+  {
+    "id": "rectangle",
+    "title": "Rectangle",
+    "category": "sketch",
+    "description": "A centered rectangular sketch face.",
+    "modelUrl": "/models/rectangle.json",
+    "thumbnailUrl": "/thumbnails/rectangle.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildSketch>\n      <b.Rectangle width={20} height={12} />\n    </b.BuildSketch>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildSketch",
+          "props": {},
+          "children": [
+            {
+              "type": "Rectangle",
+              "props": {
+                "width": 20,
+                "height": 12
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 2,
+      "volume": 0,
+      "area": 239.99999999999994,
+      "meshCount": 1,
+      "triangles": 2,
+      "valid": true
+    }
+  },
+  {
+    "id": "rounded-rectangle",
+    "title": "RectangleRounded",
+    "category": "sketch",
+    "description": "A rectangular profile with rounded corners.",
+    "modelUrl": "/models/rounded-rectangle.json",
+    "thumbnailUrl": "/thumbnails/rounded-rectangle.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildSketch>\n      <b.RectangleRounded width={22} height={14} radius={3} />\n    </b.BuildSketch>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildSketch",
+          "props": {},
+          "children": [
+            {
+              "type": "RectangleRounded",
+              "props": {
+                "width": 22,
+                "height": 14,
+                "radius": 3
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 2,
+      "volume": 0,
+      "area": 300.2743338823081,
+      "meshCount": 1,
+      "triangles": 86,
+      "valid": true
+    }
+  },
+  {
+    "id": "polygon",
+    "title": "Polygon",
+    "category": "sketch",
+    "description": "An irregular polygon created from an ordered point list.",
+    "modelUrl": "/models/polygon.json",
+    "thumbnailUrl": "/thumbnails/polygon.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildSketch>\n      <b.Polygon args={[[-10, -6], [6, -9], [12, 0], [4, 8], [-8, 6]]} />\n    </b.BuildSketch>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildSketch",
+          "props": {},
+          "children": [
+            {
+              "type": "Polygon",
+              "props": {
+                "args": [
+                  [
+                    -10,
+                    -6
+                  ],
+                  [
+                    6,
+                    -9
+                  ],
+                  [
+                    12,
+                    0
+                  ],
+                  [
+                    4,
+                    8
+                  ],
+                  [
+                    -8,
+                    6
+                  ]
+                ]
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 2,
+      "volume": 0,
+      "area": 263,
+      "meshCount": 1,
+      "triangles": 3,
+      "valid": true
+    }
+  },
+  {
+    "id": "hexagon",
+    "title": "RegularPolygon · hexagon",
+    "category": "sketch",
+    "description": "A regular six-sided profile.",
+    "modelUrl": "/models/hexagon.json",
+    "thumbnailUrl": "/thumbnails/hexagon.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildSketch>\n      <b.RegularPolygon radius={10} side_count={6} />\n    </b.BuildSketch>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildSketch",
+          "props": {},
+          "children": [
+            {
+              "type": "RegularPolygon",
+              "props": {
+                "radius": 10,
+                "side_count": 6
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 2,
+      "volume": 0,
+      "area": 259.80762113533154,
+      "meshCount": 1,
+      "triangles": 4,
+      "valid": true
+    }
+  },
+  {
+    "id": "octagon",
+    "title": "RegularPolygon · octagon",
+    "category": "sketch",
+    "description": "A rotated regular eight-sided profile.",
+    "modelUrl": "/models/octagon.json",
+    "thumbnailUrl": "/thumbnails/octagon.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildSketch>\n      <b.RegularPolygon radius={10} side_count={8} rotation={22.5} />\n    </b.BuildSketch>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildSketch",
+          "props": {},
+          "children": [
+            {
+              "type": "RegularPolygon",
+              "props": {
+                "radius": 10,
+                "side_count": 8,
+                "rotation": 22.5
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 2,
+      "volume": 0,
+      "area": 282.842712474619,
+      "meshCount": 1,
+      "triangles": 6,
+      "valid": true
+    }
+  },
+  {
+    "id": "trapezoid",
+    "title": "Trapezoid",
+    "category": "sketch",
+    "description": "A trapezoid with independently controlled side angles.",
+    "modelUrl": "/models/trapezoid.json",
+    "thumbnailUrl": "/thumbnails/trapezoid.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildSketch>\n      <b.Trapezoid width={24} height={10} left_side_angle={65} right_side_angle={75} />\n    </b.BuildSketch>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildSketch",
+          "props": {},
+          "children": [
+            {
+              "type": "Trapezoid",
+              "props": {
+                "width": 24,
+                "height": 10,
+                "left_side_angle": 65,
+                "right_side_angle": 75
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 2,
+      "volume": 0,
+      "area": 203.28715747069398,
+      "meshCount": 1,
+      "triangles": 2,
+      "valid": true
+    }
+  },
+  {
+    "id": "slot-center-to-center",
+    "title": "SlotCenterToCenter",
+    "category": "sketch",
+    "description": "A slot described by its end-center separation.",
+    "modelUrl": "/models/slot-center-to-center.json",
+    "thumbnailUrl": "/thumbnails/slot-center-to-center.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildSketch>\n      <b.SlotCenterToCenter center_separation={14} height={7} />\n    </b.BuildSketch>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildSketch",
+          "props": {},
+          "children": [
+            {
+              "type": "SlotCenterToCenter",
+              "props": {
+                "center_separation": 14,
+                "height": 7
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 2,
+      "volume": 0,
+      "area": 136.48451000647498,
+      "meshCount": 1,
+      "triangles": 84,
+      "valid": true
+    }
+  },
+  {
+    "id": "slot-overall",
+    "title": "SlotOverall",
+    "category": "sketch",
+    "description": "A rounded slot described by its overall length.",
+    "modelUrl": "/models/slot-overall.json",
+    "thumbnailUrl": "/thumbnails/slot-overall.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildSketch>\n      <b.SlotOverall width={24} height={7} />\n    </b.BuildSketch>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildSketch",
+          "props": {},
+          "children": [
+            {
+              "type": "SlotOverall",
+              "props": {
+                "width": 24,
+                "height": 7
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 2,
+      "volume": 0,
+      "area": 157.48451000647492,
+      "meshCount": 1,
+      "triangles": 84,
+      "valid": true
+    }
+  },
+  {
+    "id": "slot-center-point",
+    "title": "SlotCenterPoint",
+    "category": "sketch",
+    "description": "A slot positioned from its center and a reference point.",
+    "modelUrl": "/models/slot-center-point.json",
+    "thumbnailUrl": "/thumbnails/slot-center-point.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildSketch>\n      <b.SlotCenterPoint center={[-6, 0]} point={[6, 4]} height={6} />\n    </b.BuildSketch>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildSketch",
+          "props": {},
+          "children": [
+            {
+              "type": "SlotCenterPoint",
+              "props": {
+                "center": [
+                  -6,
+                  0
+                ],
+                "point": [
+                  6,
+                  4
+                ],
+                "height": 6
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 2,
+      "volume": 0,
+      "area": 180.06366157039037,
+      "meshCount": 1,
+      "triangles": 84,
+      "valid": true
+    }
+  },
+  {
+    "id": "text",
+    "title": "Text · OCCT glyph faces",
+    "category": "sketch",
+    "description": "Text converted into real sketch faces using DejaVu Sans.",
+    "modelUrl": "/models/text.json",
+    "thumbnailUrl": "/thumbnails/text.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildSketch>\n      <b.Text txt={\"CAD\"} font_size={12} font={\"DejaVu Sans\"} />\n    </b.BuildSketch>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildSketch",
+          "props": {},
+          "children": [
+            {
+              "type": "Text",
+              "props": {
+                "txt": "CAD",
+                "font_size": 12,
+                "font": "DejaVu Sans"
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 2,
+      "volume": 0,
+      "area": 70.70768264928705,
+      "meshCount": 1,
+      "triangles": 272,
+      "valid": true
+    }
+  },
+  {
+    "id": "line",
+    "title": "Line",
+    "category": "curve",
+    "description": "A straight edge connecting two points in 3D space.",
+    "modelUrl": "/models/line.json",
+    "thumbnailUrl": "/thumbnails/line.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildLine color={\"#254e77\"}>\n      <b.Line args={[[-10, -6, 0], [10, 6, 8]]} />\n    </b.BuildLine>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildLine",
+          "props": {
+            "color": "#254e77"
+          },
+          "children": [
+            {
+              "type": "Line",
+              "props": {
+                "args": [
+                  [
+                    -10,
+                    -6,
+                    0
+                  ],
+                  [
+                    10,
+                    6,
+                    8
+                  ]
+                ]
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    }
+  },
+  {
+    "id": "polyline",
+    "title": "Polyline",
+    "category": "curve",
+    "description": "An open chain of straight segments.",
+    "modelUrl": "/models/polyline.json",
+    "thumbnailUrl": "/thumbnails/polyline.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildLine color={\"#254e77\"}>\n      <b.Polyline args={[[-12, -6], [-4, 7], [4, -3], [12, 6]]} />\n    </b.BuildLine>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildLine",
+          "props": {
+            "color": "#254e77"
+          },
+          "children": [
+            {
+              "type": "Polyline",
+              "props": {
+                "args": [
+                  [
+                    -12,
+                    -6
+                  ],
+                  [
+                    -4,
+                    7
+                  ],
+                  [
+                    4,
+                    -3
+                  ],
+                  [
+                    12,
+                    6
+                  ]
+                ]
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    }
+  },
+  {
+    "id": "closed-polyline",
+    "title": "Polyline · closed",
+    "category": "curve",
+    "description": "A closed wire built from connected straight segments.",
+    "modelUrl": "/models/closed-polyline.json",
+    "thumbnailUrl": "/thumbnails/closed-polyline.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildLine color={\"#254e77\"}>\n      <b.Polyline args={[[-10, -7], [10, -7], [8, 7], [-7, 9]]} close={true} />\n    </b.BuildLine>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildLine",
+          "props": {
+            "color": "#254e77"
+          },
+          "children": [
+            {
+              "type": "Polyline",
+              "props": {
+                "args": [
+                  [
+                    -10,
+                    -7
+                  ],
+                  [
+                    10,
+                    -7
+                  ],
+                  [
+                    8,
+                    7
+                  ],
+                  [
+                    -7,
+                    9
+                  ]
+                ],
+                "close": true
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    }
+  },
+  {
+    "id": "spline",
+    "title": "Spline",
+    "category": "curve",
+    "description": "An interpolating smooth curve through four points.",
+    "modelUrl": "/models/spline.json",
+    "thumbnailUrl": "/thumbnails/spline.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildLine color={\"#254e77\"}>\n      <b.Spline args={[[-12, -5], [-4, 8], [4, -7], [12, 6]]} />\n    </b.BuildLine>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildLine",
+          "props": {
+            "color": "#254e77"
+          },
+          "children": [
+            {
+              "type": "Spline",
+              "props": {
+                "args": [
+                  [
+                    -12,
+                    -5
+                  ],
+                  [
+                    -4,
+                    8
+                  ],
+                  [
+                    4,
+                    -7
+                  ],
+                  [
+                    12,
+                    6
+                  ]
+                ]
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    }
+  },
+  {
+    "id": "bezier",
+    "title": "Bezier",
+    "category": "curve",
+    "description": "A cubic Bézier curve defined by four control points.",
+    "modelUrl": "/models/bezier.json",
+    "thumbnailUrl": "/thumbnails/bezier.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildLine color={\"#254e77\"}>\n      <b.Bezier args={[[-12, -6], [-5, 14], [5, -12], [12, 6]]} />\n    </b.BuildLine>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildLine",
+          "props": {
+            "color": "#254e77"
+          },
+          "children": [
+            {
+              "type": "Bezier",
+              "props": {
+                "args": [
+                  [
+                    -12,
+                    -6
+                  ],
+                  [
+                    -5,
+                    14
+                  ],
+                  [
+                    5,
+                    -12
+                  ],
+                  [
+                    12,
+                    6
+                  ]
+                ]
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    }
+  },
+  {
+    "id": "center-arc",
+    "title": "CenterArc",
+    "category": "curve",
+    "description": "A circular arc defined by its center and sweep angle.",
+    "modelUrl": "/models/center-arc.json",
+    "thumbnailUrl": "/thumbnails/center-arc.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildLine color={\"#254e77\"}>\n      <b.CenterArc center={[0, 0]} radius={10} start_angle={15} arc_size={260} />\n    </b.BuildLine>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildLine",
+          "props": {
+            "color": "#254e77"
+          },
+          "children": [
+            {
+              "type": "CenterArc",
+              "props": {
+                "center": [
+                  0,
+                  0
+                ],
+                "radius": 10,
+                "start_angle": 15,
+                "arc_size": 260
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    }
+  },
+  {
+    "id": "radius-arc",
+    "title": "RadiusArc",
+    "category": "curve",
+    "description": "A circular arc defined by its endpoints and radius.",
+    "modelUrl": "/models/radius-arc.json",
+    "thumbnailUrl": "/thumbnails/radius-arc.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildLine color={\"#254e77\"}>\n      <b.RadiusArc start_point={[-8, 0]} end_point={[8, 0]} radius={10} />\n    </b.BuildLine>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildLine",
+          "props": {
+            "color": "#254e77"
+          },
+          "children": [
+            {
+              "type": "RadiusArc",
+              "props": {
+                "start_point": [
+                  -8,
+                  0
+                ],
+                "end_point": [
+                  8,
+                  0
+                ],
+                "radius": 10
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    }
+  },
+  {
+    "id": "three-point-arc",
+    "title": "ThreePointArc",
+    "category": "curve",
+    "description": "An arc that passes through three supplied points.",
+    "modelUrl": "/models/three-point-arc.json",
+    "thumbnailUrl": "/thumbnails/three-point-arc.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildLine color={\"#254e77\"}>\n      <b.ThreePointArc args={[[-10, 0], [0, 9], [10, 0]]} />\n    </b.BuildLine>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildLine",
+          "props": {
+            "color": "#254e77"
+          },
+          "children": [
+            {
+              "type": "ThreePointArc",
+              "props": {
+                "args": [
+                  [
+                    -10,
+                    0
+                  ],
+                  [
+                    0,
+                    9
+                  ],
+                  [
+                    10,
+                    0
+                  ]
+                ]
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    }
+  },
+  {
+    "id": "sagitta-arc",
+    "title": "SagittaArc",
+    "category": "curve",
+    "description": "An arc specified by its chord endpoints and sagitta.",
+    "modelUrl": "/models/sagitta-arc.json",
+    "thumbnailUrl": "/thumbnails/sagitta-arc.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildLine color={\"#254e77\"}>\n      <b.SagittaArc start_point={[-10, 0]} end_point={[10, 0]} sagitta={5} />\n    </b.BuildLine>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildLine",
+          "props": {
+            "color": "#254e77"
+          },
+          "children": [
+            {
+              "type": "SagittaArc",
+              "props": {
+                "start_point": [
+                  -10,
+                  0
+                ],
+                "end_point": [
+                  10,
+                  0
+                ],
+                "sagitta": 5
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    }
+  },
+  {
+    "id": "polar-line",
+    "title": "PolarLine",
+    "category": "curve",
+    "description": "A line described by its start, length, and angle.",
+    "modelUrl": "/models/polar-line.json",
+    "thumbnailUrl": "/thumbnails/polar-line.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildLine color={\"#254e77\"}>\n      <b.PolarLine start={[-8, -5]} length={22} angle={35} />\n    </b.BuildLine>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildLine",
+          "props": {
+            "color": "#254e77"
+          },
+          "children": [
+            {
+              "type": "PolarLine",
+              "props": {
+                "start": [
+                  -8,
+                  -5
+                ],
+                "length": 22,
+                "angle": 35
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    }
+  },
+  {
+    "id": "helix",
+    "title": "Helix",
+    "category": "curve",
+    "description": "A 3D helical edge with fixed pitch and radius.",
+    "modelUrl": "/models/helix.json",
+    "thumbnailUrl": "/thumbnails/helix.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildLine color={\"#254e77\"}>\n      <b.Helix pitch={5} height={20} radius={6} />\n    </b.BuildLine>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildLine",
+          "props": {
+            "color": "#254e77"
+          },
+          "children": [
+            {
+              "type": "Helix",
+              "props": {
+                "pitch": 5,
+                "height": 20,
+                "radius": 6
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 1,
+      "volume": 0,
+      "area": 0,
+      "meshCount": 1,
+      "triangles": 0,
+      "valid": true
+    }
+  },
+  {
+    "id": "compositional-extrude",
+    "title": "extrude · nested sketch children",
+    "category": "operation",
+    "description": "An extrusion whose nested sketch produces an annular solid.",
+    "modelUrl": "/models/compositional-extrude.json",
+    "thumbnailUrl": "/thumbnails/compositional-extrude.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.extrude amount={8}>\n      <b.BuildSketch>\n        <b.Circle radius={10} />\n        <b.Circle radius={6} mode={b.Mode.SUBTRACT} />\n      </b.BuildSketch>\n    </b.extrude>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "extrude",
+          "props": {
+            "amount": 8
+          },
+          "children": [
+            {
+              "type": "BuildSketch",
+              "props": {},
+              "children": [
+                {
+                  "type": "Circle",
+                  "props": {
+                    "radius": 10
+                  },
+                  "children": []
+                },
+                {
+                  "type": "Circle",
+                  "props": {
+                    "radius": 6,
+                    "mode": {
+                      "$enum": "Mode.SUBTRACT"
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 1608.495438637974,
+      "area": 1206.3715789784806,
+      "meshCount": 1,
+      "triangles": 672,
+      "valid": true
+    }
+  },
+  {
+    "id": "compositional-fillet",
+    "title": "fillet · nested Box child",
+    "category": "operation",
+    "description": "A fillet operation applied to the edges of a nested box.",
+    "modelUrl": "/models/compositional-fillet.json",
+    "thumbnailUrl": "/thumbnails/compositional-fillet.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.fillet objects={{ \"$select\": \"edges\" }} radius={1.5}>\n      <b.Box length={18} width={14} height={8} />\n    </b.fillet>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "fillet",
+          "props": {
+            "objects": {
+              "$select": "edges"
+            },
+            "radius": 1.5
+          },
+          "children": [
+            {
+              "type": "Box",
+              "props": {
+                "length": 18,
+                "width": 14,
+                "height": 8
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 1943.2632545290421,
+      "area": 910.4424506661588,
+      "meshCount": 1,
+      "triangles": 4260,
+      "valid": true
+    }
+  },
+  {
+    "id": "extrude-circle",
+    "title": "extrude · circle",
+    "category": "operation",
+    "description": "A circular sketch extruded into a solid.",
+    "modelUrl": "/models/extrude-circle.json",
+    "thumbnailUrl": "/thumbnails/extrude-circle.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildPart>\n      <b.BuildSketch>\n        <b.Circle radius={7} />\n      </b.BuildSketch>\n      <b.extrude amount={12} />\n    </b.BuildPart>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildPart",
+          "props": {},
+          "children": [
+            {
+              "type": "BuildSketch",
+              "props": {},
+              "children": [
+                {
+                  "type": "Circle",
+                  "props": {
+                    "radius": 7
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "extrude",
+              "props": {
+                "amount": 12
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 1847.256480310799,
+      "area": 835.6636458548851,
+      "meshCount": 1,
+      "triangles": 332,
+      "valid": true
+    }
+  },
+  {
+    "id": "extrude-taper",
+    "title": "extrude · tapered hexagon",
+    "category": "operation",
+    "description": "A hexagonal sketch extruded with a 10° draft.",
+    "modelUrl": "/models/extrude-taper.json",
+    "thumbnailUrl": "/thumbnails/extrude-taper.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildPart>\n      <b.BuildSketch>\n        <b.RegularPolygon radius={10} side_count={6} />\n      </b.BuildSketch>\n      <b.extrude amount={12} taper={10} />\n    </b.BuildPart>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildPart",
+          "props": {},
+          "children": [
+            {
+              "type": "BuildSketch",
+              "props": {},
+              "children": [
+                {
+                  "type": "RegularPolygon",
+                  "props": {
+                    "radius": 10,
+                    "side_count": 6
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "extrude",
+              "props": {
+                "amount": 12,
+                "taper": 10
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 2417.995877050304,
+      "area": 1049.9620392930851,
+      "meshCount": 1,
+      "triangles": 20,
+      "valid": true
+    }
+  },
+  {
+    "id": "extrude-both",
+    "title": "extrude · both directions",
+    "category": "operation",
+    "description": "A slot extruded equally in both directions.",
+    "modelUrl": "/models/extrude-both.json",
+    "thumbnailUrl": "/thumbnails/extrude-both.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildPart>\n      <b.BuildSketch>\n        <b.SlotOverall width={24} height={8} />\n      </b.BuildSketch>\n      <b.extrude amount={5} both={true} />\n    </b.BuildPart>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildPart",
+          "props": {},
+          "children": [
+            {
+              "type": "BuildSketch",
+              "props": {},
+              "children": [
+                {
+                  "type": "SlotOverall",
+                  "props": {
+                    "width": 24,
+                    "height": 8
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "extrude",
+              "props": {
+                "amount": 5,
+                "both": true
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 1782.6548245743668,
+      "area": 927.8583772020568,
+      "meshCount": 1,
+      "triangles": 340,
+      "valid": true
+    }
+  },
+  {
+    "id": "extrude-ring",
+    "title": "extrude · sketch subtraction",
+    "category": "operation",
+    "description": "Two sketch circles combined into a hollow extrusion.",
+    "modelUrl": "/models/extrude-ring.json",
+    "thumbnailUrl": "/thumbnails/extrude-ring.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildPart>\n      <b.BuildSketch>\n        <b.Circle radius={10} />\n        <b.Circle radius={6} mode={b.Mode.SUBTRACT} />\n      </b.BuildSketch>\n      <b.extrude amount={8} />\n    </b.BuildPart>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildPart",
+          "props": {},
+          "children": [
+            {
+              "type": "BuildSketch",
+              "props": {},
+              "children": [
+                {
+                  "type": "Circle",
+                  "props": {
+                    "radius": 10
+                  },
+                  "children": []
+                },
+                {
+                  "type": "Circle",
+                  "props": {
+                    "radius": 6,
+                    "mode": {
+                      "$enum": "Mode.SUBTRACT"
+                    }
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "extrude",
+              "props": {
+                "amount": 8
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 1608.495438637974,
+      "area": 1206.3715789784806,
+      "meshCount": 1,
+      "triangles": 672,
+      "valid": true
+    }
+  },
+  {
+    "id": "revolve",
+    "title": "revolve · annular profile",
+    "category": "operation",
+    "description": "An asymmetric profile revolved around the Z axis.",
+    "modelUrl": "/models/revolve.json",
+    "thumbnailUrl": "/thumbnails/revolve.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildPart>\n      <b.BuildSketch args={[b.Plane.XZ]}>\n        <b.Polygon args={[[4, -5], [10, -5], [10, 4], [6, 6], [4, 3]]} />\n      </b.BuildSketch>\n      <b.revolve axis={b.Axis.Z} />\n    </b.BuildPart>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildPart",
+          "props": {},
+          "children": [
+            {
+              "type": "BuildSketch",
+              "props": {
+                "args": [
+                  {
+                    "$type": "Plane",
+                    "path": "XZ"
+                  }
+                ]
+              },
+              "children": [
+                {
+                  "type": "Polygon",
+                  "props": {
+                    "args": [
+                      [
+                        4,
+                        -5
+                      ],
+                      [
+                        10,
+                        -5
+                      ],
+                      [
+                        10,
+                        4
+                      ],
+                      [
+                        6,
+                        6
+                      ],
+                      [
+                        4,
+                        3
+                      ]
+                    ]
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "revolve",
+              "props": {
+                "axis": {
+                  "$type": "Axis",
+                  "path": "Z"
+                }
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 2597.0499269675624,
+      "area": 1368.5081957621453,
+      "meshCount": 1,
+      "triangles": 1176,
+      "valid": true
+    }
+  },
+  {
+    "id": "revolve-partial",
+    "title": "revolve · 240° profile",
+    "category": "operation",
+    "description": "A rectangular profile revolved through 240°.",
+    "modelUrl": "/models/revolve-partial.json",
+    "thumbnailUrl": "/thumbnails/revolve-partial.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildPart>\n      <b.BuildSketch args={[b.Plane.XZ]}>\n        <b.Polygon args={[[4, -5], [10, -5], [10, 5], [4, 5]]} />\n      </b.BuildSketch>\n      <b.revolve axis={b.Axis.Z} revolution_arc={240} />\n    </b.BuildPart>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildPart",
+          "props": {},
+          "children": [
+            {
+              "type": "BuildSketch",
+              "props": {
+                "args": [
+                  {
+                    "$type": "Plane",
+                    "path": "XZ"
+                  }
+                ]
+              },
+              "children": [
+                {
+                  "type": "Polygon",
+                  "props": {
+                    "args": [
+                      [
+                        4,
+                        -5
+                      ],
+                      [
+                        10,
+                        -5
+                      ],
+                      [
+                        10,
+                        5
+                      ],
+                      [
+                        4,
+                        5
+                      ]
+                    ]
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "revolve",
+              "props": {
+                "axis": {
+                  "$type": "Axis",
+                  "path": "Z"
+                },
+                "revolution_arc": 240
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 1759.2918860102843,
+      "area": 1058.2890058721514,
+      "meshCount": 1,
+      "triangles": 452,
+      "valid": true
+    }
+  },
+  {
+    "id": "loft",
+    "title": "loft · circle to rectangle",
+    "category": "operation",
+    "description": "A smooth transition from a circle to a rectangle.",
+    "modelUrl": "/models/loft.json",
+    "thumbnailUrl": "/thumbnails/loft.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildPart>\n      <b.BuildSketch>\n        <b.Circle radius={10} />\n      </b.BuildSketch>\n      <b.BuildSketch args={[{ \"$call\": \"Plane\", \"kwargs\": { \"origin\": [0, 0, 15] } }]}>\n        <b.Rectangle width={10} height={10} />\n      </b.BuildSketch>\n      <b.loft />\n    </b.BuildPart>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildPart",
+          "props": {},
+          "children": [
+            {
+              "type": "BuildSketch",
+              "props": {},
+              "children": [
+                {
+                  "type": "Circle",
+                  "props": {
+                    "radius": 10
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "BuildSketch",
+              "props": {
+                "args": [
+                  {
+                    "$call": "Plane",
+                    "kwargs": {
+                      "origin": [
+                        0,
+                        0,
+                        15
+                      ]
+                    }
+                  }
+                ]
+              },
+              "children": [
+                {
+                  "type": "Rectangle",
+                  "props": {
+                    "width": 10,
+                    "height": 10
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "loft",
+              "props": {},
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 2971.1126426604937,
+      "area": 1203.2308386155923,
+      "meshCount": 1,
+      "triangles": 804,
+      "valid": true
+    }
+  },
+  {
+    "id": "loft-ruled",
+    "title": "loft · ruled polygons",
+    "category": "operation",
+    "description": "A ruled loft between two rotated hexagons.",
+    "modelUrl": "/models/loft-ruled.json",
+    "thumbnailUrl": "/thumbnails/loft-ruled.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildPart>\n      <b.BuildSketch>\n        <b.RegularPolygon radius={11} side_count={6} />\n      </b.BuildSketch>\n      <b.BuildSketch args={[{ \"$call\": \"Plane\", \"kwargs\": { \"origin\": [0, 0, 14] } }]}>\n        <b.RegularPolygon radius={7} side_count={6} rotation={30} />\n      </b.BuildSketch>\n      <b.loft ruled={true} />\n    </b.BuildPart>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildPart",
+          "props": {},
+          "children": [
+            {
+              "type": "BuildSketch",
+              "props": {},
+              "children": [
+                {
+                  "type": "RegularPolygon",
+                  "props": {
+                    "radius": 11,
+                    "side_count": 6
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "BuildSketch",
+              "props": {
+                "args": [
+                  {
+                    "$call": "Plane",
+                    "kwargs": {
+                      "origin": [
+                        0,
+                        0,
+                        14
+                      ]
+                    }
+                  }
+                ]
+              },
+              "children": [
+                {
+                  "type": "RegularPolygon",
+                  "props": {
+                    "radius": 7,
+                    "side_count": 6,
+                    "rotation": 30
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "loft",
+              "props": {
+                "ruled": true
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 2869.640461006964,
+      "area": 1207.914936902808,
+      "meshCount": 1,
+      "triangles": 200,
+      "valid": true
+    }
+  },
+  {
+    "id": "sweep",
+    "title": "sweep · curved pipe",
+    "category": "operation",
+    "description": "A circular profile swept along a captured 3D spline.",
+    "modelUrl": "/models/sweep.json",
+    "thumbnailUrl": "/thumbnails/sweep.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildPart>\n      <b.BuildSketch args={[b.Plane.YZ]}>\n        <b.Circle radius={2} />\n      </b.BuildSketch>\n      <b.BuildLine id={\"sweep-path\"}>\n        <b.Spline args={[[0, 0, 0], [8, 0, 2], [14, 8, 5], [20, 10, 10]]} />\n      </b.BuildLine>\n      <b.sweep path={{ \"$ref\": \"sweep-path\" }} />\n    </b.BuildPart>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildPart",
+          "props": {},
+          "children": [
+            {
+              "type": "BuildSketch",
+              "props": {
+                "args": [
+                  {
+                    "$type": "Plane",
+                    "path": "YZ"
+                  }
+                ]
+              },
+              "children": [
+                {
+                  "type": "Circle",
+                  "props": {
+                    "radius": 2
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "BuildLine",
+              "props": {
+                "id": "sweep-path"
+              },
+              "children": [
+                {
+                  "type": "Spline",
+                  "props": {
+                    "args": [
+                      [
+                        0,
+                        0,
+                        0
+                      ],
+                      [
+                        8,
+                        0,
+                        2
+                      ],
+                      [
+                        14,
+                        8,
+                        5
+                      ],
+                      [
+                        20,
+                        10,
+                        10
+                      ]
+                    ]
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "sweep",
+              "props": {
+                "path": {
+                  "$ref": "sweep-path"
+                }
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 298.74985536174887,
+      "area": 350.4810135007408,
+      "meshCount": 1,
+      "triangles": 5470,
+      "valid": true
+    }
+  },
+  {
+    "id": "fillet",
+    "title": "fillet · all box edges",
+    "category": "operation",
+    "description": "A box with all twelve edges smoothly rounded.",
+    "modelUrl": "/models/fillet.json",
+    "thumbnailUrl": "/thumbnails/fillet.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildPart>\n      <b.Box length={20} width={14} height={10} />\n      <b.fillet objects={{ \"$select\": \"edges\" }} radius={2} />\n    </b.BuildPart>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildPart",
+          "props": {},
+          "children": [
+            {
+              "type": "Box",
+              "props": {
+                "length": 20,
+                "width": 14,
+                "height": 10
+              },
+              "children": []
+            },
+            {
+              "type": "fillet",
+              "props": {
+                "objects": {
+                  "$select": "edges"
+                },
+                "radius": 2
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 2659.6341812977835,
+      "area": 1084.3893421169303,
+      "meshCount": 1,
+      "triangles": 4260,
+      "valid": true
+    }
+  },
+  {
+    "id": "chamfer",
+    "title": "chamfer · all box edges",
+    "category": "operation",
+    "description": "A box with planar bevels applied to every edge.",
+    "modelUrl": "/models/chamfer.json",
+    "thumbnailUrl": "/thumbnails/chamfer.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildPart>\n      <b.Box length={20} width={14} height={10} />\n      <b.chamfer objects={{ \"$select\": \"edges\" }} length={1.5} />\n    </b.BuildPart>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildPart",
+          "props": {},
+          "children": [
+            {
+              "type": "Box",
+              "props": {
+                "length": 20,
+                "width": 14,
+                "height": 10
+              },
+              "children": []
+            },
+            {
+              "type": "chamfer",
+              "props": {
+                "objects": {
+                  "$select": "edges"
+                },
+                "length": 1.5
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 2620.0000000000005,
+      "area": 1078.5733053664699,
+      "meshCount": 1,
+      "triangles": 44,
+      "valid": true
+    }
+  },
+  {
+    "id": "union",
+    "title": "Union · box and cylinder",
+    "category": "operation",
+    "description": "A box and cylinder combined using a native solid union.",
+    "modelUrl": "/models/union.json",
+    "thumbnailUrl": "/thumbnails/union.png",
+    "source": "import { b, Union } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <Union>\n      <b.Box length={16} width={12} height={8} />\n      <b.Cylinder radius={7} height={16} />\n    </Union>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "Union",
+          "props": {},
+          "children": [
+            {
+              "type": "Box",
+              "props": {
+                "length": 16,
+                "width": 12,
+                "height": 8
+              },
+              "children": []
+            },
+            {
+              "type": "Cylinder",
+              "props": {
+                "radius": 7,
+                "height": 16
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 2845.593426113058,
+      "area": 1209.2093066780747,
+      "meshCount": 1,
+      "triangles": 580,
+      "valid": true
+    }
+  },
+  {
+    "id": "subtract",
+    "title": "Subtract · through hole",
+    "category": "operation",
+    "description": "A cylindrical through-hole cut from a rectangular block.",
+    "modelUrl": "/models/subtract.json",
+    "thumbnailUrl": "/thumbnails/subtract.png",
+    "source": "import { b, Subtract } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <Subtract>\n      <b.Box length={22} width={16} height={8} />\n      <b.Cylinder radius={5} height={12} />\n    </Subtract>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "Subtract",
+          "props": {},
+          "children": [
+            {
+              "type": "Box",
+              "props": {
+                "length": 22,
+                "width": 16,
+                "height": 8
+              },
+              "children": []
+            },
+            {
+              "type": "Cylinder",
+              "props": {
+                "radius": 5,
+                "height": 12
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 2187.681469282041,
+      "area": 1406.247779607694,
+      "meshCount": 1,
+      "triangles": 352,
+      "valid": true
+    }
+  },
+  {
+    "id": "intersect",
+    "title": "Intersect · sphere and box",
+    "category": "operation",
+    "description": "The shared volume of a sphere and a box.",
+    "modelUrl": "/models/intersect.json",
+    "thumbnailUrl": "/thumbnails/intersect.png",
+    "source": "import { b, Intersect } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <Intersect>\n      <b.Sphere radius={10} />\n      <b.Box length={16} width={16} height={8} />\n    </Intersect>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "Intersect",
+          "props": {},
+          "children": [
+            {
+              "type": "Sphere",
+              "props": {
+                "radius": 10
+              },
+              "children": []
+            },
+            {
+              "type": "Box",
+              "props": {
+                "length": 16,
+                "width": 16,
+                "height": 8
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 1959.8111144948598,
+      "area": 941.4728391080996,
+      "meshCount": 1,
+      "triangles": 644,
+      "valid": true
+    }
+  },
+  {
+    "id": "grid-locations",
+    "title": "GridLocations · 3 × 2 bosses",
+    "category": "operation",
+    "description": "Six identical bosses positioned in a rectangular grid.",
+    "modelUrl": "/models/grid-locations.json",
+    "thumbnailUrl": "/thumbnails/grid-locations.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildPart>\n      <b.GridLocations x_spacing={12} y_spacing={12} x_count={3} y_count={2}>\n        <b.Cylinder radius={3} height={8} />\n      </b.GridLocations>\n    </b.BuildPart>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildPart",
+          "props": {},
+          "children": [
+            {
+              "type": "GridLocations",
+              "props": {
+                "x_spacing": 12,
+                "y_spacing": 12,
+                "x_count": 3,
+                "y_count": 2
+              },
+              "children": [
+                {
+                  "type": "Cylinder",
+                  "props": {
+                    "radius": 3,
+                    "height": 8
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 1357.1680263507906,
+      "area": 1244.0706908215582,
+      "meshCount": 1,
+      "triangles": 1992,
+      "valid": true
+    }
+  },
+  {
+    "id": "polar-locations",
+    "title": "PolarLocations · six bosses",
+    "category": "operation",
+    "description": "Six bosses distributed around a circular pattern.",
+    "modelUrl": "/models/polar-locations.json",
+    "thumbnailUrl": "/thumbnails/polar-locations.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildPart>\n      <b.PolarLocations radius={12} count={6}>\n        <b.Cylinder radius={3} height={8} />\n      </b.PolarLocations>\n    </b.BuildPart>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildPart",
+          "props": {},
+          "children": [
+            {
+              "type": "PolarLocations",
+              "props": {
+                "radius": 12,
+                "count": 6
+              },
+              "children": [
+                {
+                  "type": "Cylinder",
+                  "props": {
+                    "radius": 3,
+                    "height": 8
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 1357.1680263507903,
+      "area": 1244.0706908215582,
+      "meshCount": 1,
+      "triangles": 1992,
+      "valid": true
+    }
+  },
+  {
+    "id": "counterbore",
+    "title": "CounterBoreHole",
+    "category": "operation",
+    "description": "A drilled hole with a wider, flat-bottomed recess.",
+    "modelUrl": "/models/counterbore.json",
+    "thumbnailUrl": "/thumbnails/counterbore.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildPart>\n      <b.Box length={24} width={18} height={10} align={[b.Align.CENTER, b.Align.CENTER, b.Align.MIN]} />\n      <b.Locations args={[[0, 0, 10]]}>\n        <b.CounterBoreHole radius={3} counter_bore_radius={6} counter_bore_depth={3} depth={12} />\n      </b.Locations>\n    </b.BuildPart>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildPart",
+          "props": {},
+          "children": [
+            {
+              "type": "Box",
+              "props": {
+                "length": 24,
+                "width": 18,
+                "height": 10,
+                "align": [
+                  {
+                    "$enum": "Align.CENTER"
+                  },
+                  {
+                    "$enum": "Align.CENTER"
+                  },
+                  {
+                    "$enum": "Align.MIN"
+                  }
+                ]
+              },
+              "children": []
+            },
+            {
+              "type": "Locations",
+              "props": {
+                "args": [
+                  [
+                    0,
+                    0,
+                    10
+                  ]
+                ]
+              },
+              "children": [
+                {
+                  "type": "CounterBoreHole",
+                  "props": {
+                    "radius": 3,
+                    "counter_bore_radius": 6,
+                    "counter_bore_depth": 3,
+                    "depth": 12
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 3782.7876562361457,
+      "area": 1892.4955592153876,
+      "meshCount": 1,
+      "triangles": 688,
+      "valid": true
+    }
+  },
+  {
+    "id": "countersink",
+    "title": "CounterSinkHole",
+    "category": "operation",
+    "description": "A drilled hole with a conical entry recess.",
+    "modelUrl": "/models/countersink.json",
+    "thumbnailUrl": "/thumbnails/countersink.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildPart>\n      <b.Box length={24} width={18} height={10} align={[b.Align.CENTER, b.Align.CENTER, b.Align.MIN]} />\n      <b.Locations args={[[0, 0, 10]]}>\n        <b.CounterSinkHole radius={3} counter_sink_radius={6} depth={12} counter_sink_angle={90} />\n      </b.Locations>\n    </b.BuildPart>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildPart",
+          "props": {},
+          "children": [
+            {
+              "type": "Box",
+              "props": {
+                "length": 24,
+                "width": 18,
+                "height": 10,
+                "align": [
+                  {
+                    "$enum": "Align.CENTER"
+                  },
+                  {
+                    "$enum": "Align.CENTER"
+                  },
+                  {
+                    "$enum": "Align.MIN"
+                  }
+                ]
+              },
+              "children": []
+            },
+            {
+              "type": "Locations",
+              "props": {
+                "args": [
+                  [
+                    0,
+                    0,
+                    10
+                  ]
+                ]
+              },
+              "children": [
+                {
+                  "type": "CounterSinkHole",
+                  "props": {
+                    "radius": 3,
+                    "counter_sink_radius": 6,
+                    "depth": 12,
+                    "counter_sink_angle": 90
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 3924.159325647686,
+      "area": 1814.5330613695064,
+      "meshCount": 1,
+      "triangles": 772,
+      "valid": true
+    }
+  },
+  {
+    "id": "text-extrude",
+    "title": "Text · raised lettering",
+    "category": "operation",
+    "description": "Native glyph faces extruded into raised lettering.",
+    "modelUrl": "/models/text-extrude.json",
+    "thumbnailUrl": "/thumbnails/text-extrude.png",
+    "source": "import { b } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <b.BuildPart>\n      <b.BuildSketch>\n        <b.Text txt={\"CAD\"} font_size={12} font={\"DejaVu Sans\"} />\n      </b.BuildSketch>\n      <b.extrude amount={3} />\n    </b.BuildPart>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "BuildPart",
+          "props": {},
+          "children": [
+            {
+              "type": "BuildSketch",
+              "props": {},
+              "children": [
+                {
+                  "type": "Text",
+                  "props": {
+                    "txt": "CAD",
+                    "font_size": 12,
+                    "font": "DejaVu Sans"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "extrude",
+              "props": {
+                "amount": 3
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 212.12508353282476,
+      "area": 539.3101347667274,
+      "meshCount": 1,
+      "triangles": 1842,
+      "valid": true
+    }
+  },
+  {
+    "id": "motor-spacer",
+    "title": "Motor spacer · four mounting posts",
+    "category": "assembly",
+    "description": "A mounting plate with a center opening and four drilled posts.",
+    "modelUrl": "/models/motor-spacer.json",
+    "thumbnailUrl": "/thumbnails/motor-spacer.png",
+    "source": "import { b, Subtract, Union } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <Subtract color={\"#db9463\"}>\n      <Union>\n        <b.Box length={42} width={42} height={4} align={[b.Align.CENTER, b.Align.CENTER, b.Align.MIN]} />\n        <b.Cylinder\n          radius={4}\n          height={10}\n          align={[b.Align.CENTER, b.Align.CENTER, b.Align.MIN]}\n          position={[-15.5, -15.5, 0]}\n         />\n        <b.Cylinder radius={4} height={10} align={[b.Align.CENTER, b.Align.CENTER, b.Align.MIN]} position={[-15.5, 15.5, 0]} />\n        <b.Cylinder radius={4} height={10} align={[b.Align.CENTER, b.Align.CENTER, b.Align.MIN]} position={[15.5, -15.5, 0]} />\n        <b.Cylinder radius={4} height={10} align={[b.Align.CENTER, b.Align.CENTER, b.Align.MIN]} position={[15.5, 15.5, 0]} />\n      </Union>\n      <b.Cylinder radius={15} height={16} position={[0, 0, 5]} />\n      <b.Cylinder radius={1.6} height={16} position={[-15.5, -15.5, 5]} />\n      <b.Cylinder radius={1.6} height={16} position={[-15.5, 15.5, 5]} />\n      <b.Cylinder radius={1.6} height={16} position={[15.5, -15.5, 5]} />\n      <b.Cylinder radius={1.6} height={16} position={[15.5, 15.5, 5]} />\n    </Subtract>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "Subtract",
+          "props": {
+            "color": "#db9463"
+          },
+          "children": [
+            {
+              "type": "Union",
+              "props": {},
+              "children": [
+                {
+                  "type": "Box",
+                  "props": {
+                    "length": 42,
+                    "width": 42,
+                    "height": 4,
+                    "align": [
+                      {
+                        "$enum": "Align.CENTER"
+                      },
+                      {
+                        "$enum": "Align.CENTER"
+                      },
+                      {
+                        "$enum": "Align.MIN"
+                      }
+                    ]
+                  },
+                  "children": []
+                },
+                {
+                  "type": "Cylinder",
+                  "props": {
+                    "radius": 4,
+                    "height": 10,
+                    "align": [
+                      {
+                        "$enum": "Align.CENTER"
+                      },
+                      {
+                        "$enum": "Align.CENTER"
+                      },
+                      {
+                        "$enum": "Align.MIN"
+                      }
+                    ],
+                    "position": [
+                      -15.5,
+                      -15.5,
+                      0
+                    ]
+                  },
+                  "children": []
+                },
+                {
+                  "type": "Cylinder",
+                  "props": {
+                    "radius": 4,
+                    "height": 10,
+                    "align": [
+                      {
+                        "$enum": "Align.CENTER"
+                      },
+                      {
+                        "$enum": "Align.CENTER"
+                      },
+                      {
+                        "$enum": "Align.MIN"
+                      }
+                    ],
+                    "position": [
+                      -15.5,
+                      15.5,
+                      0
+                    ]
+                  },
+                  "children": []
+                },
+                {
+                  "type": "Cylinder",
+                  "props": {
+                    "radius": 4,
+                    "height": 10,
+                    "align": [
+                      {
+                        "$enum": "Align.CENTER"
+                      },
+                      {
+                        "$enum": "Align.CENTER"
+                      },
+                      {
+                        "$enum": "Align.MIN"
+                      }
+                    ],
+                    "position": [
+                      15.5,
+                      -15.5,
+                      0
+                    ]
+                  },
+                  "children": []
+                },
+                {
+                  "type": "Cylinder",
+                  "props": {
+                    "radius": 4,
+                    "height": 10,
+                    "align": [
+                      {
+                        "$enum": "Align.CENTER"
+                      },
+                      {
+                        "$enum": "Align.CENTER"
+                      },
+                      {
+                        "$enum": "Align.MIN"
+                      }
+                    ],
+                    "position": [
+                      15.5,
+                      15.5,
+                      0
+                    ]
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "Cylinder",
+              "props": {
+                "radius": 15,
+                "height": 16,
+                "position": [
+                  0,
+                  0,
+                  5
+                ]
+              },
+              "children": []
+            },
+            {
+              "type": "Cylinder",
+              "props": {
+                "radius": 1.6,
+                "height": 16,
+                "position": [
+                  -15.5,
+                  -15.5,
+                  5
+                ]
+              },
+              "children": []
+            },
+            {
+              "type": "Cylinder",
+              "props": {
+                "radius": 1.6,
+                "height": 16,
+                "position": [
+                  -15.5,
+                  15.5,
+                  5
+                ]
+              },
+              "children": []
+            },
+            {
+              "type": "Cylinder",
+              "props": {
+                "radius": 1.6,
+                "height": 16,
+                "position": [
+                  15.5,
+                  -15.5,
+                  5
+                ]
+              },
+              "children": []
+            },
+            {
+              "type": "Cylinder",
+              "props": {
+                "radius": 1.6,
+                "height": 16,
+                "position": [
+                  15.5,
+                  15.5,
+                  5
+                ]
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 5113.23910302007,
+      "area": 4104.244255918583,
+      "meshCount": 1,
+      "triangles": 3056,
+      "valid": true
+    }
+  },
+  {
+    "id": "electronics",
+    "title": "PCB · connector assembly",
+    "category": "assembly",
+    "description": "A 19-part PCB assembly with a controller, connector, and pin headers.",
+    "modelUrl": "/models/electronics.json",
+    "thumbnailUrl": "/thumbnails/electronics.png",
+    "source": "import { b, Group, Subtract } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <Group>\n      <Subtract color={\"#347357\"} name={\"PCB\"}>\n        <b.Box length={48} width={32} height={1.6} />\n        <b.Cylinder radius={1.6} height={4} position={[-20, -12, 0]} />\n        <b.Cylinder radius={1.6} height={4} position={[-20, 12, 0]} />\n        <b.Cylinder radius={1.6} height={4} position={[20, -12, 0]} />\n        <b.Cylinder radius={1.6} height={4} position={[20, 12, 0]} />\n      </Subtract>\n      <b.Box length={17} width={10} height={4} color={\"#353c49\"} name={\"Controller\"} position={[0, 0, 2.8]} />\n      <b.Box length={12} width={10} height={7} color={\"#9da5af\"} name={\"USB shell\"} position={[19, 0, 4.3]} />\n      <b.Box length={1.4} width={1.4} height={8} color={\"#dbc37c\"} name={\"Pin -1-0\"} position={[-14, -11, 4.8]} />\n      <b.Box length={1.4} width={1.4} height={8} color={\"#dbc37c\"} name={\"Pin -1-1\"} position={[-10, -11, 4.8]} />\n      <b.Box length={1.4} width={1.4} height={8} color={\"#dbc37c\"} name={\"Pin -1-2\"} position={[-6, -11, 4.8]} />\n      <b.Box length={1.4} width={1.4} height={8} color={\"#dbc37c\"} name={\"Pin -1-3\"} position={[-2, -11, 4.8]} />\n      <b.Box length={1.4} width={1.4} height={8} color={\"#dbc37c\"} name={\"Pin -1-4\"} position={[2, -11, 4.8]} />\n      <b.Box length={1.4} width={1.4} height={8} color={\"#dbc37c\"} name={\"Pin -1-5\"} position={[6, -11, 4.8]} />\n      <b.Box length={1.4} width={1.4} height={8} color={\"#dbc37c\"} name={\"Pin -1-6\"} position={[10, -11, 4.8]} />\n      <b.Box length={1.4} width={1.4} height={8} color={\"#dbc37c\"} name={\"Pin -1-7\"} position={[14, -11, 4.8]} />\n      <b.Box length={1.4} width={1.4} height={8} color={\"#dbc37c\"} name={\"Pin 1-0\"} position={[-14, 11, 4.8]} />\n      <b.Box length={1.4} width={1.4} height={8} color={\"#dbc37c\"} name={\"Pin 1-1\"} position={[-10, 11, 4.8]} />\n      <b.Box length={1.4} width={1.4} height={8} color={\"#dbc37c\"} name={\"Pin 1-2\"} position={[-6, 11, 4.8]} />\n      <b.Box length={1.4} width={1.4} height={8} color={\"#dbc37c\"} name={\"Pin 1-3\"} position={[-2, 11, 4.8]} />\n      <b.Box length={1.4} width={1.4} height={8} color={\"#dbc37c\"} name={\"Pin 1-4\"} position={[2, 11, 4.8]} />\n      <b.Box length={1.4} width={1.4} height={8} color={\"#dbc37c\"} name={\"Pin 1-5\"} position={[6, 11, 4.8]} />\n      <b.Box length={1.4} width={1.4} height={8} color={\"#dbc37c\"} name={\"Pin 1-6\"} position={[10, 11, 4.8]} />\n      <b.Box length={1.4} width={1.4} height={8} color={\"#dbc37c\"} name={\"Pin 1-7\"} position={[14, 11, 4.8]} />\n    </Group>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "Group",
+          "props": {},
+          "children": [
+            {
+              "type": "Subtract",
+              "props": {
+                "color": "#347357",
+                "name": "PCB"
+              },
+              "children": [
+                {
+                  "type": "Box",
+                  "props": {
+                    "length": 48,
+                    "width": 32,
+                    "height": 1.6
+                  },
+                  "children": []
+                },
+                {
+                  "type": "Cylinder",
+                  "props": {
+                    "radius": 1.6,
+                    "height": 4,
+                    "position": [
+                      -20,
+                      -12,
+                      0
+                    ]
+                  },
+                  "children": []
+                },
+                {
+                  "type": "Cylinder",
+                  "props": {
+                    "radius": 1.6,
+                    "height": 4,
+                    "position": [
+                      -20,
+                      12,
+                      0
+                    ]
+                  },
+                  "children": []
+                },
+                {
+                  "type": "Cylinder",
+                  "props": {
+                    "radius": 1.6,
+                    "height": 4,
+                    "position": [
+                      20,
+                      -12,
+                      0
+                    ]
+                  },
+                  "children": []
+                },
+                {
+                  "type": "Cylinder",
+                  "props": {
+                    "radius": 1.6,
+                    "height": 4,
+                    "position": [
+                      20,
+                      12,
+                      0
+                    ]
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "Box",
+              "props": {
+                "length": 17,
+                "width": 10,
+                "height": 4,
+                "color": "#353c49",
+                "name": "Controller",
+                "position": [
+                  0,
+                  0,
+                  2.8
+                ]
+              },
+              "children": []
+            },
+            {
+              "type": "Box",
+              "props": {
+                "length": 12,
+                "width": 10,
+                "height": 7,
+                "color": "#9da5af",
+                "name": "USB shell",
+                "position": [
+                  19,
+                  0,
+                  4.3
+                ]
+              },
+              "children": []
+            },
+            {
+              "type": "Box",
+              "props": {
+                "length": 1.4,
+                "width": 1.4,
+                "height": 8,
+                "color": "#dbc37c",
+                "name": "Pin -1-0",
+                "position": [
+                  -14,
+                  -11,
+                  4.8
+                ]
+              },
+              "children": []
+            },
+            {
+              "type": "Box",
+              "props": {
+                "length": 1.4,
+                "width": 1.4,
+                "height": 8,
+                "color": "#dbc37c",
+                "name": "Pin -1-1",
+                "position": [
+                  -10,
+                  -11,
+                  4.8
+                ]
+              },
+              "children": []
+            },
+            {
+              "type": "Box",
+              "props": {
+                "length": 1.4,
+                "width": 1.4,
+                "height": 8,
+                "color": "#dbc37c",
+                "name": "Pin -1-2",
+                "position": [
+                  -6,
+                  -11,
+                  4.8
+                ]
+              },
+              "children": []
+            },
+            {
+              "type": "Box",
+              "props": {
+                "length": 1.4,
+                "width": 1.4,
+                "height": 8,
+                "color": "#dbc37c",
+                "name": "Pin -1-3",
+                "position": [
+                  -2,
+                  -11,
+                  4.8
+                ]
+              },
+              "children": []
+            },
+            {
+              "type": "Box",
+              "props": {
+                "length": 1.4,
+                "width": 1.4,
+                "height": 8,
+                "color": "#dbc37c",
+                "name": "Pin -1-4",
+                "position": [
+                  2,
+                  -11,
+                  4.8
+                ]
+              },
+              "children": []
+            },
+            {
+              "type": "Box",
+              "props": {
+                "length": 1.4,
+                "width": 1.4,
+                "height": 8,
+                "color": "#dbc37c",
+                "name": "Pin -1-5",
+                "position": [
+                  6,
+                  -11,
+                  4.8
+                ]
+              },
+              "children": []
+            },
+            {
+              "type": "Box",
+              "props": {
+                "length": 1.4,
+                "width": 1.4,
+                "height": 8,
+                "color": "#dbc37c",
+                "name": "Pin -1-6",
+                "position": [
+                  10,
+                  -11,
+                  4.8
+                ]
+              },
+              "children": []
+            },
+            {
+              "type": "Box",
+              "props": {
+                "length": 1.4,
+                "width": 1.4,
+                "height": 8,
+                "color": "#dbc37c",
+                "name": "Pin -1-7",
+                "position": [
+                  14,
+                  -11,
+                  4.8
+                ]
+              },
+              "children": []
+            },
+            {
+              "type": "Box",
+              "props": {
+                "length": 1.4,
+                "width": 1.4,
+                "height": 8,
+                "color": "#dbc37c",
+                "name": "Pin 1-0",
+                "position": [
+                  -14,
+                  11,
+                  4.8
+                ]
+              },
+              "children": []
+            },
+            {
+              "type": "Box",
+              "props": {
+                "length": 1.4,
+                "width": 1.4,
+                "height": 8,
+                "color": "#dbc37c",
+                "name": "Pin 1-1",
+                "position": [
+                  -10,
+                  11,
+                  4.8
+                ]
+              },
+              "children": []
+            },
+            {
+              "type": "Box",
+              "props": {
+                "length": 1.4,
+                "width": 1.4,
+                "height": 8,
+                "color": "#dbc37c",
+                "name": "Pin 1-2",
+                "position": [
+                  -6,
+                  11,
+                  4.8
+                ]
+              },
+              "children": []
+            },
+            {
+              "type": "Box",
+              "props": {
+                "length": 1.4,
+                "width": 1.4,
+                "height": 8,
+                "color": "#dbc37c",
+                "name": "Pin 1-3",
+                "position": [
+                  -2,
+                  11,
+                  4.8
+                ]
+              },
+              "children": []
+            },
+            {
+              "type": "Box",
+              "props": {
+                "length": 1.4,
+                "width": 1.4,
+                "height": 8,
+                "color": "#dbc37c",
+                "name": "Pin 1-4",
+                "position": [
+                  2,
+                  11,
+                  4.8
+                ]
+              },
+              "children": []
+            },
+            {
+              "type": "Box",
+              "props": {
+                "length": 1.4,
+                "width": 1.4,
+                "height": 8,
+                "color": "#dbc37c",
+                "name": "Pin 1-5",
+                "position": [
+                  6,
+                  11,
+                  4.8
+                ]
+              },
+              "children": []
+            },
+            {
+              "type": "Box",
+              "props": {
+                "length": 1.4,
+                "width": 1.4,
+                "height": 8,
+                "color": "#dbc37c",
+                "name": "Pin 1-6",
+                "position": [
+                  10,
+                  11,
+                  4.8
+                ]
+              },
+              "children": []
+            },
+            {
+              "type": "Box",
+              "props": {
+                "length": 1.4,
+                "width": 1.4,
+                "height": 8,
+                "color": "#dbc37c",
+                "name": "Pin 1-7",
+                "position": [
+                  14,
+                  11,
+                  4.8
+                ]
+              },
+              "children": []
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 4177.008145963585,
+      "area": 5211.520000000004,
+      "meshCount": 19,
+      "triangles": 1588,
+      "valid": true
+    }
+  },
+  {
+    "id": "transforms",
+    "title": "Translate / Rotate · assembly",
+    "category": "assembly",
+    "description": "A colored assembly positioned with translation and rotation wrappers.",
+    "modelUrl": "/models/transforms.json",
+    "thumbnailUrl": "/thumbnails/transforms.png",
+    "source": "import { b, Group, Rotate, Translate } from '@tscircuit/b123-fiber'\n\nexport default function Example() {\n  return (\n    <Group>\n      <Translate offset={[-10, 0, 0]}>\n        <b.Box length={10} width={8} height={8} color={\"#ca8470\"} />\n      </Translate>\n      <Rotate angles={[0, 30, 30]}>\n        <b.Cylinder radius={4} height={18} color={\"#698daf\"} position={[8, 0, 0]} />\n      </Rotate>\n    </Group>\n  )\n}\n",
+    "plan": {
+      "version": 1,
+      "children": [
+        {
+          "type": "Group",
+          "props": {},
+          "children": [
+            {
+              "type": "Translate",
+              "props": {
+                "offset": [
+                  -10,
+                  0,
+                  0
+                ]
+              },
+              "children": [
+                {
+                  "type": "Box",
+                  "props": {
+                    "length": 10,
+                    "width": 8,
+                    "height": 8,
+                    "color": "#ca8470"
+                  },
+                  "children": []
+                }
+              ]
+            },
+            {
+              "type": "Rotate",
+              "props": {
+                "angles": [
+                  0,
+                  30,
+                  30
+                ]
+              },
+              "children": [
+                {
+                  "type": "Cylinder",
+                  "props": {
+                    "radius": 4,
+                    "height": 18,
+                    "color": "#698daf",
+                    "position": [
+                      8,
+                      0,
+                      0
+                    ]
+                  },
+                  "children": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    "stats": {
+      "dimension": 3,
+      "volume": 1544.77868423386,
+      "area": 1000.9203070318035,
+      "meshCount": 2,
+      "triangles": 344,
+      "valid": true
+    }
+  }
+]

@@ -1,0 +1,1 @@
+{"meshes":[{"positions":[],"normals":[],"indices":[],"edges":[],"vertices":[1,2,3],"volume":0,"area":0,"valid":true,"kind":"Vertex","color":"#254e77"}],"bounds":{"min":[1,2,3],"max":[1,2,3]},"kernel":"build123d 0.13.0 / OpenCascade"}

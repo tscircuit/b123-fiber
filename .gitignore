@@ -1,5 +1,7 @@
 node_modules/
 dist/
+sandbox/dist/
+.vercel/
 .venv/
 __pycache__/
 *.py[cod]
