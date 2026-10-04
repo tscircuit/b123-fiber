@@ -5,7 +5,7 @@ This package targets **build123d 0.13.0**, using its native OpenCascade kernel. 
 The native service preserves the original Python API. JavaScript uses asynchronous RPC because geometry executes in the Python service. JSX compiles to the same native builders and operations. Python names and keyword arguments retain their spelling and angles remain in degrees.
 
 ```ts
-import { NativeClient, native, Align, Axis } from 'build123d-fiber'
+import { NativeClient, native, Align, Axis } from '@tscircuit/b123-fiber'
 
 const client = new NativeClient({ url: 'http://127.0.0.1:8765' })
 const box = await client.construct('Box', [], { length: 20, width: 12, height: 6 })

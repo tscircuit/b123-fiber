@@ -16,7 +16,7 @@ for view in ('iso', 'top', 'front', 'right'):
     sheet = Image.new('RGB', (columns * width, ((len(images) + columns - 1) // columns) * height + 66), '#e8edf3')
     draw = ImageDraw.Draw(sheet)
     title = 'isometric' if view == 'iso' else view
-    draw.text((18, 15), f'build123d-fiber · {len(images)} native OpenCascade fixtures · {title}', font=ImageFont.truetype(font_path, 22), fill='#253c53')
+    draw.text((18, 15), f'b123-fiber · {len(images)} native OpenCascade fixtures · {title}', font=ImageFont.truetype(font_path, 22), fill='#253c53')
     draw.text((18, 44), 'Actual Chromium WebGL captures. Every case has four exact screenshot regression baselines.', font=small_font, fill='#65768a')
     for index, path in enumerate(images):
         x, y = index % columns * width, index // columns * height + 66

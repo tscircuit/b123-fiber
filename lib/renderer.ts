@@ -47,7 +47,7 @@ const hostContext = Object.freeze({})
 // after React commits, so speculative renders cannot create native CAD objects.
 const reconciler = Reconciler({
   rendererVersion: '0.1.0',
-  rendererPackageName: 'build123d-fiber',
+  rendererPackageName: '@tscircuit/b123-fiber',
   extraDevToolsConfig: null,
   bindToConsole: (_method: string, args: unknown[]) => () => console.log(...args),
   supportsMutation: true,

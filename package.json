@@ -1,12 +1,12 @@
 {
-  "name": "build123d-fiber",
+  "name": "@tscircuit/b123-fiber",
   "version": "0.1.0",
   "description": "React CAD renderer for the complete build123d API, powered by OpenCascade",
   "type": "module",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/tscircuit/build123d-fiber"
+    "url": "https://github.com/tscircuit/b123-fiber"
   },
   "files": [
     "dist",
@@ -39,15 +39,20 @@
     "./native": {
       "types": "./dist/generated/values.d.ts",
       "import": "./dist/generated/values.js"
+    },
+    "./cdn": {
+      "types": "./dist/cdn.d.ts",
+      "import": "./dist/cdn.js"
     }
   },
   "scripts": {
     "prepare": "npm run build",
-    "build": "tsup lib/index.ts lib/headless.ts lib/three.ts lib/client.ts lib/generated/values.ts --format esm --dts --sourcemap --clean",
+    "build": "tsup lib/index.ts lib/headless.ts lib/three.ts lib/client.ts lib/generated/values.ts --format esm --dts --sourcemap --clean && node scripts/build-cdn.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --exclude 'tests/visual/**'",
     "test:python": ".venv/bin/python -m pytest tests/python tests/conformance tests/review -q",
     "test:visual": "node scripts/visual-test.mjs",
+    "test:cdn": "node --use-env-proxy tests/cdn.browser.mjs",
     "generate:api": ".venv/bin/python scripts/generate-api.py",
     "dev": "vite --host 127.0.0.1",
     "kernel": ".venv/bin/python -m build123d_fiber"
@@ -76,6 +81,10 @@
     "tsup": "^8.5.0",
     "typescript": "^5.9.0",
     "vite": "^7.1.0",
-    "vitest": "^3.2.0"
+    "vitest": "^3.2.0",
+    "esbuild": "0.27.7"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
   }
 }

@@ -16,6 +16,8 @@ The final checks cover:
 | Visual regression matrix | 58 fixtures × 4 views = 232 screenshots |
 | Screenshot comparison | Zero changed pixels; zero browser errors |
 | npm package contents | Verified source, declarations, native service and documentation |
+| CDN browser module | Shared React hooks and context, native volume 24 → 60, visible geometry; zero browser errors |
+| Installed release tarball | JavaScript exports load; locked native kernel imports successfully |
 
 The native tests compare volume, area, bounding boxes, validity, topology and
 curve results against independently constructed build123d models. They exercise
@@ -30,6 +32,12 @@ updates, removals, error boundaries, and root isolation. The viewer checks
 orbiting, resizing, retained state, stale requests, error reporting, bearer
 headers and native RGBA transparency. Native colors and labels also survive
 tessellation, and explicit JSX metadata takes precedence.
+
+The dedicated CDN browser module is checked in Chromium using the actual pinned
+React module from jscdn. Both the CAD reconciler and ReactDOM update hook state;
+context changes a native box from 24 to 60 mm³, and the viewer displays its mesh.
+This check verifies visible pixels and saves before/after screenshots in
+`artifacts/cdn/`; it adds no screenshot baseline to the 232-image matrix.
 
 Visual fixtures include curves, sketches, primitives and sectors, booleans,
 extrusions, tapered extrusions, lofts, revolve, sweep, fillets, chamfers, hole

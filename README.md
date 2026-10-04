@@ -1,4 +1,4 @@
-# build123d-fiber
+# b123-fiber
 
 Build precise CAD models with React and build123d. JSX is compiled to a serializable
 plan, executed by **build123d 0.13.0 and OpenCascade 8**, then displayed in a Three.js
@@ -10,9 +10,52 @@ execution; the browser displays its tessellations. This package does not ship a
 browser WASM port of build123d. Dimensions use build123d units (millimeters by
 default), angles use degrees, and keyword names retain Python's `snake_case`.
 
+## Install from jscdn
+
+Releases are published as `@tscircuit/b123-fiber` to GitHub Packages and served
+through [jscdn](https://jscdn.tscircuit.com). Install the versioned tarball without
+a GitHub token:
+
+```sh
+npm install https://jscdn.tscircuit.com/@tscircuit/b123-fiber/0.1.0.tgz
+```
+
+The package includes the native service. Start it from your application's
+directory, allowing your application's browser origin:
+
+```sh
+uv run --project node_modules/@tscircuit/b123-fiber --frozen build123d-fiber-kernel --origin http://localhost:5173
+```
+
+For a browser without a bundler, use the dedicated CDN entry:
+
+```html
+<div id="app"></div>
+<script type="module">
+  import {
+    React, createDOMRoot, Build123dView, BuildPart, Box,
+  } from 'https://jscdn.tscircuit.com/@tscircuit/b123-fiber/0.1.0/dist/cdn.js'
+
+  createDOMRoot(document.getElementById('app')).render(
+    React.createElement(Build123dView, { style: { width: 760, height: 640 } },
+      React.createElement(BuildPart, null,
+        React.createElement(Box, { length: 20, width: 12, height: 6 }),
+      ),
+    ),
+  )
+</script>
+```
+
+This entry bundles Three.js, ReactDOM and the CAD reconciler, and uses one pinned
+React module. Import `React` and `createDOMRoot` from this entry so hooks share
+the same React instance. The normal package entrypoints continue to use the
+application's peer dependencies. The native geometry service is required for
+both installation methods. See [publishing](docs/PUBLISHING.md) for the release
+workflow and CDN URLs.
+
 ## Run the project
 
-Requires Node.js 22+ and Python 3.11–3.14. [uv](https://docs.astral.sh/uv/) is used
+Development requires Node.js 24+ and Python 3.11–3.14. [uv](https://docs.astral.sh/uv/) is used
 below; a standard Python virtual environment also works.
 
 ```sh
@@ -36,7 +79,7 @@ with the kernel process's filesystem permissions.
 ```tsx
 import {
   Build123dView, BuildPart, Box, Cylinder, Fillet, Mode, Axis, native, expr,
-} from 'build123d-fiber'
+} from '@tscircuit/b123-fiber'
 
 export function Mount() {
   return <Build123dView>
@@ -59,8 +102,8 @@ context, state, refs, effects and keyed updates.
 Compile and execute without a viewer:
 
 ```tsx
-import { Box, renderToBuild123dPlan } from 'build123d-fiber/headless'
-import { NativeClient } from 'build123d-fiber/client'
+import { Box, renderToBuild123dPlan } from '@tscircuit/b123-fiber/headless'
+import { NativeClient } from '@tscircuit/b123-fiber/client'
 
 const plan = renderToBuild123dPlan(<Box length={20} width={12} height={6} />)
 const client = new NativeClient()
@@ -106,6 +149,7 @@ npm test
 npm run test:python
 npm run build
 npm run test:visual
+npm run test:cdn
 ```
 
 Visual tests execute native CAD fixtures, inspect mesh data, render isometric,
@@ -119,9 +163,9 @@ The lockfile pins Chromium; screenshots use SwiftShader and DejaVu Sans.
 
 ## Architecture
 
-`build123d-fiber/headless` compiles synchronous React elements without loading
+`@tscircuit/b123-fiber/headless` compiles synchronous React elements without loading
 Three.js or the modeling kernel. The React reconciler supports live component
-updates. `build123d-fiber/client` handles native RPC. `build123d-fiber/three`
+updates. `@tscircuit/b123-fiber/client` handles native RPC. `@tscircuit/b123-fiber/three`
 contains mesh and camera helpers. `Build123dView` is exported from the main
 entrypoint. [Architecture and protocol](ARCHITECTURE.md) describe the
 plan and mesh formats.
