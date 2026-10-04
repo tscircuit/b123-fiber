@@ -54,6 +54,10 @@ regenerating the gallery assets.
 
 ## Deploy to Vercel
 
+The [live sandbox](https://temporary-racing-aurora-9ontiux.vercel.app) is hosted
+in the `tscircuit` Vercel team. Its existing project is connected to this GitHub
+repository: pushes to `main` deploy to production automatically.
+
 Import `tscircuit/b123-fiber` into Vercel with the **repository root** as the
 project root. The root `vercel.json` configures:
 

@@ -13,3 +13,4 @@ playwright-report/
 .playwright/
 .DS_Store
 exports/
+.env*
