@@ -1,0 +1,4685 @@
+{
+  "baselineKernel": "build123d 0.13.0 / OpenCascade",
+  "baselineChromium": "153.0.8010.12",
+  "threshold": 0,
+  "maxDiffPixels": 0,
+  "expectedScreenshots": 292,
+  "matched": 114,
+  "changed": 178,
+  "missing": 0,
+  "snapshots": [
+    {
+      "name": "airfoil-front.png",
+      "baselineSha256": "74f5a1b4c0a44fd71e4c33d47f0d4b857d5f67f2a8ff49c17f427b01480ecd2e",
+      "actualSha256": "ea5d948f00f8867fa2de96eb27a4ee0d7c2dc6b8e841b7cc35d875e1f2658af3",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 2,
+      "status": "changed",
+      "comparisonImage": "airfoil-front.png"
+    },
+    {
+      "name": "airfoil-iso.png",
+      "baselineSha256": "0511cbed2ba1baea6443cdb687cfa9957bd734d584ec293b0c82fa178b5288cd",
+      "actualSha256": "106059b4ff22779ab3bf70b4bbd0d4a5547b2b1d7cfe7e734d10e39e0c9211d9",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 2771,
+      "status": "changed",
+      "comparisonImage": "airfoil-iso.png"
+    },
+    {
+      "name": "airfoil-right.png",
+      "baselineSha256": "a34e714f7623be720574ec2ee04e8739932062e9623f72146e639c9b2e5641fd",
+      "actualSha256": "3492a5f5ed39f22371d877aa2e46f1c87f7b402febe8165467bd57f2f29ce658",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 25,
+      "status": "changed",
+      "comparisonImage": "airfoil-right.png"
+    },
+    {
+      "name": "airfoil-top.png",
+      "baselineSha256": "9a3de5588177bb28d6ff8142bbe0b0f3e1c58b979a6ab6f699b03c1d05d27974",
+      "actualSha256": "6e480c5b64f8268196868d3ee94e7ac2a390ec1c6cabb1133f0b0b70190b4c06",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 3004,
+      "status": "changed",
+      "comparisonImage": "airfoil-top.png"
+    },
+    {
+      "name": "bezier-front.png",
+      "baselineSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "actualSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "bezier-front.png"
+    },
+    {
+      "name": "bezier-iso.png",
+      "baselineSha256": "06b7087ed4f459de6bccfd4d0168cd0948206ddbf16d9594224bb1b8227dd37c",
+      "actualSha256": "89122c0e3198db403c0d039687dd987b621c393a7cb39ce012d2b13df7e4102c",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 790,
+      "status": "changed",
+      "comparisonImage": "bezier-iso.png"
+    },
+    {
+      "name": "bezier-right.png",
+      "baselineSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "actualSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "bezier-right.png"
+    },
+    {
+      "name": "bezier-top.png",
+      "baselineSha256": "53ddc26cd751dfc54143850183e1e412d497538833806ddf1e7cfe35c15735a6",
+      "actualSha256": "fa076e295604d3d8a73fc0cc711e6d089f0bc3cc933dfed2e94ae4156e698fdd",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 1241,
+      "status": "changed",
+      "comparisonImage": "bezier-top.png"
+    },
+    {
+      "name": "blend-curve-front.png",
+      "baselineSha256": "ea5d948f00f8867fa2de96eb27a4ee0d7c2dc6b8e841b7cc35d875e1f2658af3",
+      "actualSha256": "ea5d948f00f8867fa2de96eb27a4ee0d7c2dc6b8e841b7cc35d875e1f2658af3",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "blend-curve-front.png"
+    },
+    {
+      "name": "blend-curve-iso.png",
+      "baselineSha256": "07e09f836f3cd6f273f72ef32db06654e362af950d2fe449d099f7bc44c4856d",
+      "actualSha256": "6c694c5131f3511a1301d5207b98342d5b74093136fca32530e93a5b0b9e75a3",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 1306,
+      "status": "changed",
+      "comparisonImage": "blend-curve-iso.png"
+    },
+    {
+      "name": "blend-curve-right.png",
+      "baselineSha256": "ea5d948f00f8867fa2de96eb27a4ee0d7c2dc6b8e841b7cc35d875e1f2658af3",
+      "actualSha256": "ea5d948f00f8867fa2de96eb27a4ee0d7c2dc6b8e841b7cc35d875e1f2658af3",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "blend-curve-right.png"
+    },
+    {
+      "name": "blend-curve-top.png",
+      "baselineSha256": "f95fb4c873b6033fca42199f9efc88f9df0ca623aadd1729edaf90ae0ce6ff21",
+      "actualSha256": "d33e1d0dcc9a1cad0eaf7c6c8f2b69258ebf4ab88e8e4d50c183950ee64ac6d6",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 1985,
+      "status": "changed",
+      "comparisonImage": "blend-curve-top.png"
+    },
+    {
+      "name": "box-front.png",
+      "baselineSha256": "0c5e1ec5630e4ec2993e042d19fd578ea2373ec41807b3e47ce4821655f67293",
+      "actualSha256": "0c5e1ec5630e4ec2993e042d19fd578ea2373ec41807b3e47ce4821655f67293",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "box-front.png"
+    },
+    {
+      "name": "box-iso.png",
+      "baselineSha256": "6a4389a2585602533745bcce3f4337440682089aafff16bcec2a392105b28530",
+      "actualSha256": "6a4389a2585602533745bcce3f4337440682089aafff16bcec2a392105b28530",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "box-iso.png"
+    },
+    {
+      "name": "box-right.png",
+      "baselineSha256": "0d058314d1073cc0f256b1d330cba4120b9a4417e28d00bd572bf43e8d3c60f2",
+      "actualSha256": "0d058314d1073cc0f256b1d330cba4120b9a4417e28d00bd572bf43e8d3c60f2",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "box-right.png"
+    },
+    {
+      "name": "box-top.png",
+      "baselineSha256": "25b0075b74737bdb925105b9948f42511de56a914246d9b60c9c545c447e1ae8",
+      "actualSha256": "25b0075b74737bdb925105b9948f42511de56a914246d9b60c9c545c447e1ae8",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "box-top.png"
+    },
+    {
+      "name": "brake-formed-front.png",
+      "baselineSha256": "8293bd011604b4ad4295f7b72195bca01fc8ec61f3b0a2ff4a91b9d7136793cb",
+      "actualSha256": "9c1341893350b014b3589e52509a6962404c8a837ccc5ec342ebd8e58f5ab13b",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 296,
+      "status": "changed",
+      "comparisonImage": "brake-formed-front.png"
+    },
+    {
+      "name": "brake-formed-iso.png",
+      "baselineSha256": "6abf41a51c8f0fba5293e0e152e046fc831f59c0eeeb0ca26efd4a68f050cb8e",
+      "actualSha256": "8b0831a07bd7c088ffbc21a86b5b07a8c2715e0685591fe74672979611a93f26",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 213,
+      "status": "changed",
+      "comparisonImage": "brake-formed-iso.png"
+    },
+    {
+      "name": "brake-formed-right.png",
+      "baselineSha256": "01e1e0410ef8e9463fd7a4372bd4cd28b184d915a60e830ecc4babe712c8298f",
+      "actualSha256": "01e1e0410ef8e9463fd7a4372bd4cd28b184d915a60e830ecc4babe712c8298f",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "brake-formed-right.png"
+    },
+    {
+      "name": "brake-formed-top.png",
+      "baselineSha256": "57e18fbe199ead65ea9c5f71ea555470f910f33b7c172cb45d622664176c7eaf",
+      "actualSha256": "850aa7b64eacdda9a1db652607eb52519030cfc29d155e05d9ab26faad16faa4",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 386,
+      "status": "changed",
+      "comparisonImage": "brake-formed-top.png"
+    },
+    {
+      "name": "center-arc-front.png",
+      "baselineSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "actualSha256": "680123c54967933ae1800d19093a19ffe1fa59ca70ad7179c10af1397524e740",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 2,
+      "status": "changed",
+      "comparisonImage": "center-arc-front.png"
+    },
+    {
+      "name": "center-arc-iso.png",
+      "baselineSha256": "e8208c65019a1d93d6340eadf64034ccd0bd32e5b00aaf43237058ffddb0b5e4",
+      "actualSha256": "10f696a8990596cd9f1abfeddb8bbf979993694f130994ce20e980ade1a07e9e",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 1001,
+      "status": "changed",
+      "comparisonImage": "center-arc-iso.png"
+    },
+    {
+      "name": "center-arc-right.png",
+      "baselineSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "actualSha256": "680123c54967933ae1800d19093a19ffe1fa59ca70ad7179c10af1397524e740",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 2,
+      "status": "changed",
+      "comparisonImage": "center-arc-right.png"
+    },
+    {
+      "name": "center-arc-top.png",
+      "baselineSha256": "3f1174e76c4d75a87ada3600e80c5388b4678b5c7c58c8fc4a4e9f6deef868d9",
+      "actualSha256": "49d0d54cf95838945dc8f0ac1d4eeb09cbe630de69dacd9f74fe2fc83f72d82e",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 2066,
+      "status": "changed",
+      "comparisonImage": "center-arc-top.png"
+    },
+    {
+      "name": "chamfer-front.png",
+      "baselineSha256": "68d602d20bf2c05822e6e0979caa96f5f0c425b3384bef5b040f0c060ccbde57",
+      "actualSha256": "026f450e2ac40e76e3fd87f9128f2c1fdadc13d174d3f4cf9f1ed38b5699680e",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 1,
+      "status": "changed",
+      "comparisonImage": "chamfer-front.png"
+    },
+    {
+      "name": "chamfer-iso.png",
+      "baselineSha256": "de317da6b470532dfd6de9c20b699fb246d53f8621da0bed51ea76f12afd5baf",
+      "actualSha256": "de317da6b470532dfd6de9c20b699fb246d53f8621da0bed51ea76f12afd5baf",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "chamfer-iso.png"
+    },
+    {
+      "name": "chamfer-right.png",
+      "baselineSha256": "2e166733e26322f511e0fa926e974c0c891e3c1260c0815999ac5b5849fce7b4",
+      "actualSha256": "2e166733e26322f511e0fa926e974c0c891e3c1260c0815999ac5b5849fce7b4",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "chamfer-right.png"
+    },
+    {
+      "name": "chamfer-top.png",
+      "baselineSha256": "65c8685e5a70ae2e606244890f7d08f1e964e36f8f8e71600db98e0c498588d4",
+      "actualSha256": "65c8685e5a70ae2e606244890f7d08f1e964e36f8f8e71600db98e0c498588d4",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "chamfer-top.png"
+    },
+    {
+      "name": "circle-front.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "circle-front.png"
+    },
+    {
+      "name": "circle-iso.png",
+      "baselineSha256": "c9d5d01ff557af096daa61133b6b74c65b819814e553949f51ba1df7d2d7ac72",
+      "actualSha256": "9b62b06a3efc39da79ff941e146551ff3a289e621ac1cb851ea4d11f6b5b0f5a",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 521,
+      "status": "changed",
+      "comparisonImage": "circle-iso.png"
+    },
+    {
+      "name": "circle-right.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "circle-right.png"
+    },
+    {
+      "name": "circle-top.png",
+      "baselineSha256": "7927db40cdeb3f21d5ea933d0762a3e773e990ea00523bd65852097f99aba86c",
+      "actualSha256": "40de3b62e44ef18cb7014f2da1e4e445adcaba2c1b97b19b06424fd6ab1621ba",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 1241,
+      "status": "changed",
+      "comparisonImage": "circle-top.png"
+    },
+    {
+      "name": "closed-polyline-front.png",
+      "baselineSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "actualSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "closed-polyline-front.png"
+    },
+    {
+      "name": "closed-polyline-iso.png",
+      "baselineSha256": "09f64e67b6c22bf7ea1e4fed7c299859455c2be679d3b4647bdf13a1730c051d",
+      "actualSha256": "09f64e67b6c22bf7ea1e4fed7c299859455c2be679d3b4647bdf13a1730c051d",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "closed-polyline-iso.png"
+    },
+    {
+      "name": "closed-polyline-right.png",
+      "baselineSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "actualSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "closed-polyline-right.png"
+    },
+    {
+      "name": "closed-polyline-top.png",
+      "baselineSha256": "d9a930848186c2be95d7df24076178fd2860047248b94e4b4d67159d66462875",
+      "actualSha256": "d9a930848186c2be95d7df24076178fd2860047248b94e4b4d67159d66462875",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "closed-polyline-top.png"
+    },
+    {
+      "name": "compositional-extrude-front.png",
+      "baselineSha256": "cd6ac519f02aade26638b647dcd57f95ec1f85732dd739f5a33037dd2b7c9d44",
+      "actualSha256": "14a9636b007bdfa0299fae5def914f5c8716ea907722f0a5dd2c0126682a9204",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 33410,
+      "status": "changed",
+      "comparisonImage": "compositional-extrude-front.png"
+    },
+    {
+      "name": "compositional-extrude-iso.png",
+      "baselineSha256": "51423686f7a5efb246973a1b3d966d44e4416ba96c2cb082f33e75d77ef4d65f",
+      "actualSha256": "acf285dd0bdc8a5c6463e4e07da9c1a0675e310fa4eb8c378ad608cb1d07df6e",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 19611,
+      "status": "changed",
+      "comparisonImage": "compositional-extrude-iso.png"
+    },
+    {
+      "name": "compositional-extrude-right.png",
+      "baselineSha256": "d6bad20c8e01f72d2db188aaae6d4fadca72f6ab590995b58552034862d6d098",
+      "actualSha256": "e8b5f3519af9a1050ee69f32496f175899a80767369e97c1af48abcfbe460ec8",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 44347,
+      "status": "changed",
+      "comparisonImage": "compositional-extrude-right.png"
+    },
+    {
+      "name": "compositional-extrude-top.png",
+      "baselineSha256": "76525c97bb4f9205a5246a4ff3d74dccdb4403b88698d72c0d4a67fa0badb5af",
+      "actualSha256": "3b1f0687192efc177cb796a6b1dbf28453117f75c9344b6c457a4a22322e3379",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 1742,
+      "status": "changed",
+      "comparisonImage": "compositional-extrude-top.png"
+    },
+    {
+      "name": "compositional-fillet-front.png",
+      "baselineSha256": "a8c76030322b09eed404638e154ee2354a43a1e005b8588a7a94726084da7ff4",
+      "actualSha256": "76abc833590250808e0acaf282295bcb2c6d8744214c9dcb42a4e931ac6af324",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 25617,
+      "status": "changed",
+      "comparisonImage": "compositional-fillet-front.png"
+    },
+    {
+      "name": "compositional-fillet-iso.png",
+      "baselineSha256": "3f6948ad9e962f2b8ebad9a0733ac0de58ec2f92191bd4fc6f79b4911f54a8ad",
+      "actualSha256": "2e605b97a001e2cf1d3a4f023ea494da88630dca80ea4b3109d46361b07a5810",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 20099,
+      "status": "changed",
+      "comparisonImage": "compositional-fillet-iso.png"
+    },
+    {
+      "name": "compositional-fillet-right.png",
+      "baselineSha256": "fe33945cdf6fa3d2083ecb98c8a705b768fbd532e8f3ad95d4e32fa73af4ebf1",
+      "actualSha256": "a8d217585c9e242b17975dd33fa6fe6b59057a83fe1cbd37562cf7478674782c",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 32650,
+      "status": "changed",
+      "comparisonImage": "compositional-fillet-right.png"
+    },
+    {
+      "name": "compositional-fillet-top.png",
+      "baselineSha256": "b21bcaf1a48fe91afbfed29523a0e876ca95784e4a3926c7ebf1283cf72802d0",
+      "actualSha256": "42d40e12f569a332dae914ee8438bc1d8c214d80126411f42c39652f61e5bbee",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 26442,
+      "status": "changed",
+      "comparisonImage": "compositional-fillet-top.png"
+    },
+    {
+      "name": "compositional-section-front.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "compositional-section-front.png"
+    },
+    {
+      "name": "compositional-section-iso.png",
+      "baselineSha256": "5e84c67ee4ab38f74f802db495e4ec2c82ed70f2266999fdc8c42d475faa94cc",
+      "actualSha256": "5e84c67ee4ab38f74f802db495e4ec2c82ed70f2266999fdc8c42d475faa94cc",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "compositional-section-iso.png"
+    },
+    {
+      "name": "compositional-section-right.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "compositional-section-right.png"
+    },
+    {
+      "name": "compositional-section-top.png",
+      "baselineSha256": "4e26dd4911dbb40a0470ce326970afe5f8d066a6b70594aff68d82b1e0cb703d",
+      "actualSha256": "4e26dd4911dbb40a0470ce326970afe5f8d066a6b70594aff68d82b1e0cb703d",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "compositional-section-top.png"
+    },
+    {
+      "name": "cone-front.png",
+      "baselineSha256": "fbf81785c1c373f4d5f4d7709b747baf7ddecdf4c1335752ad2676a40394d8b0",
+      "actualSha256": "5e031ceaa06a78fd2cae47b48b22a4952cfb4c380c718eb2671379aa853cb57b",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 42564,
+      "status": "changed",
+      "comparisonImage": "cone-front.png"
+    },
+    {
+      "name": "cone-iso.png",
+      "baselineSha256": "c4056fc2b19b70ec5ebd0d937b18553ce2c952bf0ef5c3dcca195f9992aeb55b",
+      "actualSha256": "8022b2fdc5bd1072b45d279a08e1e6cc9440e9408fca21c746bf8596779ff315",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 23036,
+      "status": "changed",
+      "comparisonImage": "cone-iso.png"
+    },
+    {
+      "name": "cone-right.png",
+      "baselineSha256": "f86f8daf8e4765791982b5059b227fc2811a5fbd11dd0f4e063b68f1781d669e",
+      "actualSha256": "d3010f80ecc26bee708076ad1e7684a45a88c153abb7e7222102a37433cc3b09",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 70421,
+      "status": "changed",
+      "comparisonImage": "cone-right.png"
+    },
+    {
+      "name": "cone-top.png",
+      "baselineSha256": "faba0e0a3d9ac78060d398791ca3c61124c8bf2f3392724a81e813a5f1d2c5a4",
+      "actualSha256": "0fc283832b0d3f81d703a74b8be6fd87699df00e94c8204cfda25d95198f4808",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 44708,
+      "status": "changed",
+      "comparisonImage": "cone-top.png"
+    },
+    {
+      "name": "constrained-arcs-front.png",
+      "baselineSha256": "ea5d948f00f8867fa2de96eb27a4ee0d7c2dc6b8e841b7cc35d875e1f2658af3",
+      "actualSha256": "562ce7847c07099984f5adb1abf6f6bb0743baafc6b2fe03e6e9726810f02eb2",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 1,
+      "status": "changed",
+      "comparisonImage": "constrained-arcs-front.png"
+    },
+    {
+      "name": "constrained-arcs-iso.png",
+      "baselineSha256": "f125734e48587f174fdaf1104f3f77bd96a01a736c620d846ce99d14989488da",
+      "actualSha256": "cfbbfb6ebe34aa3e05bfa3e48e298da76a4c375baea540753e86569c9c0d5531",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 1618,
+      "status": "changed",
+      "comparisonImage": "constrained-arcs-iso.png"
+    },
+    {
+      "name": "constrained-arcs-right.png",
+      "baselineSha256": "562ce7847c07099984f5adb1abf6f6bb0743baafc6b2fe03e6e9726810f02eb2",
+      "actualSha256": "61e26a8ebeb2da8a8d766ee3788999cbf6356481d1d69d801a7ae1ff21bf3aad",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 2,
+      "status": "changed",
+      "comparisonImage": "constrained-arcs-right.png"
+    },
+    {
+      "name": "constrained-arcs-top.png",
+      "baselineSha256": "75470f4209116da9b6287d5a2aa060661ac97a80e0cfc5ed35cdc91b18f5062a",
+      "actualSha256": "b35de1d3edd2af1e3c5e19350a7b812c42a4415234688fc5024529089dd47722",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 2558,
+      "status": "changed",
+      "comparisonImage": "constrained-arcs-top.png"
+    },
+    {
+      "name": "constrained-lines-front.png",
+      "baselineSha256": "ea5d948f00f8867fa2de96eb27a4ee0d7c2dc6b8e841b7cc35d875e1f2658af3",
+      "actualSha256": "ea5d948f00f8867fa2de96eb27a4ee0d7c2dc6b8e841b7cc35d875e1f2658af3",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "constrained-lines-front.png"
+    },
+    {
+      "name": "constrained-lines-iso.png",
+      "baselineSha256": "2d10d49dfd51d00580898f81a4c35751c98d25aeb649f539a45a9f66d1ab0200",
+      "actualSha256": "2d10d49dfd51d00580898f81a4c35751c98d25aeb649f539a45a9f66d1ab0200",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "constrained-lines-iso.png"
+    },
+    {
+      "name": "constrained-lines-right.png",
+      "baselineSha256": "6a8f55668bab4ca52dfef30ce055ccf9c2b72cb7232f5a4863657a632eee14d4",
+      "actualSha256": "6a8f55668bab4ca52dfef30ce055ccf9c2b72cb7232f5a4863657a632eee14d4",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "constrained-lines-right.png"
+    },
+    {
+      "name": "constrained-lines-top.png",
+      "baselineSha256": "ff4f4e4adfb8b6e3a5f7d720be08f95ca70c580f8090371c0652091ab11ddf3e",
+      "actualSha256": "ff4f4e4adfb8b6e3a5f7d720be08f95ca70c580f8090371c0652091ab11ddf3e",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "constrained-lines-top.png"
+    },
+    {
+      "name": "counterbore-front.png",
+      "baselineSha256": "ae447232ffc90115786fdc88fc408c43056e12578dcf872501174beb6a5bd7e1",
+      "actualSha256": "ae447232ffc90115786fdc88fc408c43056e12578dcf872501174beb6a5bd7e1",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "counterbore-front.png"
+    },
+    {
+      "name": "counterbore-iso.png",
+      "baselineSha256": "48fc83f6fd0a26c45b4b15d09138dfdf51424da88b80d5c4dc9a3b648aa6c5ba",
+      "actualSha256": "efaae62dc7f34e74072a4c0bd40874dcab25cb5a3363d47607b4e2366ad8943e",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 2706,
+      "status": "changed",
+      "comparisonImage": "counterbore-iso.png"
+    },
+    {
+      "name": "counterbore-right.png",
+      "baselineSha256": "f28195dfeb08d3d23fae37ea711a0934af0f6a47aab8164519d3be05bfae8001",
+      "actualSha256": "f28195dfeb08d3d23fae37ea711a0934af0f6a47aab8164519d3be05bfae8001",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "counterbore-right.png"
+    },
+    {
+      "name": "counterbore-top.png",
+      "baselineSha256": "ba43708a19c5d0f132e3f64b6f7dde2723ce2bed1a3a1cbbcc7283fe7b72f3f2",
+      "actualSha256": "bcefeb0ff737f9b915bcf28fbd128f783dadc62e8ccd01db425e6496387e11ab",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 632,
+      "status": "changed",
+      "comparisonImage": "counterbore-top.png"
+    },
+    {
+      "name": "countersink-front.png",
+      "baselineSha256": "ae447232ffc90115786fdc88fc408c43056e12578dcf872501174beb6a5bd7e1",
+      "actualSha256": "ae447232ffc90115786fdc88fc408c43056e12578dcf872501174beb6a5bd7e1",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "countersink-front.png"
+    },
+    {
+      "name": "countersink-iso.png",
+      "baselineSha256": "191f325b47743adb482a12020a0b79157a45e480533a8af94aaeae86de573bdd",
+      "actualSha256": "3bc4e3f726549fb7e85bc9bf20faa9d15072aae1a7595d90eb5f58a230a5d770",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 6470,
+      "status": "changed",
+      "comparisonImage": "countersink-iso.png"
+    },
+    {
+      "name": "countersink-right.png",
+      "baselineSha256": "f28195dfeb08d3d23fae37ea711a0934af0f6a47aab8164519d3be05bfae8001",
+      "actualSha256": "f28195dfeb08d3d23fae37ea711a0934af0f6a47aab8164519d3be05bfae8001",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "countersink-right.png"
+    },
+    {
+      "name": "countersink-top.png",
+      "baselineSha256": "6bca799bf2198ea17f4240fcd1a43f845bf01fd36b06d46acd753ce3c902bc1e",
+      "actualSha256": "0220799161085cf022f8f7358a6ee9aa46c48bc759dabf1225a96208aa9b32ad",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 12515,
+      "status": "changed",
+      "comparisonImage": "countersink-top.png"
+    },
+    {
+      "name": "cylinder-front.png",
+      "baselineSha256": "9f02e81aa408ee7d1fe42433fdb9e1189d50a919e6473692ed17785312ad8a2e",
+      "actualSha256": "147ac6c60bf12567aa075eb017e9cf9b4b54869f04612d101ccc002c0d338add",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 72259,
+      "status": "changed",
+      "comparisonImage": "cylinder-front.png"
+    },
+    {
+      "name": "cylinder-iso.png",
+      "baselineSha256": "cdfd678846cf6fe3503cb18825e4c264febcf9caae4580f393672a622f768ee8",
+      "actualSha256": "43c671ea2c52e283ab174cbd6d82d1e9fcc746796211e1cd161785b0dfe51efa",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 21319,
+      "status": "changed",
+      "comparisonImage": "cylinder-iso.png"
+    },
+    {
+      "name": "cylinder-right.png",
+      "baselineSha256": "2d134b314217f4f00a35f14c0358bfb77e34868790873070097a2104cf630925",
+      "actualSha256": "143ea227aa6c38d83297d17040ca12c4e912e0cd4632a084950d9167b25f0970",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 72465,
+      "status": "changed",
+      "comparisonImage": "cylinder-right.png"
+    },
+    {
+      "name": "cylinder-top.png",
+      "baselineSha256": "2b1de7f3b6f4f489ff96f261fd97ce8267b348241285bdca42b7da572bbf1bd4",
+      "actualSha256": "40de3b62e44ef18cb7014f2da1e4e445adcaba2c1b97b19b06424fd6ab1621ba",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 1221,
+      "status": "changed",
+      "comparisonImage": "cylinder-top.png"
+    },
+    {
+      "name": "dimension-line-front.png",
+      "baselineSha256": "3afd500c6721f0ccc76d1d8a6a5128d6e998516b05435f851ed8f7a9aae46679",
+      "actualSha256": "3afd500c6721f0ccc76d1d8a6a5128d6e998516b05435f851ed8f7a9aae46679",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "dimension-line-front.png"
+    },
+    {
+      "name": "dimension-line-iso.png",
+      "baselineSha256": "52a29451d3acf751d62260f9998fa5402463aeb9aa3f0eea4b0585c530fd277b",
+      "actualSha256": "214bb567edd86cc527a9b5022fd5412e3178a6e26e3d6937ff79892985665093",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 611,
+      "status": "changed",
+      "comparisonImage": "dimension-line-iso.png"
+    },
+    {
+      "name": "dimension-line-right.png",
+      "baselineSha256": "6346ac597e0e13c872334bee90a641b4efdced86ce4c478e93bb8289fabaf44a",
+      "actualSha256": "982f7df27d590b1f5e5e5e385efec040ec9b3e96c072f1b453dd4eacf2f879eb",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 1,
+      "status": "changed",
+      "comparisonImage": "dimension-line-right.png"
+    },
+    {
+      "name": "dimension-line-top.png",
+      "baselineSha256": "e9208015424ed76c3101b2e78b8da4463c7e93582b371759b2fba2e1b452a856",
+      "actualSha256": "2f99f6839cc5974ef5fd89802ca911a61ab6753a73f68ab8aebdbcd469dcc6bf",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 639,
+      "status": "changed",
+      "comparisonImage": "dimension-line-top.png"
+    },
+    {
+      "name": "double-tangent-front.png",
+      "baselineSha256": "ea5d948f00f8867fa2de96eb27a4ee0d7c2dc6b8e841b7cc35d875e1f2658af3",
+      "actualSha256": "ea5d948f00f8867fa2de96eb27a4ee0d7c2dc6b8e841b7cc35d875e1f2658af3",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "double-tangent-front.png"
+    },
+    {
+      "name": "double-tangent-iso.png",
+      "baselineSha256": "df4afad5f593f2a16238efd7281eb2d3d7645947e499b1d449f25b8ed7bec361",
+      "actualSha256": "cc5a14d31ef96b194774b7eea8f02f2a16039e8220935c996bcc97b0e3fde62e",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 800,
+      "status": "changed",
+      "comparisonImage": "double-tangent-iso.png"
+    },
+    {
+      "name": "double-tangent-right.png",
+      "baselineSha256": "ea5d948f00f8867fa2de96eb27a4ee0d7c2dc6b8e841b7cc35d875e1f2658af3",
+      "actualSha256": "ea5d948f00f8867fa2de96eb27a4ee0d7c2dc6b8e841b7cc35d875e1f2658af3",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "double-tangent-right.png"
+    },
+    {
+      "name": "double-tangent-top.png",
+      "baselineSha256": "f0c7fbf2a05f78cb9a5d4bafb953c2c2a43a3d2d43ec62b96035fc73a35df038",
+      "actualSha256": "23850f06f4c1fc77cd912de121792bb60efccab5e2ad53c253e19f91b0e93342",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 1765,
+      "status": "changed",
+      "comparisonImage": "double-tangent-top.png"
+    },
+    {
+      "name": "draft-front.png",
+      "baselineSha256": "b811969ff9f925dffdf091e03739625270872b9ec0a9308db6a71d956c29bc07",
+      "actualSha256": "b811969ff9f925dffdf091e03739625270872b9ec0a9308db6a71d956c29bc07",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "draft-front.png"
+    },
+    {
+      "name": "draft-iso.png",
+      "baselineSha256": "77242aef2e872c38e05146182e412410ce8650df148fff34436429a5faafb4d9",
+      "actualSha256": "77242aef2e872c38e05146182e412410ce8650df148fff34436429a5faafb4d9",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "draft-iso.png"
+    },
+    {
+      "name": "draft-right.png",
+      "baselineSha256": "bba04480dbf229731ff0ec90c9d215a5258251dd71e37a471f2603135d51732f",
+      "actualSha256": "bba04480dbf229731ff0ec90c9d215a5258251dd71e37a471f2603135d51732f",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "draft-right.png"
+    },
+    {
+      "name": "draft-top.png",
+      "baselineSha256": "8bc78882e4d6357bc29c9f5f66a8bd674aafa4bf386dbe3f83f4a368b5fd1043",
+      "actualSha256": "8bc78882e4d6357bc29c9f5f66a8bd674aafa4bf386dbe3f83f4a368b5fd1043",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "draft-top.png"
+    },
+    {
+      "name": "electronics-front.png",
+      "baselineSha256": "21b0632c9750a98ee920751dc27e37ff39b2a1514187ffe8b68bf3ecee42d42b",
+      "actualSha256": "21b0632c9750a98ee920751dc27e37ff39b2a1514187ffe8b68bf3ecee42d42b",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "electronics-front.png"
+    },
+    {
+      "name": "electronics-iso.png",
+      "baselineSha256": "fb8fa68b7a177e3cfdf95f58ffefcfde84aacbb3679d48e71f7754e46fadd8ea",
+      "actualSha256": "c4ad20c3d17de39120394686adbeab1a2f98da14562083e8a328b2e366757250",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 207,
+      "status": "changed",
+      "comparisonImage": "electronics-iso.png"
+    },
+    {
+      "name": "electronics-right.png",
+      "baselineSha256": "5faa2d5db0634a65720385fff9d86b6d3c93658d4a133b27f548e106b24b7c64",
+      "actualSha256": "5faa2d5db0634a65720385fff9d86b6d3c93658d4a133b27f548e106b24b7c64",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "electronics-right.png"
+    },
+    {
+      "name": "electronics-top.png",
+      "baselineSha256": "deb33ea7029686d5f98a605f6625b16c7d756ce2c8fd6a0589d1c05ff7a014ea",
+      "actualSha256": "deb33ea7029686d5f98a605f6625b16c7d756ce2c8fd6a0589d1c05ff7a014ea",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "electronics-top.png"
+    },
+    {
+      "name": "ellipse-front.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "ellipse-front.png"
+    },
+    {
+      "name": "ellipse-iso.png",
+      "baselineSha256": "ad9ec7d054af30d33ca747a43ce9c668524aae2048acf5cd9f3c4339929174a4",
+      "actualSha256": "17bb6cb4ff3a0cee16b0dd22d6abd072fe133f4003a3b54fd2b08d8b9fd903f6",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 403,
+      "status": "changed",
+      "comparisonImage": "ellipse-iso.png"
+    },
+    {
+      "name": "ellipse-right.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "ecdea1d118048178017382a919c26aca13ec3bc1647ec231dc5d11743e41adda",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 1,
+      "status": "changed",
+      "comparisonImage": "ellipse-right.png"
+    },
+    {
+      "name": "ellipse-top.png",
+      "baselineSha256": "7368cf42ea430ff77dd36d355b477d71d87fafcb36d0b540224dd5d12058d095",
+      "actualSha256": "01ce5bc79a4ed52374c83be56fe5974f9320341464dc248ed56399d402d110b7",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 944,
+      "status": "changed",
+      "comparisonImage": "ellipse-top.png"
+    },
+    {
+      "name": "extension-line-front.png",
+      "baselineSha256": "d28dda4fc792c080f6c204424d15350124fba3384ae4c9fdf5209d29604c51f6",
+      "actualSha256": "62c3a8948758f5616363bcc2b54c6c6ad131348e054c3f99030a5b633de85770",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 1,
+      "status": "changed",
+      "comparisonImage": "extension-line-front.png"
+    },
+    {
+      "name": "extension-line-iso.png",
+      "baselineSha256": "5a744f084cabdf10be05f3448722cf12a1a09a59fdfd06c9f985ba212a47f47d",
+      "actualSha256": "bb91feccdeab236634a1b783de409c38f24bcb6ddcf69d0f5d1ac0e158f5c415",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 299,
+      "status": "changed",
+      "comparisonImage": "extension-line-iso.png"
+    },
+    {
+      "name": "extension-line-right.png",
+      "baselineSha256": "d3ce55da80fd29eafca3e2ca56a8ef72f280f51abd123788647327fbd5e32a62",
+      "actualSha256": "d3ce55da80fd29eafca3e2ca56a8ef72f280f51abd123788647327fbd5e32a62",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "extension-line-right.png"
+    },
+    {
+      "name": "extension-line-top.png",
+      "baselineSha256": "fdaa707124ce40fd82774f551f44c8efeabd5d38b8c7c78b8fbebbd79f857654",
+      "actualSha256": "c98256333a2b0e3dc2cb2220ea782eafc0673462886ff2a15cd5e525e7973b5f",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 403,
+      "status": "changed",
+      "comparisonImage": "extension-line-top.png"
+    },
+    {
+      "name": "extrude-both-front.png",
+      "baselineSha256": "68aa10b833703bccc9de7ad2ed8e774ab4da1b8ab2706f4595e70f395c26b73e",
+      "actualSha256": "5bd862fe54c706a70f1ba832c57ef84e69dbd8f252bf420516b174d80e7708c0",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 8773,
+      "status": "changed",
+      "comparisonImage": "extrude-both-front.png"
+    },
+    {
+      "name": "extrude-both-iso.png",
+      "baselineSha256": "112adecfd48102ca5331a210513180aac83d32ed63e2ce94183f82166389ad7d",
+      "actualSha256": "ddfe0925ffbace7025367b9499fc6e2549327083bd3a82cd33d1c5f3451520c1",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 6717,
+      "status": "changed",
+      "comparisonImage": "extrude-both-iso.png"
+    },
+    {
+      "name": "extrude-both-right.png",
+      "baselineSha256": "e2a9e8981c0edc9aabd16e9223cfe85f0d94e5a4d732b9156ba289fb1d654415",
+      "actualSha256": "e5d15aa8864676ec8a9b4eb6a26f84376806364f159c79bc7b6f294eb6fcab59",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 29567,
+      "status": "changed",
+      "comparisonImage": "extrude-both-right.png"
+    },
+    {
+      "name": "extrude-both-top.png",
+      "baselineSha256": "887d6f538b8d401ef7f72f02e0ae57f562cf53fbde4da9aba0cca18c84e3d8bd",
+      "actualSha256": "56344582497e10f0a9d11f47f8d9f98fb0d06c7f48e78de952d93ea6a9f2cbe4",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 249,
+      "status": "changed",
+      "comparisonImage": "extrude-both-top.png"
+    },
+    {
+      "name": "extrude-circle-front.png",
+      "baselineSha256": "df7347ebb65d723570712d7e050517c2c3fd582487893e5ca5550d275468eec0",
+      "actualSha256": "ef43164c2b8f6a61bf591aeaf6502412191935acfc66c5c0e10fddcd655c2996",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 73260,
+      "status": "changed",
+      "comparisonImage": "extrude-circle-front.png"
+    },
+    {
+      "name": "extrude-circle-iso.png",
+      "baselineSha256": "8ca8744a673cc5cf2f986745c9bb04e112cc61961fc8505559e88ad8ef77d3ef",
+      "actualSha256": "3149ef57c84a39472ca701707d7d88a04093887fc46810523848ca8185673e70",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 21322,
+      "status": "changed",
+      "comparisonImage": "extrude-circle-iso.png"
+    },
+    {
+      "name": "extrude-circle-right.png",
+      "baselineSha256": "ad056485a9bd118ce791cb5872da320d1117bc02f268b25d33dc4a5d9d2b941c",
+      "actualSha256": "143ea227aa6c38d83297d17040ca12c4e912e0cd4632a084950d9167b25f0970",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 72466,
+      "status": "changed",
+      "comparisonImage": "extrude-circle-right.png"
+    },
+    {
+      "name": "extrude-circle-top.png",
+      "baselineSha256": "2b1de7f3b6f4f489ff96f261fd97ce8267b348241285bdca42b7da572bbf1bd4",
+      "actualSha256": "40de3b62e44ef18cb7014f2da1e4e445adcaba2c1b97b19b06424fd6ab1621ba",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 1221,
+      "status": "changed",
+      "comparisonImage": "extrude-circle-top.png"
+    },
+    {
+      "name": "extrude-ring-front.png",
+      "baselineSha256": "cd6ac519f02aade26638b647dcd57f95ec1f85732dd739f5a33037dd2b7c9d44",
+      "actualSha256": "14a9636b007bdfa0299fae5def914f5c8716ea907722f0a5dd2c0126682a9204",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 33410,
+      "status": "changed",
+      "comparisonImage": "extrude-ring-front.png"
+    },
+    {
+      "name": "extrude-ring-iso.png",
+      "baselineSha256": "51423686f7a5efb246973a1b3d966d44e4416ba96c2cb082f33e75d77ef4d65f",
+      "actualSha256": "acf285dd0bdc8a5c6463e4e07da9c1a0675e310fa4eb8c378ad608cb1d07df6e",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 19611,
+      "status": "changed",
+      "comparisonImage": "extrude-ring-iso.png"
+    },
+    {
+      "name": "extrude-ring-right.png",
+      "baselineSha256": "d6bad20c8e01f72d2db188aaae6d4fadca72f6ab590995b58552034862d6d098",
+      "actualSha256": "e8b5f3519af9a1050ee69f32496f175899a80767369e97c1af48abcfbe460ec8",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 44347,
+      "status": "changed",
+      "comparisonImage": "extrude-ring-right.png"
+    },
+    {
+      "name": "extrude-ring-top.png",
+      "baselineSha256": "76525c97bb4f9205a5246a4ff3d74dccdb4403b88698d72c0d4a67fa0badb5af",
+      "actualSha256": "3b1f0687192efc177cb796a6b1dbf28453117f75c9344b6c457a4a22322e3379",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 1742,
+      "status": "changed",
+      "comparisonImage": "extrude-ring-top.png"
+    },
+    {
+      "name": "extrude-taper-front.png",
+      "baselineSha256": "2c2f364bf808f88e8e4f5d1124adc7c9cedb153ae79b35a06960e03f7e24d0ad",
+      "actualSha256": "2c2f364bf808f88e8e4f5d1124adc7c9cedb153ae79b35a06960e03f7e24d0ad",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "extrude-taper-front.png"
+    },
+    {
+      "name": "extrude-taper-iso.png",
+      "baselineSha256": "be26a438621b1278b6841b8cb3eafbf580c3d1e43e4775c10389491e3fae5914",
+      "actualSha256": "be26a438621b1278b6841b8cb3eafbf580c3d1e43e4775c10389491e3fae5914",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "extrude-taper-iso.png"
+    },
+    {
+      "name": "extrude-taper-right.png",
+      "baselineSha256": "5d5359ef6b0e91bff79980b49a13953fde6e68d6e18c0a8a8ddf1bd849b51709",
+      "actualSha256": "5d5359ef6b0e91bff79980b49a13953fde6e68d6e18c0a8a8ddf1bd849b51709",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "extrude-taper-right.png"
+    },
+    {
+      "name": "extrude-taper-top.png",
+      "baselineSha256": "889d919925c7541ef644498f8f951aa7af338a14fdcd207436fb147103594c15",
+      "actualSha256": "889d919925c7541ef644498f8f951aa7af338a14fdcd207436fb147103594c15",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "extrude-taper-top.png"
+    },
+    {
+      "name": "fillet-front.png",
+      "baselineSha256": "51f54ac71ef7e93bd8b81a882adc5b1c07e1ea499e90ef95e72d1ebf6e8345a5",
+      "actualSha256": "80e3eb26f60049c6b7492144c2bd7e394967490c63a04fafffa75fb32b4a7b80",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 29200,
+      "status": "changed",
+      "comparisonImage": "fillet-front.png"
+    },
+    {
+      "name": "fillet-iso.png",
+      "baselineSha256": "22c8fe94b2771895358d30f6855ca71dd77373f0aa43635bab6487f45674a3b9",
+      "actualSha256": "471e05bbc0b80348435c1de8b8d539fd4ac4f5d0376da6751037dcb4f02c0174",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 21601,
+      "status": "changed",
+      "comparisonImage": "fillet-iso.png"
+    },
+    {
+      "name": "fillet-right.png",
+      "baselineSha256": "4c3a31506c882a777df1168e44b2dbd0b07b32059439b47f537a0fa7772b8c6c",
+      "actualSha256": "53ba569bc6f812d127f1e5c5d0442730d0ac453f15e850125eb266587ae70278",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 43479,
+      "status": "changed",
+      "comparisonImage": "fillet-right.png"
+    },
+    {
+      "name": "fillet-top.png",
+      "baselineSha256": "154492b9dedfe554ec2abc967e7dde2e59dd1c7e22d9791ef928948009831cee",
+      "actualSha256": "ccd33530f04d1919718069126e09a2305e8361a524ca8188577a2e3206b0f4c8",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 25865,
+      "status": "changed",
+      "comparisonImage": "fillet-top.png"
+    },
+    {
+      "name": "full-round-front.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "full-round-front.png"
+    },
+    {
+      "name": "full-round-iso.png",
+      "baselineSha256": "4d5e8b500a713fbe247f4957e667d4bc928a711f065541ee09683a14a8275590",
+      "actualSha256": "6fd503eda0156fcdabade9d664fad2b4f9a2156db2fd94cff67b2485f7a88f2a",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 118,
+      "status": "changed",
+      "comparisonImage": "full-round-iso.png"
+    },
+    {
+      "name": "full-round-right.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "full-round-right.png"
+    },
+    {
+      "name": "full-round-top.png",
+      "baselineSha256": "9b3257cdca99c19084fd46d2d28686f0ebeb5d32f17d610e0cfd166d6543ab4e",
+      "actualSha256": "d893c9985ac07757ac36eb1130ee2f2ca4a3c2a1a750a5943c4eda9ca46c4e19",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 167,
+      "status": "changed",
+      "comparisonImage": "full-round-top.png"
+    },
+    {
+      "name": "grid-locations-front.png",
+      "baselineSha256": "e308d6c13e40177a9114eac4a417974e8bbb9b24355ff06b6bc7bda38d5d8b1d",
+      "actualSha256": "87d48c4829436c454c4b71325cb17822532b055dc4a86c16e339b6f63c2c390e",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 14023,
+      "status": "changed",
+      "comparisonImage": "grid-locations-front.png"
+    },
+    {
+      "name": "grid-locations-iso.png",
+      "baselineSha256": "a31f772a5bf827bd5e4cb6e1c2fa207be67b4109cfb215350e832412c4a4d077",
+      "actualSha256": "6c4bbadda729c6831bda5345694eb3a783c936d86e65f5eb0c25251ee0f1c789",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 18024,
+      "status": "changed",
+      "comparisonImage": "grid-locations-iso.png"
+    },
+    {
+      "name": "grid-locations-right.png",
+      "baselineSha256": "96aece99ae52dec3ad1e8f15353562dd009fd20ee1f898876ce4c3fa589d39a4",
+      "actualSha256": "63b480382941af33e4a72c3187bb5c1f36c9492f4c4852c2787d8bc5fc9dc085",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 35055,
+      "status": "changed",
+      "comparisonImage": "grid-locations-right.png"
+    },
+    {
+      "name": "grid-locations-top.png",
+      "baselineSha256": "c88acc62e9a08f8f6e1c8e90fcc7b7a3fbbc06a52d98cdd9227b3986c11221aa",
+      "actualSha256": "da1a451e8054506113e98379beb9fd9b55f0ee9d2a0a1701d5db065497fa255e",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 613,
+      "status": "changed",
+      "comparisonImage": "grid-locations-top.png"
+    },
+    {
+      "name": "helix-front.png",
+      "baselineSha256": "769304eaf3235f64c5bf82878b2eeca2b8a66e5af318c2fde71eddbb31a69125",
+      "actualSha256": "c019e5ddf15cdbe0306553b0a9a9fafbe25b3486fb6c38d60296a7d38c3288e7",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 704,
+      "status": "changed",
+      "comparisonImage": "helix-front.png"
+    },
+    {
+      "name": "helix-iso.png",
+      "baselineSha256": "e67e0fb093977f2f4a942ab90bc6baf34e624e9d83f615d6e92eb665d2f345a8",
+      "actualSha256": "447bb4bfe1b87792f51158f7d0973d21fd7c9f0771341f64ed4ab54ba02f69bd",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 2036,
+      "status": "changed",
+      "comparisonImage": "helix-iso.png"
+    },
+    {
+      "name": "helix-right.png",
+      "baselineSha256": "406e8c81073dac5d6ac062130aa18567e4b5576f59d6e561345758bf3ff47f19",
+      "actualSha256": "25edadb888c1a8367bfea24fd5e1ad83855199a777151e9f68025bf2988ad85d",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 734,
+      "status": "changed",
+      "comparisonImage": "helix-right.png"
+    },
+    {
+      "name": "helix-top.png",
+      "baselineSha256": "5346d4aaee8e065865bbeb36e819106ac3e525668ca0d39592ec674cdd5ffbc0",
+      "actualSha256": "68e0a112726b70c02c2fccbea4026b9cf29f26539ab24d61ebdfea2dcb556b36",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 2938,
+      "status": "changed",
+      "comparisonImage": "helix-top.png"
+    },
+    {
+      "name": "hemisphere-front.png",
+      "baselineSha256": "fd7efd9896443911c876c42b25e1a2187355466ffdaba92ac07bf0736a5e5fe0",
+      "actualSha256": "b341b90e6415def9411c3b99c39982030a40a70b470a3ee22083517f332e7443",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 29618,
+      "status": "changed",
+      "comparisonImage": "hemisphere-front.png"
+    },
+    {
+      "name": "hemisphere-iso.png",
+      "baselineSha256": "b63857a7e97426fb2032140c0e8979eb1cff636b1c8abfeaff132ac30e622b75",
+      "actualSha256": "d006ddfe4a2fbaf33437afd882dffdbd631449bf6b8f6a9eff5f49eca2f6b95a",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 24140,
+      "status": "changed",
+      "comparisonImage": "hemisphere-iso.png"
+    },
+    {
+      "name": "hemisphere-right.png",
+      "baselineSha256": "bad3084850e1cbc9b5797921240630f27fb77077462cf30841f804ea9205e09c",
+      "actualSha256": "143fdc17ac7c8adff91c55437657bb5ea49d931c15323abdc73a7acf5c8d7629",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 38870,
+      "status": "changed",
+      "comparisonImage": "hemisphere-right.png"
+    },
+    {
+      "name": "hemisphere-top.png",
+      "baselineSha256": "2c706e179f5023678225c71f9f24b935a2f2206c7839f7f6e0abf5e7298d0a74",
+      "actualSha256": "74ed7532683e1686c135dd3c8ccfe46e46302bc19a0506c5ad58f82b2c218812",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 40051,
+      "status": "changed",
+      "comparisonImage": "hemisphere-top.png"
+    },
+    {
+      "name": "hexagon-front.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "hexagon-front.png"
+    },
+    {
+      "name": "hexagon-iso.png",
+      "baselineSha256": "31834535238e31a27149928bc3de67791bfffdf9a9832503a21b43fb54935367",
+      "actualSha256": "31834535238e31a27149928bc3de67791bfffdf9a9832503a21b43fb54935367",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "hexagon-iso.png"
+    },
+    {
+      "name": "hexagon-right.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "hexagon-right.png"
+    },
+    {
+      "name": "hexagon-top.png",
+      "baselineSha256": "5d03989845cd47e831cbc55b1c8250d57e59e4d3e1ada559d1fc7b468ddb203e",
+      "actualSha256": "5d03989845cd47e831cbc55b1c8250d57e59e4d3e1ada559d1fc7b468ddb203e",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "hexagon-top.png"
+    },
+    {
+      "name": "intersect-front.png",
+      "baselineSha256": "6ac598ff1e9a382ce560a9c22a8e8bf77b507462858a0b344796b1cb5b549c4d",
+      "actualSha256": "3f19b895075306162309262121962e3dca482e72f6530964b9a82c6ed6f40510",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 30442,
+      "status": "changed",
+      "comparisonImage": "intersect-front.png"
+    },
+    {
+      "name": "intersect-iso.png",
+      "baselineSha256": "be8fb871ddc71b93bf3e352fa6fdda2a8606b0174a03a9346c072fb5a059a3b5",
+      "actualSha256": "a68a522facea5bd554b66113620761e59662d7ca4dbd9e8ff35ca494b4a882d0",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 11234,
+      "status": "changed",
+      "comparisonImage": "intersect-iso.png"
+    },
+    {
+      "name": "intersect-right.png",
+      "baselineSha256": "7cf21b77d399c72d2fa1ad628a23d20968f78c42f91f0b457886f4f674529f34",
+      "actualSha256": "a3931be1087fb1617e0428618fb9b69cb6e38144778cd344256b5ec0a53e7a0d",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 27794,
+      "status": "changed",
+      "comparisonImage": "intersect-right.png"
+    },
+    {
+      "name": "intersect-top.png",
+      "baselineSha256": "d44c60c99927d8cdc7cb5e4be4e9f8d02f21d57679ff03a36d882eeb9d41250e",
+      "actualSha256": "80904b24cd575c8500283a6acb84f2af6b9e49af5731aaaf527504602b882cd5",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 7162,
+      "status": "changed",
+      "comparisonImage": "intersect-top.png"
+    },
+    {
+      "name": "line-front.png",
+      "baselineSha256": "ed41294aa82f5c8cf18a3e0bc8eb73c24b379993050c9037b5ba1ca40eb91c5f",
+      "actualSha256": "ed41294aa82f5c8cf18a3e0bc8eb73c24b379993050c9037b5ba1ca40eb91c5f",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "line-front.png"
+    },
+    {
+      "name": "line-iso.png",
+      "baselineSha256": "8387995f413fcc63ad24ea4765a61790c29c327fe4f0eef3a0ca3e78504f2b24",
+      "actualSha256": "8387995f413fcc63ad24ea4765a61790c29c327fe4f0eef3a0ca3e78504f2b24",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "line-iso.png"
+    },
+    {
+      "name": "line-right.png",
+      "baselineSha256": "7897cbfeb2139681e07788af01cd7ed39fa243d0528b657bceec99ccf33d9174",
+      "actualSha256": "7897cbfeb2139681e07788af01cd7ed39fa243d0528b657bceec99ccf33d9174",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "line-right.png"
+    },
+    {
+      "name": "line-top.png",
+      "baselineSha256": "1770c7d375d651ed07cbc4d2f32c7907598eef4deed3643746e15c7185bbbef2",
+      "actualSha256": "1770c7d375d651ed07cbc4d2f32c7907598eef4deed3643746e15c7185bbbef2",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "line-top.png"
+    },
+    {
+      "name": "loft-front.png",
+      "baselineSha256": "f8b4a619f98087a94a2a0d74f6a2ff0eb65d1a4e75273b950b6cd23c7918724a",
+      "actualSha256": "957f9a891bd588bdbc5b5434f5fbc51345550dfa4c119a7a78b197df9bf5222d",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 156804,
+      "status": "changed",
+      "comparisonImage": "loft-front.png"
+    },
+    {
+      "name": "loft-iso.png",
+      "baselineSha256": "a4f5d45d0be40fbad5796e4dbd69fc517eb5bd84c83fda7c6d095db494287cef",
+      "actualSha256": "b12ed81b0e115dcd98022e9843ecbd59b9590ca892198bc11643d4f95b37cff9",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 71418,
+      "status": "changed",
+      "comparisonImage": "loft-iso.png"
+    },
+    {
+      "name": "loft-right.png",
+      "baselineSha256": "cb6d7b739c4ff5a469d8d09700157cd327aad2103fe505389578c65ab047b12c",
+      "actualSha256": "f4a11f681ad589b7aa6094fa3b498869c50319d5b1bf943b3082a4f0fcd0b803",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 161752,
+      "status": "changed",
+      "comparisonImage": "loft-right.png"
+    },
+    {
+      "name": "loft-ruled-front.png",
+      "baselineSha256": "eadd57bf887b0a0a0886c99d550074ea8626c20a4bea66ad52f6a8ecf89410e6",
+      "actualSha256": "7f6726eaa4d2b492575a3083d91c88edaeaf38a5aedceecbc75d35684b382af0",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 156551,
+      "status": "changed",
+      "comparisonImage": "loft-ruled-front.png"
+    },
+    {
+      "name": "loft-ruled-iso.png",
+      "baselineSha256": "273dc75e2b57de6d3c612f181d29a0e172c7fe16ca3e3becaa15e387ed758b2d",
+      "actualSha256": "3090b93675c5430d895c4551b73067b9b4998f0a3c4bcec6bebe7a3f3bf4c446",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 78359,
+      "status": "changed",
+      "comparisonImage": "loft-ruled-iso.png"
+    },
+    {
+      "name": "loft-ruled-right.png",
+      "baselineSha256": "ec369c56bfb6a7b93fb8f073e48791d27a30557558995998635355cbc3c513cb",
+      "actualSha256": "a930e254de9543fd52ea064b2006e695cf0357e6e61c7e30b07aba39c5ce4d69",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 199041,
+      "status": "changed",
+      "comparisonImage": "loft-ruled-right.png"
+    },
+    {
+      "name": "loft-ruled-top.png",
+      "baselineSha256": "c313c3c31e82ee849e6746a90fa2d3a674189254c74e2e299ee9e5da08880bdb",
+      "actualSha256": "8c10e7e3cc77f7366360a073c040598b91fcdaa5ffe1127aafb9e70b36046ac9",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 101095,
+      "status": "changed",
+      "comparisonImage": "loft-ruled-top.png"
+    },
+    {
+      "name": "loft-top.png",
+      "baselineSha256": "3d49f603ad1d57a050b2d4c045f64af0af0a0669016f5e77d78b241b76224e01",
+      "actualSha256": "9af13214bfa403043f9d4609849567adcbf70440b9e6f298e433dccbc4e1df0b",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 94196,
+      "status": "changed",
+      "comparisonImage": "loft-top.png"
+    },
+    {
+      "name": "motor-spacer-front.png",
+      "baselineSha256": "1c8f67afcdc5578586af7b667ec4bf673dba69ab75f2cb734ce9fb6f731e7178",
+      "actualSha256": "9bfd51b1437df1aa0f79060e0cd6bcc06972ede150fe5bad109c64406009bc62",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 5176,
+      "status": "changed",
+      "comparisonImage": "motor-spacer-front.png"
+    },
+    {
+      "name": "motor-spacer-iso.png",
+      "baselineSha256": "9620549c1112670dbbc82f1934d5eb09a60c40ee0feabd3353c39135abbd45bf",
+      "actualSha256": "b240c76675db79eb1aa4b6ee821d49ded2b180640755f0f61efc34cd3fc17d10",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 6289,
+      "status": "changed",
+      "comparisonImage": "motor-spacer-iso.png"
+    },
+    {
+      "name": "motor-spacer-right.png",
+      "baselineSha256": "abccc5143073dfd936021f6f75c92fb8d09c5fecf540f3d339c6d28f0ede0271",
+      "actualSha256": "3be0909487f5b4fc5925ccc428782814b89d78efd74e0c29e49238f06a083fe4",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 5199,
+      "status": "changed",
+      "comparisonImage": "motor-spacer-right.png"
+    },
+    {
+      "name": "motor-spacer-top.png",
+      "baselineSha256": "797e19cbc4758e3f7c8656f22061b449f8fc5d82bac1cee584d6d0b67f257126",
+      "actualSha256": "a368375288528020a5d69db3210d02b2d3d9fc15c2733b8666a85c1c88b54479",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 1012,
+      "status": "changed",
+      "comparisonImage": "motor-spacer-top.png"
+    },
+    {
+      "name": "native-assembly-front.png",
+      "baselineSha256": "0f70df20765600615716ad15d7ffd315f7e76a6894e2749434d406c0d9b6ca81",
+      "actualSha256": "9000e8d155510ff85e55c990790cb4931c37bcda1ce59b232356e6db8aba5afd",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 7363,
+      "status": "changed",
+      "comparisonImage": "native-assembly-front.png"
+    },
+    {
+      "name": "native-assembly-iso.png",
+      "baselineSha256": "f874b1c02fea99f0804abdfc3111d7548ee0b9a90e17bac1c4e63066bebaee34",
+      "actualSha256": "cc9cec301f2116ef8cce919d9d647c07ddd9f26c96fbdc3faf9389315905862a",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 5146,
+      "status": "changed",
+      "comparisonImage": "native-assembly-iso.png"
+    },
+    {
+      "name": "native-assembly-right.png",
+      "baselineSha256": "2148231044160c41a6dc58be25370227dfd3f804ecb2d92b0ac0f4f092fbf13d",
+      "actualSha256": "4c0cbc92f6d21ed2c7c20dc84c08da79807bcb5a06fc4ea3b9fc3d69bc4c02d0",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 34491,
+      "status": "changed",
+      "comparisonImage": "native-assembly-right.png"
+    },
+    {
+      "name": "native-assembly-top.png",
+      "baselineSha256": "f090bed185b9fca6933a9cb38843aa13a7a8a019dd8fd56fcac5d1168095e01d",
+      "actualSha256": "4380c1293da9855781c1994e5b29b565a958ab5975c171e2650545b7e6dce2b9",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 74,
+      "status": "changed",
+      "comparisonImage": "native-assembly-top.png"
+    },
+    {
+      "name": "octagon-front.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "octagon-front.png"
+    },
+    {
+      "name": "octagon-iso.png",
+      "baselineSha256": "ecf18b41d8c76cff27ddb16937cf0302c383ef378020765f9e086b1965ef7849",
+      "actualSha256": "ecf18b41d8c76cff27ddb16937cf0302c383ef378020765f9e086b1965ef7849",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "octagon-iso.png"
+    },
+    {
+      "name": "octagon-right.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "octagon-right.png"
+    },
+    {
+      "name": "octagon-top.png",
+      "baselineSha256": "5b5d19939fb18a670ca66df7dc51356bb0271dfc0cb96b30e0fdc1ab18a6c79c",
+      "actualSha256": "5b5d19939fb18a670ca66df7dc51356bb0271dfc0cb96b30e0fdc1ab18a6c79c",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "octagon-top.png"
+    },
+    {
+      "name": "packed-parts-front.png",
+      "baselineSha256": "cdfd71966a752d3f6215efe7b1178a8232b190373bfd9d1b45e1ce1c1a1a9dd0",
+      "actualSha256": "b4766bdba4bf70444d561849b563c242ff87ec3e0c0a206fda0ec9630ad37a78",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 12200,
+      "status": "changed",
+      "comparisonImage": "packed-parts-front.png"
+    },
+    {
+      "name": "packed-parts-iso.png",
+      "baselineSha256": "3e4cc1aa93257f94dfb3e5d18128b0cf29e4af86bea7ecc0ce9cbfb3f3c1aa8e",
+      "actualSha256": "6706da2401cd797d1f4113a897005e2d69259b5605c3af7765fe61209a178a64",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 8639,
+      "status": "changed",
+      "comparisonImage": "packed-parts-iso.png"
+    },
+    {
+      "name": "packed-parts-right.png",
+      "baselineSha256": "028d75c43f56e71d7823c7facf36edeef2d90006477572acf40eb0789b52fa46",
+      "actualSha256": "304064bd2328edc67f453e65ba56df534a5270d200de146dc6c49ff428e304ac",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 41475,
+      "status": "changed",
+      "comparisonImage": "packed-parts-right.png"
+    },
+    {
+      "name": "packed-parts-top.png",
+      "baselineSha256": "aa8d77de39d06445a4cc366e179c13c6100680b437622e44d4599b7e2d718850",
+      "actualSha256": "45806e37b825a7bd8f27c905f93d4f61353a81d9ac6082d54765f25d4734922a",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 115,
+      "status": "changed",
+      "comparisonImage": "packed-parts-top.png"
+    },
+    {
+      "name": "polar-line-front.png",
+      "baselineSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "actualSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "polar-line-front.png"
+    },
+    {
+      "name": "polar-line-iso.png",
+      "baselineSha256": "8c19bfa97ac42464c01a294cb7d0ff54aa27884e3331f8d4a0b57bc6572da73c",
+      "actualSha256": "8c19bfa97ac42464c01a294cb7d0ff54aa27884e3331f8d4a0b57bc6572da73c",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "polar-line-iso.png"
+    },
+    {
+      "name": "polar-line-right.png",
+      "baselineSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "actualSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "polar-line-right.png"
+    },
+    {
+      "name": "polar-line-top.png",
+      "baselineSha256": "c832845e555ea1d3cbea831b6e6e24862ca99bf20900e32c82264acf5f2b65a6",
+      "actualSha256": "c832845e555ea1d3cbea831b6e6e24862ca99bf20900e32c82264acf5f2b65a6",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "polar-line-top.png"
+    },
+    {
+      "name": "polar-locations-front.png",
+      "baselineSha256": "d45917ba58c9c4e39b5c0d933806e1de8449c72e048f4c6e1982ebbb395c3f58",
+      "actualSha256": "ba2c98b15cb4f5ed9cc5d332699ad144ae3a350da74468a402b862a60150fbc9",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 19331,
+      "status": "changed",
+      "comparisonImage": "polar-locations-front.png"
+    },
+    {
+      "name": "polar-locations-iso.png",
+      "baselineSha256": "7c30358e56f5e462eaea7d926eef751fcbd57332e12aed5ad9d173c78acfaf57",
+      "actualSha256": "f992498def2fd6acefcd545996a0bbf99467ff04d997534422a5511c5e8aca23",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 12523,
+      "status": "changed",
+      "comparisonImage": "polar-locations-iso.png"
+    },
+    {
+      "name": "polar-locations-right.png",
+      "baselineSha256": "77f65f848a67b91154fa7f37303e81b4ecdd3b1d7e61128b39386af44b59f7cd",
+      "actualSha256": "a219884ec9e0d7b28180dae4cb460e4c276891eac57e1a17e626fc333e620f64",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 22652,
+      "status": "changed",
+      "comparisonImage": "polar-locations-right.png"
+    },
+    {
+      "name": "polar-locations-top.png",
+      "baselineSha256": "50aac32645705c4a73714c7ea7e7d003bc151a678bb0a9f21ff8b4a8f449dddf",
+      "actualSha256": "2ff763774c3d81af56d2ab567d07688d2025f946f7bc8a42e9d0321180a80b5f",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 465,
+      "status": "changed",
+      "comparisonImage": "polar-locations-top.png"
+    },
+    {
+      "name": "polygon-front.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "polygon-front.png"
+    },
+    {
+      "name": "polygon-iso.png",
+      "baselineSha256": "878af83aba2f6720e016ef14d9025d88738bbe881949e900c7de3ea6d4becc26",
+      "actualSha256": "878af83aba2f6720e016ef14d9025d88738bbe881949e900c7de3ea6d4becc26",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "polygon-iso.png"
+    },
+    {
+      "name": "polygon-right.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "polygon-right.png"
+    },
+    {
+      "name": "polygon-top.png",
+      "baselineSha256": "d2e396fd5bf39b623c95a0c9760683825ff9acb0a2823873e4a0a01d3bb1a2ff",
+      "actualSha256": "d2e396fd5bf39b623c95a0c9760683825ff9acb0a2823873e4a0a01d3bb1a2ff",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "polygon-top.png"
+    },
+    {
+      "name": "polyline-front.png",
+      "baselineSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "actualSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "polyline-front.png"
+    },
+    {
+      "name": "polyline-iso.png",
+      "baselineSha256": "da5b73a2e5603b60226e2ceda98996f4be97169d9f42daf80647f55d20b03c14",
+      "actualSha256": "da5b73a2e5603b60226e2ceda98996f4be97169d9f42daf80647f55d20b03c14",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "polyline-iso.png"
+    },
+    {
+      "name": "polyline-right.png",
+      "baselineSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "actualSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "polyline-right.png"
+    },
+    {
+      "name": "polyline-top.png",
+      "baselineSha256": "c9ecc814e92aef3e209fbcae19be90ad5ee4cb4848f119f17d1113b579508a8d",
+      "actualSha256": "c9ecc814e92aef3e209fbcae19be90ad5ee4cb4848f119f17d1113b579508a8d",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "polyline-top.png"
+    },
+    {
+      "name": "projection-front.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "projection-front.png"
+    },
+    {
+      "name": "projection-iso.png",
+      "baselineSha256": "c4eed5edb5a03a2c3e4ccde4b2589d7773a833efa32901790a2f92d923e7e9f9",
+      "actualSha256": "c4eed5edb5a03a2c3e4ccde4b2589d7773a833efa32901790a2f92d923e7e9f9",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "projection-iso.png"
+    },
+    {
+      "name": "projection-right.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "projection-right.png"
+    },
+    {
+      "name": "projection-top.png",
+      "baselineSha256": "9a88c2486626cc4ac1c84d8d88ce853c335104bb0dcf099eb2b4ca640903df19",
+      "actualSha256": "9a88c2486626cc4ac1c84d8d88ce853c335104bb0dcf099eb2b4ca640903df19",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "projection-top.png"
+    },
+    {
+      "name": "radius-arc-front.png",
+      "baselineSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "actualSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "radius-arc-front.png"
+    },
+    {
+      "name": "radius-arc-iso.png",
+      "baselineSha256": "09842943ec3262ef7bbd1153ffdbb7388fa4f26937ea31b82850abd8079e1170",
+      "actualSha256": "b3df61907224679e9b00aa363c74e2670bbe36c2a23c691aa51cc4b7c2cdb398",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 1100,
+      "status": "changed",
+      "comparisonImage": "radius-arc-iso.png"
+    },
+    {
+      "name": "radius-arc-right.png",
+      "baselineSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "actualSha256": "e237ba8243fdf820a616dd495ed7da2ae07d005326c49ed3586b3c3bd1d5003e",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 8,
+      "status": "changed",
+      "comparisonImage": "radius-arc-right.png"
+    },
+    {
+      "name": "radius-arc-top.png",
+      "baselineSha256": "c10e4463ea4e34838b5eedf46468a61042775b16d5c7c7cdf99a79ef9a2912d9",
+      "actualSha256": "4f5efa652ea3ba9e31ed65d6489d52afe9a6ac6c106af7b5ecfcd31503616130",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 1419,
+      "status": "changed",
+      "comparisonImage": "radius-arc-top.png"
+    },
+    {
+      "name": "rectangle-front.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "rectangle-front.png"
+    },
+    {
+      "name": "rectangle-iso.png",
+      "baselineSha256": "8ebddf5dbe3026d7109b70b29b8a6b68155fed8ea7347c7aefec35aca0091ef8",
+      "actualSha256": "8ebddf5dbe3026d7109b70b29b8a6b68155fed8ea7347c7aefec35aca0091ef8",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "rectangle-iso.png"
+    },
+    {
+      "name": "rectangle-right.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "rectangle-right.png"
+    },
+    {
+      "name": "rectangle-top.png",
+      "baselineSha256": "81a7bde44f45912eb771c418feea124a69d30ebec7569674000e623d964ad5dd",
+      "actualSha256": "81a7bde44f45912eb771c418feea124a69d30ebec7569674000e623d964ad5dd",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "rectangle-top.png"
+    },
+    {
+      "name": "revolve-front.png",
+      "baselineSha256": "815c3a6914b601ea55acebff2b690d15b252e75c05fa8a9dbe3b48efa013184f",
+      "actualSha256": "d24c10fdc86e742f1251b5b621f4ef3f9054eb6372bb9d1fa17afd5a84677e47",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 31935,
+      "status": "changed",
+      "comparisonImage": "revolve-front.png"
+    },
+    {
+      "name": "revolve-iso.png",
+      "baselineSha256": "a68a6d344ce14f3d162b36060dbde792918e68062820a679f6f0c5f257c33390",
+      "actualSha256": "d3af67b73ea8fb36ceccad8ae88a0a1ac604e3160443c4df085b47905f198ce4",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 28609,
+      "status": "changed",
+      "comparisonImage": "revolve-iso.png"
+    },
+    {
+      "name": "revolve-partial-front.png",
+      "baselineSha256": "e29c8bdb0719bcb5b161d7317b27d12a2e47e6103bdd9aeb480e28739ceb1aad",
+      "actualSha256": "7d339a262a97c67836242f5af54748ea2421d5f124932a62f91fdcdf2213141c",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 21349,
+      "status": "changed",
+      "comparisonImage": "revolve-partial-front.png"
+    },
+    {
+      "name": "revolve-partial-iso.png",
+      "baselineSha256": "7001c41b6893cf33d85c69850b776b47f7a0d764d1e1d89d960073616126cd6a",
+      "actualSha256": "01fc79b1927e80805333f60c942bca40536613c72fb97bd1f6ff7add08dd5500",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 10930,
+      "status": "changed",
+      "comparisonImage": "revolve-partial-iso.png"
+    },
+    {
+      "name": "revolve-partial-right.png",
+      "baselineSha256": "3fc5e3321e220a144b7c1dca0012fc39eb9bced7d491a0eaa47be864040bb26c",
+      "actualSha256": "f6fd3557e984c42773edb2aa80c86d5772ca95f0e19cfaea25d3ed302ba37f66",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 39203,
+      "status": "changed",
+      "comparisonImage": "revolve-partial-right.png"
+    },
+    {
+      "name": "revolve-partial-top.png",
+      "baselineSha256": "884d3aaed42c97b9d76936f31c444e79d73707c3e9f1798b33b76070d44dcf0a",
+      "actualSha256": "fb154ac9d35d8b04bbf84b86ca8e6ed29c0bc09398410479a58ecc19217a3de9",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 1137,
+      "status": "changed",
+      "comparisonImage": "revolve-partial-top.png"
+    },
+    {
+      "name": "revolve-right.png",
+      "baselineSha256": "8114feb653a3326bb3efaac00a46340d30066a3259dfb8ebe6c1e0052139826d",
+      "actualSha256": "d9ad7c66f7d309cdb6eaf600a66769b10a084a1791c90ee2c5a1fef12aff4655",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 43090,
+      "status": "changed",
+      "comparisonImage": "revolve-right.png"
+    },
+    {
+      "name": "revolve-top.png",
+      "baselineSha256": "790313f1e0dfd7a5279c44080c337fcf8f963b0f66145b8cb10756ff4d99098b",
+      "actualSha256": "098cca35104b1289a1fc3797c59d3203cfed28027950454a9fd29345222e0f32",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 35862,
+      "status": "changed",
+      "comparisonImage": "revolve-top.png"
+    },
+    {
+      "name": "rotated-box-front.png",
+      "baselineSha256": "439a3e7a5fbd01e94ac29e0495f67da5dadc08b96a9454ce5119aa58a0674c33",
+      "actualSha256": "439a3e7a5fbd01e94ac29e0495f67da5dadc08b96a9454ce5119aa58a0674c33",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "rotated-box-front.png"
+    },
+    {
+      "name": "rotated-box-iso.png",
+      "baselineSha256": "e31fa50236710370e1ff8c644aa37c6ed1bb86ab155a56c1248f2f9149e5d1f8",
+      "actualSha256": "e31fa50236710370e1ff8c644aa37c6ed1bb86ab155a56c1248f2f9149e5d1f8",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "rotated-box-iso.png"
+    },
+    {
+      "name": "rotated-box-right.png",
+      "baselineSha256": "915a2b440a086a543aee6124573e8bc18fa623db6714d9157073141b9f71dee9",
+      "actualSha256": "915a2b440a086a543aee6124573e8bc18fa623db6714d9157073141b9f71dee9",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "rotated-box-right.png"
+    },
+    {
+      "name": "rotated-box-top.png",
+      "baselineSha256": "ba035f6961bc24065316fbeddb6cf0e969386aba3237a153fde101c28669a962",
+      "actualSha256": "ba035f6961bc24065316fbeddb6cf0e969386aba3237a153fde101c28669a962",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "rotated-box-top.png"
+    },
+    {
+      "name": "rounded-rectangle-front.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "rounded-rectangle-front.png"
+    },
+    {
+      "name": "rounded-rectangle-iso.png",
+      "baselineSha256": "2889b7945d14c565d519b71deb686567fc7997ac337fd39b44220f4dd6f1babb",
+      "actualSha256": "94833481ab0e4e7542cfdb2e56c2a4b2ec63215e82fb4a0c9e10b5a4f5182a7e",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 46,
+      "status": "changed",
+      "comparisonImage": "rounded-rectangle-iso.png"
+    },
+    {
+      "name": "rounded-rectangle-right.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "rounded-rectangle-right.png"
+    },
+    {
+      "name": "rounded-rectangle-top.png",
+      "baselineSha256": "7264893cbd7a5101c7d3c0fffc7374acb68f840da55d5a85a89c02c1a6e27e89",
+      "actualSha256": "6a8415ecaf9e47354ab1a0daf5e6073da851f9c5f2cb555180ab0220bf7a3bfd",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 156,
+      "status": "changed",
+      "comparisonImage": "rounded-rectangle-top.png"
+    },
+    {
+      "name": "sagitta-arc-front.png",
+      "baselineSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "actualSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "sagitta-arc-front.png"
+    },
+    {
+      "name": "sagitta-arc-iso.png",
+      "baselineSha256": "5e06a3df836364e09d2d5114de8eeb48d0c6e3d9cde4aa225a536146c601f710",
+      "actualSha256": "b3df61907224679e9b00aa363c74e2670bbe36c2a23c691aa51cc4b7c2cdb398",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 1092,
+      "status": "changed",
+      "comparisonImage": "sagitta-arc-iso.png"
+    },
+    {
+      "name": "sagitta-arc-right.png",
+      "baselineSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "actualSha256": "e237ba8243fdf820a616dd495ed7da2ae07d005326c49ed3586b3c3bd1d5003e",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 8,
+      "status": "changed",
+      "comparisonImage": "sagitta-arc-right.png"
+    },
+    {
+      "name": "sagitta-arc-top.png",
+      "baselineSha256": "2ef86d4a1ad4e83b9db7c40a12753f315f281538cebc2fb0ff486fea95b22438",
+      "actualSha256": "4f5efa652ea3ba9e31ed65d6489d52afe9a6ac6c106af7b5ecfcd31503616130",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 1422,
+      "status": "changed",
+      "comparisonImage": "sagitta-arc-top.png"
+    },
+    {
+      "name": "sector-cylinder-front.png",
+      "baselineSha256": "4ee56b9f9c6e82b9f5a14245723751a60127a57878ef360ca23b4efdd9eeb33d",
+      "actualSha256": "41dc5eac761c6b0206cb6559c378527445d62a1831607b4c97fc521876bdbb51",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 5056,
+      "status": "changed",
+      "comparisonImage": "sector-cylinder-front.png"
+    },
+    {
+      "name": "sector-cylinder-iso.png",
+      "baselineSha256": "f859d95b56eb1447c914f00ddf76b64a33c2cc9c2c2e99ce13cc2b88b3f29c76",
+      "actualSha256": "2721d86d572d9ce3a05dc9287b06bc55749fc83663cbd6debf598e8fc459e9a3",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 6199,
+      "status": "changed",
+      "comparisonImage": "sector-cylinder-iso.png"
+    },
+    {
+      "name": "sector-cylinder-right.png",
+      "baselineSha256": "ed6fcb755e65da0b8dd34ab9ec6d3ee06dfe3d50e34fbc2ce82c8eb3c335f7a2",
+      "actualSha256": "5c87cfa5b831df2def56c0f9add4c3359d0f108fd5d6bc18d3e67521a3e24dc2",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 56222,
+      "status": "changed",
+      "comparisonImage": "sector-cylinder-right.png"
+    },
+    {
+      "name": "sector-cylinder-top.png",
+      "baselineSha256": "7c4508a0ac7d536b4435118b7f227f8edef44cdaa7b83002707106fce2494685",
+      "actualSha256": "83c8badbc1f146905e082f0119c110eb9c9f69100f951416c51242bb5bb24676",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 988,
+      "status": "changed",
+      "comparisonImage": "sector-cylinder-top.png"
+    },
+    {
+      "name": "sector-torus-front.png",
+      "baselineSha256": "00e49e6891c2b91470ea2a7c5d6239da70e426b4de0d012d29e722658ac5230d",
+      "actualSha256": "2ad82691cbcf0d796abadae53932d704edf4a9cbb7311bbb357eaf25afe9ba73",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 13655,
+      "status": "changed",
+      "comparisonImage": "sector-torus-front.png"
+    },
+    {
+      "name": "sector-torus-iso.png",
+      "baselineSha256": "b0646336edb9ac2a7c670793abe20c7598579f725b6a762bdd6c8278849a4622",
+      "actualSha256": "fbcf265a0e7664af292b8f1d39f84bd75ba6b9edf2f6fce515fedbda919ea517",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 10228,
+      "status": "changed",
+      "comparisonImage": "sector-torus-iso.png"
+    },
+    {
+      "name": "sector-torus-right.png",
+      "baselineSha256": "9fc5fcddaefbcb1b0ac9b149dd54502e185ae80f91c87b49174e2baab783fb54",
+      "actualSha256": "aeed6b09c6bea0679d4b15236f36ad73e4eaa45f871a64ba525e6748a3e1c0c2",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 14263,
+      "status": "changed",
+      "comparisonImage": "sector-torus-right.png"
+    },
+    {
+      "name": "sector-torus-top.png",
+      "baselineSha256": "5217e1f41dacf57fb4ecbec5d1afbfa81bf67187a4e5c15090349277a1f4ee97",
+      "actualSha256": "33d6d838cdf8000cbc8a8ca216e682f9f9768c5d56db23ea3590b2863bc9904c",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 19931,
+      "status": "changed",
+      "comparisonImage": "sector-torus-top.png"
+    },
+    {
+      "name": "slot-center-point-front.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "slot-center-point-front.png"
+    },
+    {
+      "name": "slot-center-point-iso.png",
+      "baselineSha256": "7a58b1546af7bbb7759211437304442afd272910d051b51c9b8263ffc22a1473",
+      "actualSha256": "94563b828d9b7228206f67a642713790a5ad5cea0e3adec18006c4a5ca87ef70",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 47,
+      "status": "changed",
+      "comparisonImage": "slot-center-point-iso.png"
+    },
+    {
+      "name": "slot-center-point-right.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "ecdea1d118048178017382a919c26aca13ec3bc1647ec231dc5d11743e41adda",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 1,
+      "status": "changed",
+      "comparisonImage": "slot-center-point-right.png"
+    },
+    {
+      "name": "slot-center-point-top.png",
+      "baselineSha256": "9369c6a18ab6f4297118cce229768e7fd921d1216b20b9fd4871491e52247459",
+      "actualSha256": "499ce109b3826bb4ad474059170c1f83e26c45437ab8b7a2a0d6a4500134d637",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 109,
+      "status": "changed",
+      "comparisonImage": "slot-center-point-top.png"
+    },
+    {
+      "name": "slot-center-to-center-front.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "slot-center-to-center-front.png"
+    },
+    {
+      "name": "slot-center-to-center-iso.png",
+      "baselineSha256": "a0c8f3feb424deb662ef142b0af85a961f49075aa461c5d73502de189e88e8a6",
+      "actualSha256": "91bfa456afae819b24b0db260e124aacf7bfc56da90b54b4b5046b265db10514",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 120,
+      "status": "changed",
+      "comparisonImage": "slot-center-to-center-iso.png"
+    },
+    {
+      "name": "slot-center-to-center-right.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "slot-center-to-center-right.png"
+    },
+    {
+      "name": "slot-center-to-center-top.png",
+      "baselineSha256": "6cba742c7dd14a8a0e1f2f2cc501b6a71eec6509411cf1d5cc4c451c0d85a612",
+      "actualSha256": "56344582497e10f0a9d11f47f8d9f98fb0d06c7f48e78de952d93ea6a9f2cbe4",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 224,
+      "status": "changed",
+      "comparisonImage": "slot-center-to-center-top.png"
+    },
+    {
+      "name": "slot-overall-front.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "slot-overall-front.png"
+    },
+    {
+      "name": "slot-overall-iso.png",
+      "baselineSha256": "9375a4486141e19544d0d0836424751fe2fcd0c73dd0f6a2534bcb30c50126ff",
+      "actualSha256": "7412897305ddf91e191029b80ccef0d5df6c44641de6c79f9b210c5705501b3d",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 73,
+      "status": "changed",
+      "comparisonImage": "slot-overall-iso.png"
+    },
+    {
+      "name": "slot-overall-right.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "slot-overall-right.png"
+    },
+    {
+      "name": "slot-overall-top.png",
+      "baselineSha256": "01ecfaf79b47fa8335ab9802beae3a7afdbc9ac5aabf3bf5019c912e76921729",
+      "actualSha256": "164f0c7d6036bbf6a15886ad91cf2a93ddb420e344d3ea82496710bf8640f024",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 146,
+      "status": "changed",
+      "comparisonImage": "slot-overall-top.png"
+    },
+    {
+      "name": "sphere-front.png",
+      "baselineSha256": "81c20191e452fb4e3419537e2fd7d907aa1b2a938a1a839c5587880509ce1cf1",
+      "actualSha256": "0bccc09a449fe9db9a5d8ddcb365c0a6b53c3c0dbdfc76df457075f85b42ad3e",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 16985,
+      "status": "changed",
+      "comparisonImage": "sphere-front.png"
+    },
+    {
+      "name": "sphere-iso.png",
+      "baselineSha256": "4b577a3b0f22543a33db3e09081258ce69c5d44f1d2eae219480675fd22528f7",
+      "actualSha256": "b0e334f5ce411aa0ca029c539e55b6b36e2845d49a611e01b7f46d683a6b98df",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 15244,
+      "status": "changed",
+      "comparisonImage": "sphere-iso.png"
+    },
+    {
+      "name": "sphere-right.png",
+      "baselineSha256": "c59adbed3f9d902a8fcb7e40959d6b4a94a3ba634e56fea24f74c45dd83069dd",
+      "actualSha256": "cbb8f81bf44722db55b0627d261cae7dc1fb8591f535345548b3ead724b26629",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 43147,
+      "status": "changed",
+      "comparisonImage": "sphere-right.png"
+    },
+    {
+      "name": "sphere-top.png",
+      "baselineSha256": "57f0791692ec6f8917294753a41ef09155f266860d13fb09e6e850be49d463c5",
+      "actualSha256": "b00d62fdd5f3531bb1277fd3860aa3099940c905513cc6bf8a3dc130409eabb8",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 41078,
+      "status": "changed",
+      "comparisonImage": "sphere-top.png"
+    },
+    {
+      "name": "spline-front.png",
+      "baselineSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "actualSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "spline-front.png"
+    },
+    {
+      "name": "spline-iso.png",
+      "baselineSha256": "5f91f5f5e37035ec277b6579dbd48f2a85f039b7f4cec033f32113bad42c8027",
+      "actualSha256": "2e3ed8afc6a36de27be71569af464ba36570e4bbf115b8b3153792c9bd997c07",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 1328,
+      "status": "changed",
+      "comparisonImage": "spline-iso.png"
+    },
+    {
+      "name": "spline-right.png",
+      "baselineSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "actualSha256": "4bf115785d4d0fccc100da117b7d427fd698905bf1651bf41e0ff699adfba277",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 1,
+      "status": "changed",
+      "comparisonImage": "spline-right.png"
+    },
+    {
+      "name": "spline-top.png",
+      "baselineSha256": "20e60714f3c4c1e1a1f1da8296a078b7a9f67766d42fd09ff9edaec4b0e2f5b5",
+      "actualSha256": "171c43aa819cf710d0395faff323350dedfcd1abc658d5e25f5fd474db30bb04",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 2676,
+      "status": "changed",
+      "comparisonImage": "spline-top.png"
+    },
+    {
+      "name": "subtract-front.png",
+      "baselineSha256": "373f8c499fb88e2357f9154846d3842b9d9078c144d83acf56a9876c1d1e956a",
+      "actualSha256": "373f8c499fb88e2357f9154846d3842b9d9078c144d83acf56a9876c1d1e956a",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "subtract-front.png"
+    },
+    {
+      "name": "subtract-iso.png",
+      "baselineSha256": "85fd66dcdbd6a4d102be10aa73cff3e7d2c27d5bf63d21b3219f7fcf46831f78",
+      "actualSha256": "89b2144eb787628465db6b98db49fba03874463a0a52d3381339adf0cd63bd67",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 3430,
+      "status": "changed",
+      "comparisonImage": "subtract-iso.png"
+    },
+    {
+      "name": "subtract-right.png",
+      "baselineSha256": "cacfe744bf9e5647226597ba6c9974946de047a11cd1118175c15b000bc7d9b9",
+      "actualSha256": "cacfe744bf9e5647226597ba6c9974946de047a11cd1118175c15b000bc7d9b9",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "subtract-right.png"
+    },
+    {
+      "name": "subtract-top.png",
+      "baselineSha256": "664f05346448356acab606bdc9195ff6a11bef491e6762d32088d18c00206936",
+      "actualSha256": "b1cece2794c381731ee720bd6a52cea74682890770aa722d82babb9b41b1f7c0",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 408,
+      "status": "changed",
+      "comparisonImage": "subtract-top.png"
+    },
+    {
+      "name": "sweep-front.png",
+      "baselineSha256": "206ef925fddc3b42f84153c8251a3f488c7c58d4f89d2ba1a69e67ecd66565a2",
+      "actualSha256": "16a439b661794bc19abf8010533423b91c484bec723ba9d415cab546dc9205eb",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 48249,
+      "status": "changed",
+      "comparisonImage": "sweep-front.png"
+    },
+    {
+      "name": "sweep-iso.png",
+      "baselineSha256": "942fded24286b95efb8ba2a55a2f948f37bb3041395639d1b26b061428a743b9",
+      "actualSha256": "1f283e833ea2161013167dda0c772f0aa361e58f80087403ce616443c960bdad",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 26022,
+      "status": "changed",
+      "comparisonImage": "sweep-iso.png"
+    },
+    {
+      "name": "sweep-right.png",
+      "baselineSha256": "a45adad627a457365b640b360ff47a6344300e77dfdd4b3c1e4c3fa240da5b42",
+      "actualSha256": "e8b1eeea254e82548ddd28c56b5308ddbd53dc49f42108f4a30ce9c6c69596e0",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 51182,
+      "status": "changed",
+      "comparisonImage": "sweep-right.png"
+    },
+    {
+      "name": "sweep-top.png",
+      "baselineSha256": "fd8d597a7bad9d2adb56c21671ba5c7bedc5d9928f01cedfe1f61b9e6b915da0",
+      "actualSha256": "c34992c3812d7435f6f0dd1218926ab642f68ce30ab884ee5ab53437d3d75488",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 36569,
+      "status": "changed",
+      "comparisonImage": "sweep-top.png"
+    },
+    {
+      "name": "technical-drawing-front.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "technical-drawing-front.png"
+    },
+    {
+      "name": "technical-drawing-iso.png",
+      "baselineSha256": "95532cc4003593a129b07d2200aa7ed9767512e6cfa19cc04ab1b3085677f3e6",
+      "actualSha256": "9f8d4deda65e39681423509599ebec3da6d261a0e8445091abe5f16c82025baa",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 414,
+      "status": "changed",
+      "comparisonImage": "technical-drawing-iso.png"
+    },
+    {
+      "name": "technical-drawing-right.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "technical-drawing-right.png"
+    },
+    {
+      "name": "technical-drawing-top.png",
+      "baselineSha256": "92a2938d7cc2d32000fa7d75b8426a1ed5c7390e0555a64334cdcaf284bcced0",
+      "actualSha256": "a86928eaa9f17d08493bd14d70d68b572502d12d44eb861715db04de0e2f30d7",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 328,
+      "status": "changed",
+      "comparisonImage": "technical-drawing-top.png"
+    },
+    {
+      "name": "text-extrude-front.png",
+      "baselineSha256": "197c597fc57532b6e615777275459360c7bf941b805057f6e974df08e46aa1db",
+      "actualSha256": "5a613dbd35dbca0a21be1889aa170aec5e28a231f3b02242a2577b2aa7d9a78a",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 16935,
+      "status": "changed",
+      "comparisonImage": "text-extrude-front.png"
+    },
+    {
+      "name": "text-extrude-iso.png",
+      "baselineSha256": "08fe9f778f9e1eec6a5d43c701df44a45c70761d35654372a89ca27465893b3c",
+      "actualSha256": "be93c9afe7aacb5272cad3a04a9cd5a02e712c959ba82a96fff8f41199fc5e11",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 25174,
+      "status": "changed",
+      "comparisonImage": "text-extrude-iso.png"
+    },
+    {
+      "name": "text-extrude-right.png",
+      "baselineSha256": "29b125eb600f028389c1df050868f4d5733a1e388129b0d91eb6dff7c322e589",
+      "actualSha256": "665ee71a34557bdd6bd1a69de878227e3be0eedd77668491687abae3d4467b30",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 89388,
+      "status": "changed",
+      "comparisonImage": "text-extrude-right.png"
+    },
+    {
+      "name": "text-extrude-top.png",
+      "baselineSha256": "9ef43c6bca7862b9c9f4c49cff91c6eefa71dc02245a3d611d4037cdcdcb9f4a",
+      "actualSha256": "f2bfe6e3226d55ff7e891db0c9995cd61062612be8f8e823af4e8ae88a9de556",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 509,
+      "status": "changed",
+      "comparisonImage": "text-extrude-top.png"
+    },
+    {
+      "name": "text-front.png",
+      "baselineSha256": "e243982acf1d252c992d7623236a567986603b2514771bdc5bc274f8c8cea1ae",
+      "actualSha256": "e243982acf1d252c992d7623236a567986603b2514771bdc5bc274f8c8cea1ae",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "text-front.png"
+    },
+    {
+      "name": "text-iso.png",
+      "baselineSha256": "9a287a68734ae734bf20f56942790d0839ad5ac351c03217e67a8e59f9181ff8",
+      "actualSha256": "ee734255a0a48219d83ed7c4925c899e4b6c2f5caef48b216d49b1f44bdd5bcc",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 263,
+      "status": "changed",
+      "comparisonImage": "text-iso.png"
+    },
+    {
+      "name": "text-right.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "text-right.png"
+    },
+    {
+      "name": "text-top.png",
+      "baselineSha256": "025b7d64120098c42f28a8f1b18ceddcca81c724bb9d44917f22cdc104f91396",
+      "actualSha256": "e8b24d57ba5c65237c2f1a592e7a57b8d168829be8b10ce817fb6565a62d93ce",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 426,
+      "status": "changed",
+      "comparisonImage": "text-top.png"
+    },
+    {
+      "name": "three-point-arc-front.png",
+      "baselineSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "actualSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "three-point-arc-front.png"
+    },
+    {
+      "name": "three-point-arc-iso.png",
+      "baselineSha256": "3a5f9c17bf19e119eafdab8634ef0a5d545a4c9cc081ad2ddfd56800d28e5e54",
+      "actualSha256": "e59f5734aa4f1f7b5bfa820826c469c236ec05929c43467584f69113169051ee",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 1101,
+      "status": "changed",
+      "comparisonImage": "three-point-arc-iso.png"
+    },
+    {
+      "name": "three-point-arc-right.png",
+      "baselineSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "actualSha256": "6f827a66e5e3d10b9a7be5e00a2d08daaf15ac078e68095e9408963bb6ae8de5",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "three-point-arc-right.png"
+    },
+    {
+      "name": "three-point-arc-top.png",
+      "baselineSha256": "d650aa8d1f2ea8400a1d5074bd800cf7580fa0412c0ea78af5eea549a1492060",
+      "actualSha256": "7d2afe19f29eb4c576e182e335b0934efc362c37b15bbc22d0483be4d84cfd9c",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 1689,
+      "status": "changed",
+      "comparisonImage": "three-point-arc-top.png"
+    },
+    {
+      "name": "torus-front.png",
+      "baselineSha256": "260996f55fffa00d5624ff1a34f1f4e37df6fdd02ab79e8fb8ec1b9de101b11f",
+      "actualSha256": "37b8b5a01ad9391ce33732c39d382c03c7caf1321bdcfdea2246f1f6a194ba4a",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 25740,
+      "status": "changed",
+      "comparisonImage": "torus-front.png"
+    },
+    {
+      "name": "torus-iso.png",
+      "baselineSha256": "8ae2fb24b04338d3480617576c233629f4d5f5ba5a57a85c57c35063aa9ef6c1",
+      "actualSha256": "1a96d042bab615c81be7d2b72dd138112242fc75be5ec2ff150ff10799a3096f",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 21253,
+      "status": "changed",
+      "comparisonImage": "torus-iso.png"
+    },
+    {
+      "name": "torus-right.png",
+      "baselineSha256": "87712c0e91b61bfa618bccc0c60c62f5020ae9045fe67bb6504981d38f70126f",
+      "actualSha256": "a0573ffe2f1ee3bfbc6a920b11aa51841d04e959b7dab5e4621455d19c7614be",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 23412,
+      "status": "changed",
+      "comparisonImage": "torus-right.png"
+    },
+    {
+      "name": "torus-top.png",
+      "baselineSha256": "3306d0214f02f7158804ab81814aa372d4e05dd31e52fc561363572969a353cf",
+      "actualSha256": "4d6e10cbad6f921aae40ee39bcf24f3e3cce685b0804b8c1f193f69e8c86c3f9",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 30837,
+      "status": "changed",
+      "comparisonImage": "torus-top.png"
+    },
+    {
+      "name": "transforms-front.png",
+      "baselineSha256": "92bda496aca86caa9b08e1263183728b1bee615dd87e309cf4a8cd9fd7803cce",
+      "actualSha256": "8d877a4a6d1dc668e5a8faa84a05dbf09e731b26c1dae1b0af3d0c7fc5bd0236",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 15175,
+      "status": "changed",
+      "comparisonImage": "transforms-front.png"
+    },
+    {
+      "name": "transforms-iso.png",
+      "baselineSha256": "d4f5f601a4d721aa39564288df0d884ba056f101805953a71c1f9356a0049b52",
+      "actualSha256": "c0a2891b5c3cbf1335ff9066c0843cac62d8da64a95ddfae79da58920df2c727",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 6117,
+      "status": "changed",
+      "comparisonImage": "transforms-iso.png"
+    },
+    {
+      "name": "transforms-right.png",
+      "baselineSha256": "30082aeb5f7973141d990364b27ab3668c4922905567d2f8aed3ce8214a64933",
+      "actualSha256": "8046553bc80b43ea2dfc3c0ac05956ee823dd1ad6b3e04437de93cb9e84b2fe7",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 19864,
+      "status": "changed",
+      "comparisonImage": "transforms-right.png"
+    },
+    {
+      "name": "transforms-top.png",
+      "baselineSha256": "64613b89c17dd4f70fddc67ab537d63573d72c760d2c7eed3a95f803269adaa0",
+      "actualSha256": "9732620865292c091a8cf0a1c8ba82e588131d6f83ef81d216e6966445c29f2f",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 2843,
+      "status": "changed",
+      "comparisonImage": "transforms-top.png"
+    },
+    {
+      "name": "trapezoid-front.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "trapezoid-front.png"
+    },
+    {
+      "name": "trapezoid-iso.png",
+      "baselineSha256": "b4250f9c72300c2b71c1a2067efa7820285153fb43dff1b042865e7ccbba9c4e",
+      "actualSha256": "b4250f9c72300c2b71c1a2067efa7820285153fb43dff1b042865e7ccbba9c4e",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "trapezoid-iso.png"
+    },
+    {
+      "name": "trapezoid-right.png",
+      "baselineSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "actualSha256": "41e6d8c924aebb3c586c4431e3c1e11468e44d1cee1817a4d89527675d118995",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "trapezoid-right.png"
+    },
+    {
+      "name": "trapezoid-top.png",
+      "baselineSha256": "d76f776870d3c6a4bbfcae2146958b4567879bdb76100f4fcce71aa5f886680d",
+      "actualSha256": "d76f776870d3c6a4bbfcae2146958b4567879bdb76100f4fcce71aa5f886680d",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "trapezoid-top.png"
+    },
+    {
+      "name": "union-front.png",
+      "baselineSha256": "1cf6c055fa8c6de73fee6186768a8009d2df07babd9f5c563123f07de8bec8ca",
+      "actualSha256": "c2c9fbf2a566e4e9999420ab1c55189783ef5383a62fb509b3d10772811c7a8c",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 43311,
+      "status": "changed",
+      "comparisonImage": "union-front.png"
+    },
+    {
+      "name": "union-iso.png",
+      "baselineSha256": "973e3e60fff8ee86c123d8992567478db83712cd31b881793177680312a94c2c",
+      "actualSha256": "8c4027e7a169ff5d9da8b84642e01d97d9f8a3cd1e683299d280169a4a33de80",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 13395,
+      "status": "changed",
+      "comparisonImage": "union-iso.png"
+    },
+    {
+      "name": "union-right.png",
+      "baselineSha256": "0a27a5db6cc30d3552561806be6887789b1ccf161626741ee5151f9ae4794d5b",
+      "actualSha256": "980d7be988a518a5a3fbf9fc62cbeb7b971f80f1ecd6952521b020a52f7ab01b",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 41297,
+      "status": "changed",
+      "comparisonImage": "union-right.png"
+    },
+    {
+      "name": "union-top.png",
+      "baselineSha256": "cc0afcdb3162acac071c55e5f547be540a52f220b0e6032c253bfed335a4aafc",
+      "actualSha256": "7b9fa232997344dfa503e24fe8f853b3f841b632e0701ebb902865f2ce149e41",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 1176,
+      "status": "changed",
+      "comparisonImage": "union-top.png"
+    },
+    {
+      "name": "vertex-front.png",
+      "baselineSha256": "2614065f09c980554be546dda01ba22b443c62bdb19028b2f16dd0facd6ac3d7",
+      "actualSha256": "2614065f09c980554be546dda01ba22b443c62bdb19028b2f16dd0facd6ac3d7",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "vertex-front.png"
+    },
+    {
+      "name": "vertex-iso.png",
+      "baselineSha256": "2614065f09c980554be546dda01ba22b443c62bdb19028b2f16dd0facd6ac3d7",
+      "actualSha256": "2614065f09c980554be546dda01ba22b443c62bdb19028b2f16dd0facd6ac3d7",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "vertex-iso.png"
+    },
+    {
+      "name": "vertex-right.png",
+      "baselineSha256": "2614065f09c980554be546dda01ba22b443c62bdb19028b2f16dd0facd6ac3d7",
+      "actualSha256": "2614065f09c980554be546dda01ba22b443c62bdb19028b2f16dd0facd6ac3d7",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "vertex-right.png"
+    },
+    {
+      "name": "vertex-top.png",
+      "baselineSha256": "2614065f09c980554be546dda01ba22b443c62bdb19028b2f16dd0facd6ac3d7",
+      "actualSha256": "2614065f09c980554be546dda01ba22b443c62bdb19028b2f16dd0facd6ac3d7",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "vertex-top.png"
+    },
+    {
+      "name": "wedge-front.png",
+      "baselineSha256": "362592b9644797ad0b3614dfd00b9c144371b112650346eda1da8f42f154c978",
+      "actualSha256": "362592b9644797ad0b3614dfd00b9c144371b112650346eda1da8f42f154c978",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "wedge-front.png"
+    },
+    {
+      "name": "wedge-iso.png",
+      "baselineSha256": "d7b941edc5509285f8ebf976c25af0eaa55d03302b5a3fe8603f17999aa7a2d3",
+      "actualSha256": "d7b941edc5509285f8ebf976c25af0eaa55d03302b5a3fe8603f17999aa7a2d3",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "wedge-iso.png"
+    },
+    {
+      "name": "wedge-right.png",
+      "baselineSha256": "781ca39916b44583ffa0ec4838407b042f995e29e85030a65620082a4333968b",
+      "actualSha256": "781ca39916b44583ffa0ec4838407b042f995e29e85030a65620082a4333968b",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "wedge-right.png"
+    },
+    {
+      "name": "wedge-top.png",
+      "baselineSha256": "b87d7710f87ce7644f624cad30bf86ed58b10a5fd24101f704074a92e715d47b",
+      "actualSha256": "b87d7710f87ce7644f624cad30bf86ed58b10a5fd24101f704074a92e715d47b",
+      "expectedSize": [
+        760,
+        640
+      ],
+      "actualSize": [
+        760,
+        640
+      ],
+      "diffPixels": 0,
+      "status": "matched",
+      "comparisonImage": "wedge-top.png"
+    }
+  ],
+  "passed": false
+}

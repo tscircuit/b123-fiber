@@ -1,11 +1,12 @@
 import { publicSymbols, symbolKinds, auxiliarySymbols, auxiliarySymbolKinds, type ClassSymbol, type FunctionSymbol, type PublicSymbol, type AuxiliarySymbol } from "./generated/symbols"
 import { values } from "./generated/values"
 import type { Build123dPlan, RenderOptions, RenderResult } from "./types"
+import { BrowserKernel, type BrowserKernelOptions } from "./kernel/index"
 import type { NativeTypeValue } from "./generated/runtime"
 import type { NativeCallableMap, NativeClassName } from './generated/api-types'
 import type { NativeOverloadedKeywordCallable, NativeCallableSignature, NativeRequestInvocation, NativeResult, NativeExplicitResult, NativeDynamicRequestInvocation, NativeDynamicInvocation, NativeMethodNames, NativeMethodSignature, NativeInvocation, NativePropertyNames, NativeProperty, NativeWritableNames, NativeWritable, NativeStaticMethodNames, NativeStaticSignature, NativeStaticPropertyNames, NativeStaticProperty, NativeOperatorName, NativeOperatorResult } from './native-types'
 import type { NativeCallableInvocation, NativeCallableResult } from './native-types'
-import { base64Bytes, bytesBase64, fileBlob, fileName, type NativeBinaryInput, type NativeFile, type NativeFileFormat, type NativeFileOptions, type NativeImportOptions, type NativeExportOptions, type NativeImportedFile } from './files'
+import { base64Bytes, bytesBase64, type NativeBinaryInput, type NativeFile, type NativeFileFormat, type NativeFileOptions, type NativeImportOptions, type NativeExportOptions, type NativeImportedFile } from './files'
 
 export { nativeFile } from './files'
 export type { NativeBinaryInput, NativeFile, NativeFileFormat, NativeFileValue, NativeFileOptions, NativeImportOptions, NativeExportOptions, NativeImportedFile } from './files'
@@ -31,27 +32,22 @@ export type NativeApi = {
     ? (typeof values)[Name] : NativeTypeValue
 }
 
-export interface NativeClientOptions {
-  /** Geometry service URL. May be relative when the service shares an origin. */
-  url?: string
-  /** Injectable HTTP transport, useful in tests and applications with authentication. */
-  fetch?: typeof globalThis.fetch
-  headers?: HeadersInit
+export interface NativeClientOptions extends BrowserKernelOptions {
+  /** Share an existing in-process OpenCascade kernel between clients or viewers. */
+  kernel?: BrowserKernel | Promise<BrowserKernel>
   signal?: AbortSignal
 }
 export interface NativeRequestOptions { signal?: AbortSignal | null }
 
-/** A native Python exception or HTTP/transport failure, preserving useful details. */
+/** An in-process compatibility or OpenCascade error, preserving useful details. */
 export class NativeError extends Error {
-  readonly status: number
-  readonly pythonType?: string
+  readonly kernelType?: string
   readonly path?: string
   readonly details: unknown
-  constructor(message: string, options: { status?: number; pythonType?: string; path?: string; details?: unknown; cause?: unknown } = {}) {
+  constructor(message: string, options: { kernelType?: string; path?: string; details?: unknown; cause?: unknown } = {}) {
     super(message, { cause: options.cause })
     this.name = "NativeError"
-    this.status = options.status ?? 0
-    this.pythonType = options.pythonType
+    this.kernelType = options.kernelType
     this.path = options.path
     this.details = options.details
   }
@@ -122,21 +118,18 @@ export class NativeHandle<Kind extends string = string, Item = unknown> {
   markReleased(): void { this.released = true }
 }
 
-/** Complete asynchronous dispatch to the pinned native build123d API. */
+/** Asynchronous build123d-compatible bindings to local OpenCascade WebAssembly. */
 export class NativeClient {
-  readonly url: string
   readonly api: NativeApi
-  private readonly transport: typeof globalThis.fetch
-  private readonly headers: HeadersInit | undefined
+  private readonly options: NativeClientOptions
+  private kernelPromise?: Promise<BrowserKernel>
   private readonly signal: AbortSignal | undefined
   private readonly handles = new Map<string, NativeHandle<any, any>>()
 
-  constructor(options: NativeClientOptions | string = {}) {
-    const config = typeof options === "string" ? { url: options } : options
-    this.url = (config.url ?? "http://127.0.0.1:8765").replace(/\/+$/, "")
-    this.transport = config.fetch ?? globalThis.fetch.bind(globalThis)
-    this.headers = config.headers
-    this.signal = config.signal
+  constructor(options: NativeClientOptions = {}) {
+    this.options = options
+    this.signal = options.signal
+    if (options.kernel) this.kernelPromise = Promise.resolve(options.kernel)
     const namespace: Record<string, unknown> = {}
     for (const name of [...publicSymbols, ...auxiliarySymbols]) {
       const kind = name in auxiliarySymbolKinds
@@ -220,145 +213,102 @@ export class NativeClient {
     if (errors.length) throw new AggregateError(errors, "Some native handles could not be released")
   }
 
-  /** Native runtime inventory, including every method/property signature. */
+  /** Lazily initialize the local WebAssembly kernel. No geometry service is needed. */
+  get ready(): Promise<BrowserKernel> {
+    return this.kernelPromise ??= BrowserKernel.create(this.options)
+  }
+
+  /** Local compatibility inventory, including available and unsupported bindings. */
   async inventory<Result = unknown>(options: NativeRequestOptions = {}): Promise<Result> {
-    return this.http("/api", { method: "GET" }, options) as Promise<Result>
+    return this.withKernel(kernel => kernel.inventory(), options) as Promise<Result>
   }
 
-  /** Execute a serializable JSX plan with the same transport/authentication as RPC. */
+  /** Execute a serializable JSX plan with the in-process OpenCascade kernel. */
   async render(plan: Build123dPlan, options: RenderOptions = {}): Promise<RenderResult> {
-    const body = this.encode({
-      plan,
-      ...(options.tolerance === undefined ? {} : { tolerance: options.tolerance }),
-      ...(options.angularTolerance === undefined ? {} : { angularTolerance: options.angularTolerance }),
-    })
-    const result = await this.http("/render", { method: "POST", body: JSON.stringify(body) }, { signal: options.signal })
-    if (!result || !Array.isArray(result.meshes) || typeof result.kernel !== "string" || !("bounds" in result)) {
-      throw new NativeError("The native service returned an invalid render response", { details: result })
+    const encoded = this.encode(plan) as Build123dPlan
+    const result = await this.withKernel(kernel => kernel.render(encoded, options), options)
+    if (!result || !Array.isArray(result.meshes) || typeof result.kernel !== 'string' || !('bounds' in result)) {
+      throw new NativeError('The local kernel returned an invalid render response', { details: result })
     }
-    return result as RenderResult
+    return result
   }
 
-  /** Store binary content under a generated ID in the native workspace. */
+  /** Store browser bytes in the WebAssembly instance's virtual filesystem. */
   async uploadFile(contents: NativeBinaryInput, options: NativeFileOptions = {}): Promise<NativeFile> {
-    const filename = options.filename ?? fileName(contents)
-    const result = await this.http(`/files?filename=${encodeURIComponent(filename)}`, {
-      method: 'POST', body: fileBlob(contents), headers: { 'Content-Type': 'application/octet-stream' },
-    }, options)
-    if (!result?.file || typeof result.file.id !== 'string' || typeof result.file.path !== 'string') {
-      throw new NativeError('The native service returned an invalid file response', { details: result })
-    }
-    return result.file as NativeFile
+    return this.withKernel(kernel => kernel.uploadFile(contents, options), options)
   }
 
-  /** Download an uploaded file. File IDs belong to the current native process. */
+  /** Download a file retained by this WebAssembly instance. */
   downloadFile(file: NativeFile | string, options: NativeRequestOptions = {}): Promise<Blob> {
-    return this.binary(`/files/${encodeURIComponent(typeof file === 'string' ? file : file.id)}`, { method: 'GET' }, options)
+    return this.withKernel(kernel => kernel.downloadFile(file), options)
   }
 
   async deleteFile(file: NativeFile | string, options: NativeRequestOptions = {}): Promise<void> {
-    await this.http(`/files/${encodeURIComponent(typeof file === 'string' ? file : file.id)}`, { method: 'DELETE' }, options)
+    await this.withKernel(kernel => kernel.deleteFile(file), options)
   }
 
-  /** Import a browser file and return a durable, self-contained native CAD plan. */
+  /** Import browser bytes and return a self-contained, replayable CAD plan. */
   async importFile(contents: NativeBinaryInput, options: NativeImportOptions = {}): Promise<NativeImportedFile<NativeHandle | NativeHandle[]>> {
-    const filename = options.filename ?? fileName(contents, `model.${options.format ?? 'step'}`)
-    const query = new URLSearchParams({ filename })
-    if (options.format) query.set('format', options.format)
-    if (options.kwargs) query.set('options', JSON.stringify(this.encode(options.kwargs)))
-    const result = await this.http(`/files/import?${query}`, {
-      method: 'POST', body: fileBlob(contents), headers: { 'Content-Type': 'application/octet-stream' },
-    }, options)
-    if (!result?.plan || !result.result || !Array.isArray(result.result.meshes) || !('value' in result)) {
-      throw new NativeError('The native service returned an invalid import response', { details: result })
-    }
+    const result = await this.withKernel(kernel => kernel.importFile(contents, options), options)
     return { ...result, value: this.decode(result.value) } as NativeImportedFile<NativeHandle | NativeHandle[]>
   }
 
-  /** Export native geometry as a downloadable CAD file with authenticated transport. */
+  /** Export in-process OpenCascade geometry as a downloadable browser Blob. */
   exportFile(target: Build123dPlan | NativeHandle<any, any> | readonly NativeHandle<any, any>[], format: NativeFileFormat, options: NativeExportOptions = {}): Promise<Blob> {
-    const plan = target && typeof target === 'object' && 'version' in target && 'children' in target
-    const body = this.encode({
-      format, ...(plan ? { plan: target } : { target }),
-      ...(options.filename === undefined ? {} : { filename: options.filename }),
-      ...(options.kwargs === undefined ? {} : { options: options.kwargs }),
-    })
-    return this.binary('/files/export', { method: 'POST', body: JSON.stringify(body) }, options)
+    return this.withKernel(kernel => kernel.exportFile(this.encode(target), format, options), options)
   }
 
-  /** Construct native BytesIO/StringIO for build123d's stream overloads. */
+  /** Create an in-process byte or text stream for compatible stream overloads. */
   async createStream(contents: NativeBinaryInput | string = new Uint8Array(), options: NativeRequestOptions & { kind?: 'bytes' | 'text' } = {}): Promise<NativeHandle> {
-    const kind = options.kind ?? (typeof contents === 'string' ? 'text' : 'bytes')
-    const result = await this.http(`/streams?kind=${kind}`, {
-      method: 'POST', body: fileBlob(contents), headers: { 'Content-Type': 'application/octet-stream' },
-    }, options)
-    const handle = this.decode(result?.value)
-    if (!(handle instanceof NativeHandle)) throw new NativeError('The native service returned an invalid stream handle', { details: result })
-    return handle
+    const value = await this.withKernel(kernel => kernel.createStream(contents, options), options)
+    return this.decode(value.value) as NativeHandle
   }
 
-  /** Read complete stream contents without changing the native stream position. */
   async readStream(stream: NativeHandle<any, any>, options: NativeRequestOptions = {}): Promise<Uint8Array | string> {
     stream.assertUsable(this)
-    const blob = await this.binary(`/streams/${encodeURIComponent(stream.id)}`, { method: 'GET' }, options)
-    return stream.kind === 'StringIO' ? blob.text() : new Uint8Array(await blob.arrayBuffer())
+    return this.withKernel(kernel => kernel.readStream(stream.toJSON()), options)
   }
 
   async writeStream(stream: NativeHandle<any, any>, contents: NativeBinaryInput | string, options: NativeRequestOptions = {}): Promise<void> {
     stream.assertUsable(this)
-    await this.http(`/streams/${encodeURIComponent(stream.id)}`, {
-      method: 'POST', body: fileBlob(contents), headers: { 'Content-Type': 'application/octet-stream' },
-    }, options)
+    await this.withKernel(kernel => kernel.writeStream(stream.toJSON(), contents), options)
   }
 
   async request<Result = any>(request: RpcRequest, options: NativeRequestOptions = {}): Promise<Result> {
-    const encoded = this.encode(request)
-    const response = await this.http("/rpc", { method: "POST", body: JSON.stringify(encoded) }, options)
-    if (!response || typeof response !== "object" || !("value" in response)) {
-      throw new NativeError("The native service returned an invalid RPC response", { details: response })
+    const encoded = this.encode(request) as RpcRequest
+    const response = await this.withKernel(kernel => kernel.rpc(encoded), options)
+    if (!response || typeof response !== 'object' || !('value' in response)) {
+      throw new NativeError('The local kernel returned an invalid RPC response', { details: response })
     }
-    return this.decode((response as { value: unknown }).value) as Result
+    return this.decode(response.value) as Result
   }
 
-  private async response(path: string, init: RequestInit, options: NativeRequestOptions = {}): Promise<Response> {
-    const headers = new Headers(this.headers)
-    new Headers(init.headers).forEach((value, name) => headers.set(name, value))
-    if (!headers.has('Accept')) headers.set("Accept", "application/json")
-    if (init.body !== undefined && !headers.has('Content-Type')) headers.set("Content-Type", "application/json")
-    let response: Response
+  private async withKernel<Result>(operation: (kernel: BrowserKernel) => Result | Promise<Result>, options: NativeRequestOptions = {}): Promise<Result> {
+    const signal = options.signal !== undefined ? options.signal : this.signal
+    signal?.throwIfAborted()
     try {
-      response = await this.transport(`${this.url}${path}`, { ...init, headers, signal: options.signal !== undefined ? options.signal : this.signal })
+      const kernel = await this.abortable(this.ready, signal)
+      signal?.throwIfAborted()
+      const value = await this.abortable(Promise.resolve(operation(kernel)), signal)
+      signal?.throwIfAborted()
+      return value
     } catch (cause) {
-      throw new NativeError(`Could not reach the native build123d service at ${this.url || "the current origin"}`, { cause })
+      if (signal?.aborted || cause instanceof NativeError || cause instanceof DOMException && cause.name === 'AbortError') throw cause
+      const details = cause as { name?: string; path?: string; details?: unknown }
+      throw new NativeError(cause instanceof Error ? cause.message : String(cause), {
+        kernelType: details?.name, path: details?.path, details: details?.details, cause,
+      })
     }
-    return response
   }
 
-  private async binary(path: string, init: RequestInit, options: NativeRequestOptions = {}): Promise<Blob> {
-    const headers = new Headers(init.headers)
-    headers.set('Accept', 'application/octet-stream')
-    const response = await this.response(path, { ...init, headers }, options)
-    if (!response.ok) return this.jsonResponse(response)
-    return response.blob()
-  }
-
-  private async http(path: string, init: RequestInit, options: NativeRequestOptions = {}): Promise<any> {
-    return this.jsonResponse(await this.response(path, init, options))
-  }
-
-  private async jsonResponse(response: Response): Promise<any> {
-    const body = await response.text()
-    let data: any
-    try { data = body ? JSON.parse(body) : null }
-    catch (cause) {
-      throw new NativeError(`The native service returned non-JSON data (HTTP ${response.status})`, { status: response.status, details: body, cause })
-    }
-    if (!response.ok || data?.error) {
-      const error = data?.error
-      const message = typeof error === "string" ? error : error?.message ?? data?.message ?? `Native request failed (HTTP ${response.status})`
-      throw new NativeError(message, { status: response.status, pythonType: error?.type, path: error?.path, details: data })
-    }
-    return data
+  private abortable<Result>(promise: Promise<Result>, signal?: AbortSignal | null): Promise<Result> {
+    if (!signal) return promise
+    return new Promise((resolve, reject) => {
+      const abort = () => { signal.removeEventListener('abort', abort); reject(signal.reason) }
+      if (signal.aborted) { reject(signal.reason); return }
+      signal.addEventListener('abort', abort, { once: true })
+      promise.then(value => { signal.removeEventListener('abort', abort); resolve(value) }, error => { signal.removeEventListener('abort', abort); reject(error) })
+    })
   }
 
   /** Recursively encode handles and validate that the JSON protocol loses no values. */
@@ -407,6 +357,6 @@ export class NativeClient {
   }
 }
 
-export function createNativeClient(options: NativeClientOptions | string = {}): NativeClient {
+export function createNativeClient(options: NativeClientOptions = {}): NativeClient {
   return new NativeClient(options)
 }

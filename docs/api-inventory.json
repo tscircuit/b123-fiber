@@ -229978,7 +229978,7 @@
             "annotation": "tuple[float, float]",
             "default": [
               0,
-              Infinity
+              "Infinity"
             ]
           }
         ],
@@ -230208,7 +230208,7 @@
             "annotation": "tuple[float, float]",
             "default": [
               0,
-              Infinity
+              "Infinity"
             ]
           },
           {

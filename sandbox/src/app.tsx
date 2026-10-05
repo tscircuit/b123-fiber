@@ -2,12 +2,15 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode }
 import { createRoot } from 'react-dom/client'
 import type { Build123dPlan, RenderResult } from '../../lib/types'
 import type { CadView } from '../../lib/three'
+import type { NativeFileFormat } from '../../lib/files'
 import rawCatalog from './catalog.json'
 import { CadViewer } from './viewer'
-import { NativeClient, NativeError, NativeHandle } from '../../lib/client'
+import { SandboxCadClient } from './cad'
 import { compileSource } from './compile'
 import { changeParameter, planParameters, planToSource, type PlanParameter } from './plan-source'
 import './style.css'
+
+declare global { interface Window { __CAD_SANDBOX__?: { exampleId: string; result?: RenderResult; plan: Build123dPlan } } }
 
 interface Example {
   id: string
@@ -113,11 +116,6 @@ function ParameterField({ parameter, onChange }: { parameter: PlanParameter; onC
   return <label className="flex min-w-0 flex-col gap-1 text-sm"><span className="whitespace-normal wrap-anywhere">{parameter.label}</span>{typeof parameter.value === 'boolean' ? <input type="checkbox" className="size-4" checked={parameter.value} onChange={event => onChange(event.target.checked)} /> : <input className="w-full rounded-md border border-gray-300 px-3 py-2" type={typeof parameter.value === 'number' ? 'number' : 'text'} step="any" value={text} onChange={event => { setText(event.target.value); if (typeof parameter.value === 'number') { if (event.target.value.trim() && Number.isFinite(Number(event.target.value))) onChange(Number(event.target.value)) } else onChange(event.target.value) }} onBlur={() => { if (typeof parameter.value === 'number' && !text.trim()) setText(String(parameter.value)) }} />}</label>
 }
 
-function defaultKernelUrl() {
-  try { return sessionStorage.getItem('b123-fiber.kernel-url') ?? import.meta.env.VITE_KERNEL_URL ?? 'https://b123-fiber-kernel.vercel.app' }
-  catch { return import.meta.env.VITE_KERNEL_URL ?? 'https://b123-fiber-kernel.vercel.app' }
-}
-
 function App() {
   const [selectedId, setSelectedId] = useState(getInitialExample)
   const [query, setQuery] = useState('')
@@ -141,22 +139,19 @@ function App() {
   const [activePlan, setActivePlan] = useState(initial.plan)
   const [renderedSource, setRenderedSource] = useState(initial.source)
   const [customTitle, setCustomTitle] = useState<string>()
-  const [kernelUrl, setKernelUrl] = useState(defaultKernelUrl)
-  const [kernelToken, setKernelToken] = useState('')
-  const [kernelOpen, setKernelOpen] = useState(false)
-  const [kernelStatus, setKernelStatus] = useState<'idle' | 'connected' | 'error'>('idle')
-  const [runStatus, setRunStatus] = useState<'idle' | 'compiling' | 'rendering' | 'connecting' | 'importing' | 'exporting'>('idle')
-  const [runError, setRunError] = useState<{ stage: string; message: string; settings?: boolean }>()
-  const [exportFormat, setExportFormat] = useState<'step' | 'stl' | 'brep' | 'svg' | 'dxf'>('step')
+  const [runStatus, setRunStatus] = useState<'idle' | 'compiling' | 'rendering' | 'importing' | 'exporting'>('idle')
+  const [runError, setRunError] = useState<{ stage: string; message: string }>()
+  const [exportFormat, setExportFormat] = useState<NativeFileFormat>('step')
   const runController = useRef<AbortController | null>(null)
-  const staticController = useRef<AbortController | null>(null)
+  const previewController = useRef<AbortController | null>(null)
   const searchRef = useRef<HTMLInputElement>(null)
   const noticeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const selected = examples.find(example => example.id === selectedId) ?? examples[0]!
   const model = modelId === selected.id ? loadedModel : null
+  useEffect(() => { window.__CAD_SANDBOX__ = { exampleId: selected.id, result: model ?? undefined, plan: activePlan } }, [selected.id, model, activePlan])
   const busy = runStatus !== 'idle'
   const title = customTitle ?? displayTitle(selected.title)
-  const client = useMemo(() => new NativeClient({ url: kernelUrl.trim(), headers: kernelToken ? { Authorization: `Bearer ${kernelToken}` } : undefined }), [kernelUrl, kernelToken])
+  const client = useMemo(() => new SandboxCadClient(), [])
   const parameters = useMemo(() => planParameters(draftPlan), [draftPlan])
   const stats = model ? {
     ...selected.stats,
@@ -208,16 +203,13 @@ function App() {
     setLoadError(undefined)
     if (cached) { setModel(cached); setModelId(selected.id); setLoading(false); return }
     const controller = new AbortController()
-    staticController.current = controller
+    previewController.current = controller
     setModel(null)
     setModelId('')
     setLoading(true)
     async function load() {
       try {
-        const response = await fetch(selected.modelUrl, { signal: controller.signal })
-        if (!response.ok) throw new Error(`Geometry could not be loaded (${response.status}).`)
-        const result = await response.json() as RenderResult
-        if (!Array.isArray(result.meshes) || !('bounds' in result)) throw new Error('The model file is incomplete.')
+        const result = await client.render(selected.plan, { tolerance: 0.12, angularTolerance: 0.15, signal: controller.signal })
         if (controller.signal.aborted) return
         modelCache.set(selected.id, result)
         setModel(result)
@@ -226,48 +218,19 @@ function App() {
       } catch (error) {
         if (controller.signal.aborted) return
         setLoading(false)
-        setLoadError(error instanceof Error ? error.message : 'Geometry could not be loaded.')
+        setLoadError(error instanceof Error ? error.message : 'Geometry could not be built.')
       }
     }
     void load()
     return () => controller.abort()
-  }, [selected, retryToken])
+  }, [selected, retryToken, client])
 
-  useEffect(() => {
-    try { sessionStorage.setItem('b123-fiber.kernel-url', kernelUrl) } catch { /* Session storage is optional. */ }
-    setKernelStatus('idle')
-  }, [kernelUrl, kernelToken])
-
-  useEffect(() => () => runController.current?.abort(), [])
+  useEffect(() => () => { runController.current?.abort(); client.dispose() }, [client])
 
   const source = tab === 'plan' ? planText : draftSource
 
   function errorMessage(error: unknown) {
     return error instanceof Error ? error.message : String(error)
-  }
-
-  async function connectKernel() {
-    if (busy) return
-    const controller = new AbortController()
-    runController.current = controller
-    setRunStatus('connecting')
-    setRunError(undefined)
-    const timeout = setTimeout(() => controller.abort(), 15000)
-    try {
-      const response = await fetch(`${client.url}/health`, { headers: kernelToken ? { Authorization: `Bearer ${kernelToken}` } : undefined, signal: controller.signal })
-      const data = await response.json()
-      if (!response.ok) throw new Error(data.error?.message ?? `Kernel returned HTTP ${response.status}`)
-      if (data.status !== 'ok') throw new Error('This endpoint did not return a kernel health response.')
-      setKernelStatus('connected')
-      feedback('Kernel connected')
-    } catch (error) {
-      if (runController.current !== controller) return
-      setKernelStatus('error')
-      setRunError({ stage: 'Connection', message: controller.signal.aborted ? 'Connection timed out.' : `${errorMessage(error)} (${client.url})`, settings: true })
-    } finally {
-      clearTimeout(timeout)
-      if (runController.current === controller) setRunStatus('idle')
-    }
   }
 
   async function preparePlan(signal: AbortSignal): Promise<Build123dPlan> {
@@ -286,6 +249,8 @@ function App() {
 
   async function runDraft() {
     if (busy) return
+    previewController.current?.abort()
+    setLoading(false)
     const controller = new AbortController()
     runController.current = controller
     setRunError(undefined)
@@ -298,19 +263,15 @@ function App() {
       setRunStatus('rendering')
       const result = await client.render(plan, { tolerance: 0.12, angularTolerance: 0.15, signal: controller.signal })
       if (controller.signal.aborted) return
-      staticController.current?.abort()
       setModel(result)
       setModelId(selected.id)
       setActivePlan(plan)
       setRenderedSource(tab === 'plan' ? planToSource(plan) : draftSource)
-      setKernelStatus('connected')
       setLoading(false)
       setLoadError(undefined)
     } catch (error) {
       if (!controller.signal.aborted) {
-        const connectionError = error instanceof NativeError && (error.status === 0 || error.status === 401 || error.status === 403)
-        setRunError({ stage, message: errorMessage(error), settings: stage === 'Kernel' && connectionError })
-        if (stage === 'Kernel') setKernelStatus(connectionError ? 'error' : 'connected')
+        setRunError({ stage, message: errorMessage(error) })
       }
     } finally {
       if (runController.current === controller) setRunStatus('idle')
@@ -343,23 +304,15 @@ function App() {
 
   async function importCad(file: File) {
     if (busy) return
-    if (new URL(client.url, window.location.href).hostname === 'b123-fiber-kernel.vercel.app' && file.size > 2 * 1024 * 1024) {
-      setRunError({ stage: 'Import', message: 'Hosted kernel accepts CAD files up to 2 MiB. Use a local kernel for larger files.', settings: true })
-      return
-    }
+    previewController.current?.abort()
+    setLoading(false)
     const controller = new AbortController()
     runController.current = controller
     setRunStatus('importing')
     setRunError(undefined)
     try {
       const imported = await client.importFile(file, { filename: file.name, signal: controller.signal })
-      const release = (value: unknown): void => {
-        if (value instanceof NativeHandle) void value.release().catch(() => {})
-        else if (Array.isArray(value)) value.forEach(release)
-      }
-      release(imported.value)
       if (controller.signal.aborted) return
-      staticController.current?.abort()
       const source = planToSource(imported.plan)
       setDraftSource(source)
       setRenderedSource(source)
@@ -369,11 +322,10 @@ function App() {
       setModel(imported.result)
       setModelId(selected.id)
       setCustomTitle(file.name)
-      setKernelStatus('connected')
       setLoading(false)
       setLoadError(undefined)
       setTab('jsx')
-    } catch (error) { if (!controller.signal.aborted) setRunError({ stage: 'Import', message: errorMessage(error), settings: error instanceof NativeError && (error.status === 0 || error.status === 401 || error.status === 403) }) }
+    } catch (error) { if (!controller.signal.aborted) setRunError({ stage: 'Import', message: errorMessage(error) }) }
     finally { if (runController.current === controller) setRunStatus('idle') }
   }
 
@@ -397,8 +349,7 @@ function App() {
       link.download = filename
       link.click()
       setTimeout(() => URL.revokeObjectURL(url), 1000)
-      setKernelStatus('connected')
-    } catch (error) { if (!controller.signal.aborted) setRunError({ stage, message: errorMessage(error), settings: error instanceof NativeError && (error.status === 0 || error.status === 401 || error.status === 403) }) }
+    } catch (error) { if (!controller.signal.aborted) setRunError({ stage, message: errorMessage(error) }) }
     finally { if (runController.current === controller) setRunStatus('idle') }
   }
 
@@ -434,10 +385,9 @@ function App() {
   return <div className="min-h-screen bg-gray-50 font-sans text-gray-900">
     <header className="flex items-center justify-between border-b border-gray-200 bg-white px-4 py-3">
       <a href="?example=electronics" className="font-semibold" onClick={event => { event.preventDefault(); choose(examples.find(example => example.id === 'electronics')!) }}>b123-fiber sandbox</a>
-      <nav className="flex items-center gap-4 text-sm" aria-label="Project links"><button className={`${button} ${kernelStatus === 'connected' ? 'text-green-700' : ''}`} aria-expanded={kernelOpen} aria-controls="kernel-settings" data-testid="kernel-settings-toggle" onClick={() => setKernelOpen(!kernelOpen)}>Kernel{kernelStatus === 'connected' ? ' connected' : ''}</button><a className="text-blue-600 hover:underline" href="https://build123d.readthedocs.io/en/latest/" target="_blank" rel="noreferrer">Docs</a><a className="text-blue-600 hover:underline" href="https://github.com/tscircuit/b123-fiber" target="_blank" rel="noreferrer">GitHub</a></nav>
+      <nav className="flex items-center gap-4 text-sm" aria-label="Project links"><a className="text-blue-600 hover:underline" href="https://build123d.readthedocs.io/en/latest/" target="_blank" rel="noreferrer">Docs</a><a className="text-blue-600 hover:underline" href="https://github.com/tscircuit/b123-fiber" target="_blank" rel="noreferrer">GitHub</a></nav>
     </header>
     <div className="p-4">
-      {kernelOpen && <section id="kernel-settings" className="mb-4 space-y-3 rounded-lg border border-gray-200 bg-white p-4" aria-label="Kernel settings"><div className="grid gap-3 sm:grid-cols-[minmax(0,2fr)_minmax(0,1fr)_auto]"><label className="min-w-0 space-y-1 text-sm"><span>Kernel URL</span><input className="w-full rounded-md border border-gray-300 px-3 py-2" type="url" value={kernelUrl} onChange={event => setKernelUrl(event.target.value)} disabled={busy} data-testid="kernel-url" placeholder="http://127.0.0.1:8765" /></label><label className="min-w-0 space-y-1 text-sm"><span>Token (optional)</span><input className="w-full rounded-md border border-gray-300 px-3 py-2" type="password" autoComplete="off" value={kernelToken} onChange={event => setKernelToken(event.target.value)} disabled={busy} data-testid="kernel-token" /></label><button className={`${button} self-end`} data-testid="kernel-connect" onClick={() => void connectKernel()} disabled={busy || !kernelUrl.trim()}>{runStatus === 'connecting' ? 'Connecting…' : 'Connect'}</button></div><p className="text-sm text-gray-500">Run locally: <code className="whitespace-normal font-mono wrap-anywhere">uv run build123d-fiber-kernel --origin {window.location.origin}</code></p></section>}
       <button className={`${button} mb-4 lg:hidden`} data-testid="mobile-examples-toggle" aria-expanded={browserOpen} aria-controls="example-browser" onClick={() => setBrowserOpen(!browserOpen)}><Icon name="menu" />Examples ({examples.length})</button>
       {browserOpen && <button className="fixed inset-0 z-20 bg-black/30 lg:hidden" aria-label="Close example browser" onClick={() => setBrowserOpen(false)} />}
       <main className="workbench grid min-w-0 items-start gap-4 lg:grid-cols-[20rem_minmax(0,1fr)]">
@@ -462,10 +412,10 @@ function App() {
         </section>
         <aside className="min-w-0 overflow-hidden rounded-lg border border-gray-200 bg-white lg:col-start-2" aria-label="Example source and metadata">
           <div className="flex flex-wrap items-center gap-1 border-b border-gray-200 p-2" role="tablist" aria-label="Example details">{(['jsx', 'plan', 'parameters', 'details'] as const).map(item => <button className={`${button} ${tab === item ? active : ''}`} id={`tab-${item}`} key={item} role="tab" aria-selected={tab === item} aria-controls="code-content" onClick={() => setTab(item)}>{item === 'jsx' ? 'JSX' : item === 'plan' ? 'Plan' : item === 'parameters' ? 'Parameters' : 'Details'}</button>)}<button className={`${button} ml-auto`} aria-label={tab === 'details' ? 'Copy model metadata' : 'Copy source'} title="Copy to clipboard" onClick={() => void copy(tab === 'details' ? JSON.stringify({ ...stats, bounds: model?.bounds, kernel: model?.kernel }, null, 2) : source)}><Icon name="copy" /></button></div>
-          <div className="flex flex-wrap items-center gap-2 border-b border-gray-200 p-3"><button className={primaryButton} data-testid="run-source" onClick={() => void runDraft()} disabled={busy}>{runStatus === 'compiling' ? 'Compiling…' : runStatus === 'rendering' ? 'Rendering…' : 'Run'}</button><button className={button} onClick={resetExample} disabled={busy}>Reset example</button><span className="text-xs text-gray-500" role="status" data-testid="run-status">{runStatus === 'idle' ? (draftSource !== renderedSource || planText !== JSON.stringify(activePlan, null, 2) ? 'Edited' : '') : runStatus === 'connecting' ? 'Connecting…' : runStatus === 'importing' ? 'Importing…' : runStatus === 'exporting' ? 'Exporting…' : ''}</span></div>
-          {runError && <div className="border-b border-red-200 bg-red-50 p-3 text-sm text-red-700" role="alert" data-testid="editor-error"><strong>{runError.stage} error</strong><pre className="mt-1 whitespace-pre-wrap font-mono wrap-anywhere">{runError.message}</pre>{runError.settings && <button className="mt-2 text-blue-700 underline" onClick={() => setKernelOpen(true)}>Kernel settings</button>}</div>}
+          <div className="flex flex-wrap items-center gap-2 border-b border-gray-200 p-3"><button className={primaryButton} data-testid="run-source" onClick={() => void runDraft()} disabled={busy}>{runStatus === 'compiling' ? 'Compiling…' : runStatus === 'rendering' ? 'Rendering…' : 'Run'}</button>{busy && <button className={button} data-testid="cancel-source" onClick={() => { runController.current?.abort(); runController.current = null; setRunStatus('idle') }}>Cancel</button>}<button className={button} onClick={resetExample} disabled={busy}>Reset example</button><span className="text-xs text-gray-500" role="status" data-testid="run-status">{runStatus === 'idle' ? (draftSource !== renderedSource || planText !== JSON.stringify(activePlan, null, 2) ? 'Edited' : '') : runStatus === 'importing' ? 'Importing…' : runStatus === 'exporting' ? 'Exporting…' : ''}</span></div>
+          {runError && <div className="border-b border-red-200 bg-red-50 p-3 text-sm text-red-700" role="alert" data-testid="editor-error"><strong>{runError.stage} error</strong><pre className="mt-1 whitespace-pre-wrap font-mono wrap-anywhere">{runError.message}</pre></div>}
           <div className="min-w-0" role="tabpanel" id="code-content" aria-labelledby={`tab-${tab}`} tabIndex={0}>{tab === 'jsx' || tab === 'plan' ? <EditableSource source={source} language={tab} onChange={value => tab === 'jsx' ? setDraftSource(value) : setPlanText(value)} onRun={() => void runDraft()} /> : tab === 'parameters' ? <div className="grid gap-4 p-4 sm:grid-cols-2">{parameters.length ? parameters.map(parameter => <ParameterField key={parameter.path.join('.')} parameter={parameter} onChange={value => updateParameter(parameter, value)} />) : <p className="text-sm text-gray-500">Edit the JSX to add parameters.</p>}</div> : <dl className="space-y-4 p-4 text-sm">{[['Kernel', model?.kernel ?? 'OpenCascade'], ['Units', 'Millimeters'], ['Dimension', `${stats.dimension}D · ${geometryKind}`], ['Surface area', `${measure(stats.area)} mm²`], ['Bounding size', dimensions ? dimensions.map(measure).join(' × ') + ' mm' : 'Loading…'], ['Topology', stats.valid ? 'Valid' : 'Invalid']].map(([label, value]) => <div key={label}><dt className="text-gray-500">{label}</dt><dd>{value}</dd></div>)}</dl>}</div>
-          <div className="flex flex-wrap gap-2 border-t border-gray-200 p-3"><button className={button} onClick={() => download(`${selected.id}.plan.json`, activePlan)}><Icon name="download" size={14} />Plan JSON</button><button className={button} disabled={!model} onClick={() => model && download(`${selected.id}.mesh.json`, model)}><Icon name="download" size={14} />Mesh JSON</button><label className={button}><Icon name="download" size={14} />Import CAD<input className="sr-only" data-testid="cad-file-input" type="file" accept=".step,.stp,.stl,.brep,.brp,.svg,.dxf" disabled={busy} onChange={event => { const file = event.currentTarget.files?.[0]; event.currentTarget.value = ''; if (file) void importCad(file) }} /></label><select className="rounded-md border border-gray-300 px-3 py-2 text-sm" aria-label="CAD export format" value={exportFormat} onChange={event => setExportFormat(event.target.value as typeof exportFormat)} disabled={busy}>{['step', 'stl', 'brep', 'svg', 'dxf'].map(format => <option key={format} value={format}>{format.toUpperCase()}</option>)}</select><button className={button} data-testid="export-cad" onClick={() => void exportCad()} disabled={busy}><Icon name="download" size={14} />Download CAD</button></div>
+          <div className="flex flex-wrap gap-2 border-t border-gray-200 p-3"><button className={button} onClick={() => download(`${selected.id}.plan.json`, activePlan)}><Icon name="download" size={14} />Plan JSON</button><button className={button} disabled={!model} onClick={() => model && download(`${selected.id}.mesh.json`, model)}><Icon name="download" size={14} />Mesh JSON</button><label className={button}><Icon name="download" size={14} />Import CAD<input className="sr-only" data-testid="cad-file-input" type="file" accept=".step,.stp,.stl,.brep,.brp,.svg,.dxf" disabled={busy} onChange={event => { const file = event.currentTarget.files?.[0]; event.currentTarget.value = ''; if (file) void importCad(file) }} /></label><select className="rounded-md border border-gray-300 px-3 py-2 text-sm" aria-label="CAD export format" value={exportFormat} onChange={event => setExportFormat(event.target.value as typeof exportFormat)} disabled={busy}>{['step', 'stl', 'brep', 'svg', 'dxf', 'gltf', 'glb', 'obj', '3mf'].map(format => <option key={format} value={format}>{format.toUpperCase()}</option>)}</select><button className={button} data-testid="export-cad" onClick={() => void exportCad()} disabled={busy}><Icon name="download" size={14} />Download CAD</button></div>
         </aside>
       </main>
     </div>

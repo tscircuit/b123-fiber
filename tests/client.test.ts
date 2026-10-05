@@ -1,18 +1,20 @@
 import { describe, expect, it, vi } from "vitest"
 import { NativeClient, NativeError, NativeHandle, expr } from "../lib/client"
 import { Align, Axis, native, values } from "../lib/generated/values"
+import type { BrowserKernel } from "../lib/kernel/index"
 import { publicSymbols, symbolKinds, auxiliarySymbols } from "../lib/generated/symbols"
 
 function stub(...responses: unknown[]) {
-  const requests: { url: string; init: RequestInit; body?: any }[] = []
-  const fetch = vi.fn(async (url: string | URL | Request, init: RequestInit = {}) => {
-    requests.push({ url: String(url), init, body: init.body ? JSON.parse(String(init.body)) : undefined })
-    return new Response(JSON.stringify(responses.shift() ?? { value: null }), { status: 200 })
-  }) as unknown as typeof globalThis.fetch
-  return { client: new NativeClient({ url: "http://localhost:9999/", fetch }), requests, fetch }
+  const requests: { body: any }[] = []
+  const rpc = vi.fn(async (request: unknown) => {
+    requests.push({ body: request })
+    return responses.shift() ?? { value: null }
+  })
+  const kernel = { rpc } as unknown as BrowserKernel
+  return { client: new NativeClient({ kernel }), requests, rpc, kernel }
 }
 
-describe("complete native API client", () => {
+describe("local WebAssembly API client", () => {
   it("exposes every native root export and dispatches constructor/function calls correctly", async () => {
     const { client, requests } = stub({ value: { $ref: "box", kind: "Box" } }, { value: [3, 4] })
     expect(Object.keys(client.api)).toEqual([...publicSymbols, ...auxiliarySymbols])
@@ -74,13 +76,14 @@ describe("complete native API client", () => {
 
   it("releaseAll attempts all refs and keeps failed native releases usable for retry", async () => {
     let fail = true
-    const fetch = vi.fn(async (_url: unknown, options: RequestInit) => {
-      const request = JSON.parse(String(options.body))
-      if (request.op === "construct") return new Response(JSON.stringify({ value: [{ $ref: "s1" }, { $ref: "s2" }] }))
-      if (request.target.$ref === "s1" && fail) return new Response(JSON.stringify({ error: { type: "RuntimeError", message: "retry release" } }), { status: 422 })
-      return new Response(JSON.stringify({ value: null }))
-    }) as unknown as typeof globalThis.fetch
-    const client = new NativeClient({ fetch })
+    const kernel = {
+      rpc: vi.fn(async (request: any) => {
+        if (request.op === "construct") return { value: [{ $ref: "s1" }, { $ref: "s2" }] }
+        if (request.target.$ref === "s1" && fail) throw new Error("retry release")
+        return { value: null }
+      }),
+    } as unknown as BrowserKernel
+    const client = new NativeClient({ kernel })
     const handles = await client.construct<NativeHandle[]>("ShapeList")
     await expect(client.releaseAll()).rejects.toThrow(/could not be released/)
     expect(handles[0].isReleased).toBe(false)
@@ -90,62 +93,66 @@ describe("complete native API client", () => {
     expect(handles[0].isReleased).toBe(true)
   })
 
-  it("retains structured Python errors, malformed response details and transport causes", async () => {
-    const fetch = vi.fn(async () => new Response(JSON.stringify({ error: { type: "ValueError", message: "Invalid radius", path: "rpc.construct.Sphere" } }), { status: 422 })) as unknown as typeof globalThis.fetch
-    const client = new NativeClient({ fetch })
+  it("retains structured local errors and initialization causes", async () => {
+    const cause = Object.assign(new RangeError("Invalid radius"), { path: "construct.Sphere", details: { radius: -1 } })
+    const kernel = { rpc: vi.fn(() => { throw cause }) } as unknown as BrowserKernel
+    const client = new NativeClient({ kernel })
     const error = await client.construct("Sphere", [], { radius: -1 }).catch((error) => error)
     expect(error).toBeInstanceOf(NativeError)
-    expect(error).toMatchObject({ message: "Invalid radius", pythonType: "ValueError", status: 422, path: "rpc.construct.Sphere" })
-    const html = new NativeClient({ fetch: vi.fn(async () => new Response("<html>bad gateway</html>", { status: 502 })) as unknown as typeof globalThis.fetch })
-    await expect(html.construct("Box", [1, 2, 3])).rejects.toMatchObject({ name: "NativeError", status: 502 })
+    expect(error).toMatchObject({ message: "Invalid radius", kernelType: "RangeError", path: "construct.Sphere", cause })
     const missingValue = stub({ unexpected: true }).client
     await expect(missingValue.construct("Box", [1, 2, 3])).rejects.toThrow(/invalid RPC response/)
-    const cause = new Error("connection refused")
-    const offline = new NativeClient({ fetch: vi.fn(async () => { throw cause }) as unknown as typeof globalThis.fetch })
+    const offline = new NativeClient({ kernel: Promise.reject(cause) })
     await expect(offline.construct("Box", [1, 2, 3])).rejects.toMatchObject({ name: "NativeError", cause })
   })
 
-  it("supports relative URLs, inventory reads, custom headers and cancellation signals", async () => {
-    const requests: { url: string; init?: RequestInit }[] = []
-    const controller = new AbortController()
-    const client = new NativeClient({ url: "/kernel/", headers: { "X-Test": "native" }, signal: controller.signal, fetch: (async (url, init) => {
-      requests.push({ url: String(url), init })
-      return new Response(JSON.stringify({ exports: publicSymbols }))
-    }) as typeof globalThis.fetch })
-    expect(await client.inventory()).toEqual({ exports: [...publicSymbols] })
-    expect(requests[0].url).toBe("/kernel/api")
-    expect(requests[0].init?.method).toBe("GET")
-    expect(new Headers(requests[0].init?.headers).get("X-Test")).toBe("native")
-    expect(requests[0].init?.signal).toBe(controller.signal)
+  it("shares an injected asynchronous kernel and reads the local inventory", async () => {
+    const inventory = { exports: [...publicSymbols], runtime: "OpenCascade WebAssembly" }
+    const kernel = { inventory: vi.fn(() => inventory) } as unknown as BrowserKernel
+    const client = new NativeClient({ kernel: Promise.resolve(kernel) })
+    expect(await client.ready).toBe(kernel)
+    expect(await client.inventory()).toEqual(inventory)
+    expect(kernel.inventory).toHaveBeenCalledOnce()
   })
 
-  it("renders headless plans with OCCT tessellation options and request signal overrides", async () => {
+  it("renders locally with OCCT tessellation options and cancellation", async () => {
     const controller = new AbortController()
-    const override = new AbortController()
-    const scene = { meshes: [], bounds: null, kernel: "build123d/OpenCascade" }
-    const { client, requests } = stub(scene, { value: 24 }, { invalid: "render" })
+    const scene = { meshes: [], bounds: null, kernel: "OpenCascade WebAssembly" }
+    const render = vi.fn(async () => scene)
+    const client = new NativeClient({ kernel: { render } as unknown as BrowserKernel })
     const plan = { version: 1 as const, children: [{ type: "Box", props: { length: 2, width: 3, height: 4 }, children: [] }] }
-    expect(await client.render(plan, { tolerance: 0.01, angularTolerance: 0.1, signal: override.signal })).toEqual(scene)
-    expect(requests[0].url).toBe("http://localhost:9999/render")
-    expect(requests[0].body).toEqual({ plan, tolerance: 0.01, angularTolerance: 0.1 })
-    expect(requests[0].init.signal).toBe(override.signal)
-    await client.callFunction("polar", [1, 90], {}, { signal: controller.signal })
-    expect(requests[1].init.signal).toBe(controller.signal)
-    await expect(client.render(plan)).rejects.toThrow(/invalid render response/)
+    const options = { tolerance: 0.01, angularTolerance: 0.1, signal: controller.signal }
+    expect(await client.render(plan, options)).toEqual(scene)
+    expect(render).toHaveBeenCalledWith(plan, options)
+    controller.abort()
+    await expect(client.render(plan, options)).rejects.toMatchObject({ name: "AbortError" })
+    expect(render).toHaveBeenCalledOnce()
   })
 
-  it("preserves constructor default signal and allows explicitly clearing it per request", async () => {
+  it("preserves constructor default cancellation and allows explicitly clearing it", async () => {
     const controller = new AbortController()
-    const signals: unknown[] = []
-    const client = new NativeClient({ signal: controller.signal, fetch: (async (_url, init) => {
-      signals.push(init?.signal)
-      return new Response(JSON.stringify({ value: 1 }))
-    }) as typeof globalThis.fetch })
-    await client.resolve("MM")
-    await client.resolve("MM", { signal: null })
-    expect(signals).toEqual([controller.signal, null])
+    controller.abort()
+    const { kernel, requests } = stub({ value: 1 })
+    const client = new NativeClient({ kernel, signal: controller.signal })
+    await expect(client.resolve("MM")).rejects.toMatchObject({ name: "AbortError" })
+    expect(requests).toHaveLength(0)
+    expect(await client.resolve("MM", { signal: null })).toBe(1)
     expect(client.api.MM).toBe(1)
     expect(client.api.Align.CENTER).toEqual({ $enum: "Align.CENTER" })
+  })
+
+  it("cancels while WebAssembly initialization is pending without invoking CAD", async () => {
+    let initialize!: (kernel: BrowserKernel) => void
+    const pending = new Promise<BrowserKernel>(resolve => { initialize = resolve })
+    const controller = new AbortController()
+    const { kernel, requests } = stub({ value: 1 })
+    const client = new NativeClient({ kernel: pending })
+    const result = client.resolve("MM", { signal: controller.signal })
+    controller.abort()
+    await expect(result).rejects.toMatchObject({ name: 'AbortError' })
+    expect(requests).toHaveLength(0)
+    initialize(kernel)
+    expect(await client.resolve("MM")).toBe(1)
   })
 
   it("rejects JSON lossy values before issuing a request and accepts repeated plain values", async () => {

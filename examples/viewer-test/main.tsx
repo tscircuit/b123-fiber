@@ -2,11 +2,28 @@ import React, { createContext, useContext, useEffect, useState } from 'react'
 import { createRoot } from 'react-dom/client'
 import { Box } from '../../lib/components'
 import { Build123dView } from '../../lib/viewer'
-import type { RenderResult } from '../../lib/types'
+import type { Build123dPlan, RenderOptions, RenderResult } from '../../lib/types'
+import { NativeClient } from '../../lib/client'
+import wasmUrl from 'replicad-opencascadejs/wasm?url'
+import fontUrl from '../../assets/fonts/DejaVuSans.ttf?url'
 
 const Dimensions = createContext({ width: 5, height: 4 })
-declare global { interface Window { __CAD_VIEWER_TEST__: { result?: RenderResult; loads: number; errors: number; error?: string }; __SET_CAD_LENGTH__?: () => void } }
-window.__CAD_VIEWER_TEST__ = { loads: 0, errors: 0 }
+declare global { interface Window { __CAD_VIEWER_TEST__: { result?: RenderResult; loads: number; errors: number; started: number; error?: string }; __SET_CAD_LENGTH__?: () => void } }
+window.__CAD_VIEWER_TEST__ = { loads: 0, errors: 0, started: 0 }
+const client = new NativeClient({ wasmUrl, fontUrl })
+const delayed = new URLSearchParams(window.location.search).get('delay') === '1'
+if (delayed) {
+  const render = client.render.bind(client)
+  client.render = async (plan: Build123dPlan, options?: RenderOptions) => {
+    if (plan.children.length) {
+      const request = ++window.__CAD_VIEWER_TEST__.started
+      const result = await render(plan, { ...options, signal: undefined })
+      await new Promise(resolve => setTimeout(resolve, request === 1 ? 750 : 30))
+      return result
+    }
+    return render(plan, options)
+  }
+}
 function HookModel({ transparent }: { transparent: boolean }) {
   const [length, setLength] = useState(6)
   const dimensions = useContext(Dimensions)
@@ -23,7 +40,7 @@ function Harness() {
     <button onClick={() => setInvalid(true)}>Invalid CAD props</button>
     <button onClick={() => setTransparent(value => !value)}>Toggle transparency</button>
     <span data-testid="revision">{revision}</span>
-    <Build123dView headers={{ Authorization: 'Bearer viewer-test' }} style={{ height: 500 }} onLoad={result => { window.__CAD_VIEWER_TEST__.result = result; window.__CAD_VIEWER_TEST__.loads++ }} onError={error => { window.__CAD_VIEWER_TEST__.error = error.message; window.__CAD_VIEWER_TEST__.errors++ }}>
+    <Build123dView client={client} style={{ height: 500 }} onLoad={result => { window.__CAD_VIEWER_TEST__.result = result; window.__CAD_VIEWER_TEST__.loads++ }} onError={error => { window.__CAD_VIEWER_TEST__.error = error.message; window.__CAD_VIEWER_TEST__.errors++ }}>
       {invalid ? <Box length={Number.NaN} width={5} height={4} /> : <Dimensions.Provider value={{ width: 5, height: 4 }}><HookModel transparent={transparent} /></Dimensions.Provider>}
     </Build123dView>
   </div>

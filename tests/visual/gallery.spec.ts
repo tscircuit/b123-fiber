@@ -7,8 +7,10 @@ import { join } from 'node:path'
 const artifacts = join(process.cwd(), 'artifacts/visual')
 mkdirSync(artifacts, { recursive: true })
 for (const fixture of visualFixtures) {
-  test(`${fixture.id}: native geometry and four engineering views`, async ({ page }) => {
+  test(`${fixture.id}: browser WASM geometry and four native snapshot comparisons`, async ({ page }) => {
     const browserErrors: string[] = []
+    const serviceRequests: string[] = []
+    page.on('request', request => { if (/\/(render|rpc|health)(?:[?/#]|$)/.test(request.url())) serviceRequests.push(request.url()) })
     page.on('pageerror', error => browserErrors.push(error.message))
     page.on('console', message => { if (message.type() === 'error') browserErrors.push(message.text()) })
     await page.goto(`/?test=1&case=${fixture.id}`)
@@ -17,7 +19,7 @@ for (const fixture of visualFixtures) {
     expect(status, await page.locator('[data-cad-status]').innerText()).toBe('ready')
     await page.waitForFunction(() => Boolean(window.__CAD_VISUAL__?.result))
     const result = await page.evaluate(() => window.__CAD_VISUAL__.result!)
-    expect(result.kernel).toMatch(/build123d|OpenCascade|OCCT/i)
+    expect(result.kernel).toMatch(/OpenCascade.*(?:WebAssembly|WASM)/i)
     expect(result.bounds).not.toBeNull()
     expect(result.bounds!.min).toHaveLength(3)
     expect(result.bounds!.max).toHaveLength(3)
@@ -61,8 +63,9 @@ for (const fixture of visualFixtures) {
         if (Math.abs(pixels.data[i]! - 241) + Math.abs(pixels.data[i + 1]! - 244) + Math.abs(pixels.data[i + 2]! - 248) > 20) foreground++
       }
       expect(foreground, `${view} camera renders a visible shape`).toBeGreaterThan(40)
-      await expect(canvas).toHaveScreenshot(`${fixture.id}-${view}.png`)
+      if (process.env.B123_SNAPSHOT_REPORT_ONLY !== '1' || process.env.B123_BROWSER_BASELINES === '1') await expect.soft(canvas).toHaveScreenshot(`${fixture.id}-${view}.png`)
     }
     expect(browserErrors, 'No browser runtime, network or WebGL errors').toEqual([])
+    expect(serviceRequests, 'Geometry is computed by browser WASM without HTTP calls').toEqual([])
   })
 }

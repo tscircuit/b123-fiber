@@ -14,16 +14,13 @@ jobs:
         with:
           node-version: 24
           cache: npm
-      - uses: astral-sh/setup-uv@v6
-        with:
-          python-version: '3.12'
       - run: npm ci
-      - run: uv sync --extra test --frozen
-      - run: npm run generate:api && git diff --exit-code -- lib/generated docs/api-inventory.json
+      - run: npm run check:api
       - run: npm run typecheck && npm test && npm run build
-      - run: npm run test:python
+      - run: npm run test:kernel:minified
+      - run: npm run test:browser:fixtures
       - run: PLAYWRIGHT_BROWSERS_PATH=.playwright npx playwright install --with-deps chromium
-      - run: npm run test:visual
+      - run: npm run test:visual -- --browser-baselines --report-only
       - run: npm run test:cdn
       - run: npm run sandbox:build && npm run test:sandbox && npm run test:sandbox:editor
       - uses: actions/upload-artifact@v4

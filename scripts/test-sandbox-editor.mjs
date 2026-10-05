@@ -5,7 +5,6 @@ import { createServer } from 'node:http'
 import { mkdtemp, readFile, writeFile, mkdir, rm } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { resolve, extname, sep } from 'node:path'
-import { spawn } from 'node:child_process'
 import { setTimeout as delay } from 'node:timers/promises'
 
 const root = resolve(import.meta.dirname, '..')
@@ -15,9 +14,8 @@ const workspace = await mkdtemp(resolve(tmpdir(), 'b123-editor-'))
 process.env.PLAYWRIGHT_BROWSERS_PATH ??= resolve(root, '.playwright')
 const { chromium } = await import('@playwright/test')
 const types = { '.html': 'text/html', '.js': 'application/javascript', '.css': 'text/css', '.json': 'application/json', '.png': 'image/png', '.wasm': 'application/wasm' }
-const report = { assertions: [], browserErrors: [], nativeVolumes: [], screenshots: [], browser: '' }
-let browser, kernel
-let logs = ''
+const report = { assertions: [], browserErrors: [], serviceRequests: [], precomputedModelRequests: [], wasmRequests: [], nativeVolumes: [], screenshots: [], browser: '' }
+let browser
 const server = createServer(async (request, response) => {
   try {
     const pathname = decodeURIComponent(new URL(request.url, 'http://localhost').pathname)
@@ -30,42 +28,19 @@ const server = createServer(async (request, response) => {
 })
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve))
 const baseUrl = process.env.SANDBOX_URL ?? `http://127.0.0.1:${server.address().port}`
-const token = 'sandbox-editor-test-token'
-let kernelUrl = process.env.SANDBOX_KERNEL_URL
-let authToken = process.env.SANDBOX_KERNEL_TOKEN ?? ''
 await mkdir(artifacts, { recursive: true })
 
 try {
-  if (!kernelUrl) {
-    const reserve = createServer()
-    await new Promise(resolve => reserve.listen(0, '127.0.0.1', resolve))
-    const port = reserve.address().port
-    await new Promise(resolve => reserve.close(resolve))
-    kernelUrl = `http://127.0.0.1:${port}`
-    authToken = token
-    kernel = spawn(resolve(root, '.venv/bin/python'), ['-m', 'build123d_fiber', '--port', String(port), '--origin', new URL(baseUrl).origin, '--workspace-root', workspace], {
-      cwd: root, env: { ...process.env, PYTHONPATH: resolve(root, 'python'), BUILD123D_FIBER_TOKEN: token }, stdio: ['ignore', 'pipe', 'pipe'],
-    })
-    kernel.stdout.on('data', chunk => { logs += chunk.toString() })
-    kernel.stderr.on('data', chunk => { logs += chunk.toString() })
-  }
-  const headers = authToken ? { Authorization: `Bearer ${authToken}` } : undefined
-  let healthy = false
-  for (let attempt = 0; attempt < 160; attempt++) {
-    try {
-      const response = await fetch(`${kernelUrl}/health`, { headers, signal: AbortSignal.timeout(2000) })
-      if (response.ok && (await response.json()).status === 'ok') { healthy = true; break }
-    } catch { /* Wait for native imports and OCCT initialization. */ }
-    if (kernel?.exitCode != null) throw new Error(`Kernel exited: ${logs}`)
-    await delay(100)
-  }
-  assert(healthy, `Native kernel is available: ${logs}`)
   browser = await chromium.launch({ executablePath: process.env.CHROMIUM_PATH, args: ['--no-sandbox', '--disable-dev-shm-usage', '--use-gl=angle', '--use-angle=swiftshader', '--enable-unsafe-swiftshader'] })
   report.browser = browser.version()
   const page = await browser.newPage({ viewport: { width: 1440, height: 1000 }, deviceScaleFactor: 1 })
   page.on('pageerror', error => report.browserErrors.push(error.message))
+  page.on('request', request => {
+    if (/\/(render|rpc|health)(?:[?/#]|$)/.test(request.url())) report.serviceRequests.push(request.url()); if (/\/(?:browser-)?models\/[^/]+\.json/.test(request.url())) report.precomputedModelRequests.push(request.url())
+    if (request.url().endsWith('.wasm')) report.wasmRequests.push(request.url())
+  })
   if (process.env.SANDBOX_NODE_TRANSPORT === '1') {
-    const origins = [new URL(baseUrl).origin, new URL(kernelUrl).origin]
+    const origins = [new URL(baseUrl).origin]
     await page.route('**/*', async route => {
       const request = route.request()
       if (!origins.includes(new URL(request.url()).origin)) { await route.continue(); return }
@@ -91,12 +66,7 @@ try {
   await page.locator('[data-testid="example-card"][data-example-id="box"]').click()
   await page.locator('.cad-viewer[data-model-id="box"][data-model-ready="true"]').waitFor()
   report.assertions.push('Full example source autosizes without clipping at desktop, tablet, and mobile widths')
-  await page.getByTestId('kernel-settings-toggle').click()
-  await page.getByTestId('kernel-url').fill(kernelUrl)
-  await page.getByTestId('kernel-token').fill(authToken)
-  await page.getByTestId('kernel-connect').click()
-  await page.waitForFunction(() => document.querySelector('[data-testid="kernel-settings-toggle"]')?.textContent.includes('connected'))
-  report.assertions.push('Configurable native endpoint and bearer token connect over real HTTP')
+  report.assertions.push('Sandbox edits use a local OpenCascade WASM worker without endpoint or token settings')
 
   const editor = page.getByTestId('jsx-editor')
   const original = await editor.inputValue()
@@ -197,39 +167,42 @@ try {
   const plan = JSON.parse(await readFile(planPath, 'utf8'))
   assert.equal(plan.version, 1)
   assert(!JSON.stringify(plan).includes('"$ref"'), 'Imported plan is independent of process-local native handles')
-  const replay = await fetch(`${kernelUrl}/render`, { method: 'POST', headers: { 'Content-Type': 'application/json', ...headers }, body: JSON.stringify({ plan }), signal: AbortSignal.timeout(30_000) })
-  assert.equal(replay.status, 200)
-  const replayModel = await replay.json()
-  assert.equal(replayModel.meshes.reduce((sum, mesh) => sum + mesh.volume, 0), 480)
-  report.assertions.push('Downloaded imported plan replays natively over HTTP with embedded CAD bytes')
+  await page.getByRole('tab', { name: 'Plan', exact: true }).click()
+  await page.getByTestId('plan-editor').fill(JSON.stringify(plan, null, 2))
+  await page.getByTestId('run-source').click()
+  await page.waitForFunction(() => document.querySelector('[data-testid="run-source"]')?.textContent === 'Run' && !document.querySelector('[data-testid="editor-error"]'), undefined, { timeout: 30_000 })
+  assert.equal(Number(await page.getByTestId('model-stats').getAttribute('data-volume')), 480)
+  report.assertions.push('Downloaded imported plan replays in browser WASM with embedded CAD bytes')
+  await page.getByRole('tab', { name: 'JSX', exact: true }).click()
 
   await page.getByRole('button', { name: 'Reset example', exact: true }).click()
   assert.equal(await editor.inputValue(), original)
   assert.equal(Number(await page.getByTestId('model-stats').getAttribute('data-volume')), 1728)
-  let releaseAsset
-  const heldAsset = new Promise(resolve => { releaseAsset = resolve })
-  const assetUrl = new URL('/models/box.json', baseUrl).toString()
-  const assetBody = await readFile(resolve(dist, 'models/box.json'))
-  await page.route(assetUrl, async route => {
-    await heldAsset
-    try { await route.fulfill({ status: 200, contentType: 'application/json', body: assetBody }) }
-    catch { /* Native regeneration deliberately cancels this stale request. */ }
+  let releaseInitialWasm
+  const heldWasm = new Promise(resolve => { releaseInitialWasm = resolve })
+  let initialWasmHeld = false
+  const wasmPattern = /\/(?:[^/]*(?:opencascade|replicad)[^/]*\.wasm)(?:[?#]|$)/
+  await page.context().route(wasmPattern, async route => {
+    if (initialWasmHeld) { await route.continue(); return }
+    initialWasmHeld = true
+    await heldWasm
+    try { await route.continue() } catch { /* The superseded worker was terminated. */ }
   })
   await page.reload()
   await editor.waitFor({ state: 'visible' })
-  await page.getByTestId('kernel-settings-toggle').click()
-  await page.getByTestId('kernel-token').fill(authToken)
+  for (let attempt = 0; !initialWasmHeld && attempt < 100; attempt++) await delay(50)
+  assert(initialWasmHeld, 'Initial OpenCascade WASM initialization is deliberately delayed')
   await editor.fill(original.replace('length={18}', 'length={24}'))
   await page.getByTestId('run-source').click()
-  await page.waitForFunction(() => Number(document.querySelector('[data-testid="model-stats"]')?.getAttribute('data-volume')) === 2304, undefined, { timeout: 30_000 })
-  releaseAsset()
+  await page.waitForFunction(() => Number(document.querySelector('[data-testid="model-stats"]')?.getAttribute('data-volume')) === 2304 && document.querySelector('.cad-viewer')?.getAttribute('data-model-ready') === 'true', undefined, { timeout: 30_000 })
+  releaseInitialWasm()
   await delay(150)
   assert.equal(Number(await page.getByTestId('model-stats').getAttribute('data-volume')), 2304)
-  report.assertions.push('A late example asset cannot overwrite a newly regenerated native model')
+  report.assertions.push('A superseded local WASM initialization cannot overwrite a newly regenerated model')
   await page.getByRole('button', { name: 'Reset example', exact: true }).click()
   await page.waitForFunction(() => Number(document.querySelector('[data-testid="model-stats"]')?.getAttribute('data-volume')) === 1728 && document.querySelector('.cad-viewer')?.getAttribute('data-model-ready') === 'true')
-  await page.unroute(assetUrl)
-  report.assertions.push('Reset restores original geometry even when its initial asset request was cancelled')
+  await page.context().unroute(wasmPattern)
+  report.assertions.push('Reset computes original geometry after cancelling the initial WASM worker')
   await page.evaluate(() => scrollTo(0, 0))
   await page.screenshot({ path: resolve(artifacts, 'desktop-editor.png'), fullPage: true })
   report.screenshots.push('desktop-editor.png')
@@ -238,16 +211,18 @@ try {
   await page.screenshot({ path: resolve(artifacts, 'mobile-editor.png'), fullPage: true })
   report.screenshots.push('mobile-editor.png')
   assert.deepEqual(report.browserErrors, [])
-  console.log(`Passed ${report.assertions.length} real native editor, upload, and download checks`)
+  assert.deepEqual(report.precomputedModelRequests, [], 'Gallery renders from plans instead of loading saved native meshes')
+  assert.deepEqual(report.serviceRequests, [], 'CAD operations must not request an HTTP geometry service')
+  assert(report.wasmRequests.some(url => /opencascade|replicad/.test(url)), 'Browser loaded the real OpenCascade WASM asset')
+  console.log(`Passed ${report.assertions.length} browser WASM editor, upload, and download checks`)
 } catch (error) {
   report.failure = error.stack ?? String(error)
+  report.failureState = await page?.evaluate(() => ({ error: document.querySelector('[data-testid="editor-error"]')?.textContent, run: document.querySelector('[data-testid="run-source"]')?.textContent, source: document.querySelector('[data-testid="jsx-editor"]')?.value, volume: document.querySelector('[data-testid="model-stats"]')?.getAttribute('data-volume') })).catch(() => undefined)
+  await page?.screenshot({ path: resolve(artifacts, 'failure.png'), fullPage: true }).catch(() => {})
   throw error
 } finally {
   await browser?.close()
-  kernel?.kill('SIGTERM')
-  if (kernel && kernel.exitCode == null) await Promise.race([new Promise(resolve => kernel.once('exit', resolve)), delay(5000).then(() => kernel.kill('SIGKILL'))])
   await new Promise(resolve => server.close(resolve))
   await writeFile(resolve(artifacts, 'results.json'), JSON.stringify(report, null, 2) + '\n')
-  await writeFile(resolve(artifacts, 'kernel.log'), logs)
   await rm(workspace, { recursive: true, force: true })
 }

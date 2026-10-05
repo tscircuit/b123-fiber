@@ -1,7 +1,4 @@
 import { afterAll, beforeAll, expect, test } from 'vitest'
-import { spawn, type ChildProcess } from 'node:child_process'
-import { createServer } from 'node:net'
-import { resolve } from 'node:path'
 import { useState } from 'react'
 import { NativeClient, NativeError, type NativeHandle } from '../lib/client'
 import { Box, BuildPart, Cylinder, Fillet, Shape, Subtract, Translate } from '../lib/components'
@@ -11,44 +8,16 @@ import { Axis, native } from '../lib/generated/values'
 import { expr } from '../lib/generated/runtime'
 import { publicSymbols } from '../lib/generated/symbols'
 
-let processHandle: ChildProcess
 let client: NativeClient
-let serviceLog = ''
 
 beforeAll(async () => {
-  const port = await new Promise<number>((resolvePort, reject) => {
-    const server = createServer()
-    server.once('error', reject)
-    server.listen(0, '127.0.0.1', () => {
-      const address = server.address()
-      if (!address || typeof address === 'string') return reject(new Error('Could not allocate kernel test port'))
-      server.close(() => resolvePort(address.port))
-    })
-  })
-  const url = `http://127.0.0.1:${port}`
-  processHandle = spawn(resolve('.venv/bin/python'), ['-m', 'build123d_fiber', '--port', String(port)], { stdio: ['ignore', 'pipe', 'pipe'] })
-  processHandle.stdout?.on('data', chunk => { serviceLog += String(chunk) })
-  processHandle.stderr?.on('data', chunk => { serviceLog += String(chunk) })
-  processHandle.once('error', error => { serviceLog += error.message })
-  let ready = false
-  for (let attempt = 0; attempt < 150; attempt++) {
-    try {
-      const response = await fetch(`${url}/health`, { signal: AbortSignal.timeout(1000) })
-      if (response.ok) { ready = true; break }
-    } catch { /* The native imports take a few seconds during startup. */ }
-    if (processHandle.exitCode !== null) throw new Error(serviceLog)
-    await new Promise(done => setTimeout(done, 100))
-  }
-  if (!ready) throw new Error(`Native service failed to start: ${serviceLog}`)
-  client = new NativeClient({ url })
+  client = new NativeClient()
+  await client.ready
 }, 30_000)
 
-afterAll(async () => {
-  try { await client?.releaseAll() }
-  finally { processHandle?.kill('SIGTERM') }
-})
+afterAll(async () => { await client?.releaseAll() })
 
-test('the TypeScript and live native inventories agree on every public export', async () => {
+test('the TypeScript and local WASM inventories agree on every public export', async () => {
   const api = await client.inventory<{ exports: string[]; version: string }>()
   expect(api.version).toBe('0.13.0')
   expect(api.exports).toEqual([...publicSymbols])
@@ -151,7 +120,7 @@ test('native errors retain their type and path and do not corrupt later builders
   await expect(client.render(renderToBuild123dPlan(<BuildPart>
     <Box length={10} width={8} height={6} />
     <Fillet radius={999} objects={native.edges()} />
-  </BuildPart>))).rejects.toMatchObject({ name: 'NativeError', status: 422, path: 'plan.children[0].children[1]' })
+  </BuildPart>))).rejects.toMatchObject({ name: 'NativeError', path: 'plan.children[0].children[1]' })
   const result = await client.render(renderToBuild123dPlan(<Box length={2} width={3} height={4} />))
   expect(result.meshes[0]!.volume).toBeCloseTo(24)
   await expect(client.construct('NoSuchClass')).rejects.toBeInstanceOf(NativeError)
@@ -187,7 +156,7 @@ test('native selector keys can be invoked directly and embedded as expressions',
     expect(await client.invoke(distance, [reference])).toBe(0)
     const result = await client.render(renderToBuild123dPlan(<Box length={expr.operator(expr.apply(distance, [reference]), 'add', [2])} width={3} height={4} />))
     expect(result.meshes[0]!.volume).toBeCloseTo(24)
-    await expect(reference.invoke([])).rejects.toMatchObject({ pythonType: 'TypeError' })
+    await expect(reference.invoke([])).rejects.toMatchObject({ name: 'NativeError' })
   } finally {
     await Promise.all([box.release(), faces.release(), reference.release(), distance.release()])
   }

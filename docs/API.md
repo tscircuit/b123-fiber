@@ -1,36 +1,93 @@
-# Native API inventory
+# Compatible API bindings
 
-This package targets **build123d 0.13.0**, using its native OpenCascade kernel. The generated [inventory](api-inventory.json) contains all **203 root exports**, constructor and function signatures, overloads, inherited methods, writable properties, and metaclass properties such as `Plane.XY`. Regenerate it with `.venv/bin/python scripts/generate-api.py`; `--check` verifies reproducibility.
+The generated [inventory](api-inventory.json) records build123d 0.13.0's **203 root
+exports**, inspected overloads, inherited methods, and properties. It is the
+TypeScript compatibility reference. The runtime is implemented in TypeScript
+with OpenCascade WebAssembly; it does not import or execute Python build123d.
+Not every listed API has equivalent browser behavior. Use
+`await client.inventory()` and the [compatibility matrix](COMPATIBILITY.md) to
+inspect implemented and unsupported bindings.
 
-The native service preserves the original Python API. JavaScript uses asynchronous RPC because geometry executes in the Python service. JSX compiles to the same native builders and operations. Python names and keyword arguments retain their spelling and angles remain in degrees.
+## Local client and retained objects
 
 ```ts
-import { NativeClient, native, Align, Axis } from '@tscircuit/b123-fiber'
+import { NativeClient } from '@tscircuit/b123-fiber'
 
-const client = new NativeClient({ url: 'http://127.0.0.1:8765' })
+const client = new NativeClient()
 const box = await client.construct('Box', [], { length: 20, width: 12, height: 6 })
 const volume = await box.get('volume')
 const edges = await box.call('edges')
-const vertical = await edges.call('filter_by', [Axis.Z])
-const filleted = await box.call('fillet', [1, vertical])
-const other = await client.api.Cylinder({ radius: 3, height: 10, align: Align.CENTER })
-const cut = await box.operator('sub', other)
-const solid = await client.callStatic('Solid', 'make_box', [2, 3, 4])
-await client.callFunction('export_step', [cut, 'part.step'])
-await Promise.all([box.release(), edges.release(), vertical.release(), filleted.release(), other.release(), cut.release(), solid.release()])
+await box.set('label', 'Mount')
+const download = await client.exportFile(box, 'step', { filename: 'mount.step' })
+await Promise.all([box.release(), edges.release()])
 ```
 
-`construct(name, args, kwargs)` and `callFunction(name, args, kwargs)` cover every exported constructor/function. `client.api.Name(kwargs)` is a convenient asynchronous namespace for keyword calls. Native objects return `NativeHandle` values, whose `.call(name, args, kwargs)`, `.get(name)`, `.set(name, value)`, `.at(index)`, `.slice(start, stop, step)`, `.operator(name, ...args)` and `.release()` expose methods, properties, indexing, algebra and lifetime management. Native callable results support `.invoke(args, kwargs)` or `client.invoke(target, args, kwargs)`. ShapeList and other native collections support `.length()`, `.contains(value)` and `.toArray()`. Static/class methods use `callStatic(typeName, method, args, kwargs)`. Values recursively decode inside arrays and records, and handles recursively encode when passed to later operations. Call `.release()` once a handle is no longer needed; use `client.releaseAll()` to release all handles retained by that client. Handles belong to their originating client, and using released or cross-client handles throws before any request.
+`construct(name, args, kwargs)` and `callFunction(name, args, kwargs)` dispatch
+local compatible bindings. `client.api.Name(kwargs)` provides keyword-only
+calls. `NativeHandle` exposes `.call()`, `.get()`, `.set()`, `.at()`, `.slice()`,
+`.operator()`, and `.release()`. Collections provide `.length()`, `.contains()`,
+and `.toArray()`. Static methods use `client.callStatic(typeName, method, args,
+kwargs)`. Retained callables use `.invoke(args, kwargs)`. Handles recursively
+encode in subsequent calls and retain stable identity when decoded repeatedly.
 
-`native.Name(...args)` and `native.Name.withKwargs(kwargs, ...args)` create serializable symbolic calls for JSX props. Symbolic class attributes and static calls work as `native.Plane.XY` and `native.Solid.make_box(2, 3, 4)`. These calls execute when the service decodes the plan or RPC arguments. `values` combines symbolic classes/functions, enums, and constants into one namespace. Direct RPC objects remain native objects; their attributes are read explicitly with `.get()`. JavaScript does not overload Python's algebra operators; `.operator('add' | 'sub' | 'and' | 'mul', ...)` forwards their native equivalents.
+Release handles when finished, or use `client.releaseAll()`. Handles belong to
+their originating client and cannot be used after release or in another client.
+Indexed mutation uses `.setAt()` and `.deleteAt()` where the binding supports it.
 
-The `expr` namespace composes native method/property/index/operator expressions for JSX props. For example, `expr.method(expr.call('edges'), 'filter_by', [Axis.Z])` selects vertical edges while the enclosing builder is active. `expr.index(target, -1)` and `expr.slice(target, 1, 3)` retain Python selection behavior. Native callbacks can be expressed with `expr.lambda(edge => expr.operator(expr.get(edge, 'length'), 'gt', [5]))`; this JavaScript function builds a serializable callback body once, and the native service evaluates that body for each actual edge. `expr.apply(target, args, kwargs)` executes a retained or symbolic native callable, such as a key returned by `native.topo_distance_to`. `expr.arg(index)` supports explicit callback arguments and `expr.conditional(condition, thenValue, elseValue)` branches on native expressions. JavaScript arithmetic/comparisons inside a callback are not transmitted; compose `expr.operator` calls instead.
+## Symbolic expressions in JSX
 
-`client.render(plan, { tolerance, angularTolerance, signal })` executes headless plans and returns OCCT mesh data using the client's configured URL, headers and error handling. RPC methods accept optional request options with a signal; `client.request(request, { signal })` exposes the complete protocol. The constructor signal is the default, and a per-request signal overrides it.
+`native.Name(...args)` and `native.Name.withKwargs(kwargs, ...args)` create
+serializable calls. `native.Plane.XY` and `native.Solid.make_box(2, 3, 4)` represent
+class attributes/static calls. They execute when the local kernel evaluates the
+plan. `values` combines symbolic constructors, functions, enums, and constants.
+JavaScript arithmetic is not overloaded; use compatible `.operator()` calls.
 
-Browser File/Blob imports, CAD downloads, native BytesIO/StringIO, and durable hosted file plans are documented in [file transport](FILE-TRANSPORT.md). Native handles and upload IDs belong to one service process; hosted applications should render self-contained plans. See [compatibility](COMPATIBILITY.md) and [deployment limits](DEPLOYMENT.md).
+`expr.method(expr.call('edges'), 'filter_by', [Axis.Z])` describes selection in an
+active builder. `expr.index()` and `expr.slice()` describe indexed selection.
+`expr.lambda(edge => expr.operator(expr.get(edge, 'length'), 'gt', [5]))` builds
+a serializable predicate once. `expr.apply(target, args, kwargs)` calls a
+compatible callable; `expr.arg(index)` describes callback arguments and
+`expr.conditional()` chooses a branch. JavaScript closures are not executed
+inside the CAD kernel; expression objects describe their supported operations.
 
-The bridge exposes native capabilities rather than approximating missing operations. Some APIs require their original native context or resource: builder selectors need an active builder, text needs an installed font, import/export accepts native workspace paths or the browser file/stream bridge, and assembly methods need native joint/shape handles. Backend errors retain the Python exception type and message. Declarative native callbacks are supported through `expr.lambda`; arbitrary JavaScript closures, arbitrary Python code, private attributes, and raw OCP objects are outside the JSON protocol. Generated TypeScript bindings cover inspected overloads, positional/keyword argument combinations, specific enums, native value inputs, and typed retained object methods/properties. Known kwargs and named JSX component props are closed; explicit return-type generics and dynamic RPC names remain escape hatches. Unannotated native APIs accept wire values, and raw OCP values retain opaque handle types. Python value ranges, builder-context availability, and mathematical shape validity are checked by the native service. Root coverage is not a claim that every context or every overload has its own visual regression fixture.
+## Initialization, rendering, and errors
+
+```ts
+const client = new NativeClient({
+  wasmUrl: '/assets/opencascade.wasm',
+  fontUrl: '/assets/DejaVuSans.ttf',
+})
+await client.ready
+const result = await client.render(plan, {
+  tolerance: 0.1,
+  angularTolerance: 0.1,
+  signal: controller.signal,
+})
+```
+
+Packaged assets load lazily by default. `wasmBinary`/`fontBinary` accept bytes;
+`openCascade` injects an initialized compatible OpenCascade.js instance. A shared
+`kernel` can also be supplied. There is no URL for a geometry service and no
+fetch/authentication transport option. Geometry runs in-process after static
+assets load. The sandbox uses a worker to keep synchronous CAD work off the UI.
+
+The constructor signal is the default; per-request options override it, and
+`signal: null` clears it. Cancellation rejects pending asynchronous requests;
+terminating a dedicated worker stops synchronous native computation. Errors
+preserve their message, `kernelType`, optional plan path, and cause. Missing
+bindings throw explicit errors rather than silently falling back to a backend.
+
+Known keyword arguments and named JSX props are typed against the upstream
+signatures. Explicit result generics and dynamic symbol names remain escape
+hatches. These declarations do not prove runtime support for every overload.
+Builder availability, argument ranges, and native geometry validity are checked
+by the local compatibility implementation. See [files](FILE-TRANSPORT.md),
+[architecture](../ARCHITECTURE.md), and [deployment](DEPLOYMENT.md).
+
+## Upstream symbol inventory
+
+The following lists describe the reference API, including unsupported runtime
+bindings. They are preserved for comparison with the pinned build123d release.
 
 ## Classes
 

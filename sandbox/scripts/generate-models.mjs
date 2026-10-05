@@ -1,14 +1,13 @@
 #!/usr/bin/env node
 /**
- * Rebuild the deployed gallery with the pinned native build123d/OpenCascade kernel.
- * Run from anywhere: node sandbox/scripts/generate-models.mjs
- * Prerequisites (repository root): npm ci && uv sync --extra test --frozen
- * Browsing uses checked-in meshes; editing calls the hosted native CAD service.
+ * Generate gallery assets with local OpenCascade WASM. Requires only npm ci.
+ * Existing /models native assets remain immutable migration comparisons.
+ * New output: sandbox/public/browser-models and src/browser-catalog.json.
  */
 import { build } from 'esbuild'
-import { spawnSync } from 'node:child_process'
+import { createRequire } from 'node:module'
 import { copyFile, mkdir, writeFile } from 'node:fs/promises'
-import { fileURLToPath } from 'node:url'
+import { fileURLToPath, pathToFileURL } from 'node:url'
 import { dirname, join, resolve } from 'node:path'
 
 const sandbox = resolve(dirname(fileURLToPath(import.meta.url)), '..')
@@ -31,29 +30,18 @@ const fixtures = visualFixtures.map(fixture => ({
   ...fixture, plan: { version: 1, children: fixture.plan.children.map(normalizeNode) },
 }))
 
-const python = String.raw`
-import json, sys
-from build123d_fiber.kernel import Kernel
-kernel = Kernel()
-request = json.load(sys.stdin)
-for fixture in request['fixtures']:
-    result = kernel.render({
-        'plan': fixture['plan'],
-        'tolerance': request['tolerance'],
-        'angularTolerance': request['angularTolerance'],
-    })
-    print(json.dumps({'id': fixture['id'], 'result': result}, separators=(',', ':')), flush=True)
-`
-const generated = spawnSync(join(repository, '.venv/bin/python'), ['-c', python], {
-  cwd: repository,
-  input: JSON.stringify({ fixtures, tolerance, angularTolerance }),
-  encoding: 'utf8', maxBuffer: 256 * 1024 * 1024,
-})
-if (generated.status !== 0) throw new Error(generated.stderr || `Native mesh generator exited ${generated.status}`)
-const nativeResults = new Map(generated.stdout.trim().split('\n').map(line => {
-  const { id, result } = JSON.parse(line)
-  return [id, result]
-}))
+const runtimeEntry = join(repository, 'artifacts/browser-model-generator.mjs')
+await mkdir(dirname(runtimeEntry), { recursive: true })
+await build({ stdin: { contents: "export { NativeClient } from './lib/client';", resolveDir: repository, loader: 'ts' }, outfile: runtimeEntry, bundle: true, platform: 'node', format: 'esm', packages: 'external' })
+const { NativeClient } = await import(pathToFileURL(runtimeEntry).href)
+const require = createRequire(import.meta.url)
+const client = new NativeClient({ wasmUrl: require.resolve('replicad-opencascadejs/wasm'), fontUrl: join(repository, 'assets/fonts/DejaVuSans.ttf') })
+await client.ready
+const nativeResults = new Map()
+for (const fixture of fixtures) {
+  nativeResults.set(fixture.id, await client.render(fixture.plan, { tolerance, angularTolerance }))
+}
+await client.releaseAll()
 
 const descriptions = {
   vertex: 'A single native vertex, rendered as point topology.',
@@ -146,13 +134,17 @@ const sourceFor = fixture => {
 
 const quantize = number => Number(number.toFixed(6))
 const finite = numbers => Array.isArray(numbers) && numbers.every(Number.isFinite)
-const modelDirectory = join(sandbox, 'public/models')
+const outputFlag = process.argv.indexOf('--output')
+const catalogFlag = process.argv.indexOf('--catalog')
+const modelDirectory = outputFlag === -1 ? join(sandbox, 'public/browser-models') : resolve(process.argv[outputFlag + 1])
+const catalogFile = catalogFlag === -1 ? join(sandbox, 'src/browser-catalog.json') : resolve(process.argv[catalogFlag + 1])
+if (modelDirectory === join(sandbox, 'public/models')) throw new Error('Existing native models are immutable migration references; choose a distinct browser output directory.')
 const thumbnailDirectory = join(sandbox, 'public/thumbnails')
 await Promise.all([mkdir(modelDirectory, { recursive: true }), mkdir(thumbnailDirectory, { recursive: true }), mkdir(join(sandbox, 'src'), { recursive: true })])
 const catalog = []
 for (const fixture of fixtures) {
   const result = nativeResults.get(fixture.id)
-  if (!result || !/build123d 0\.13\.0.*OpenCascade/.test(result.kernel)) throw new Error(`Unexpected native kernel for ${fixture.id}`)
+  if (!result || !/OpenCascade|OCCT/.test(result.kernel)) throw new Error(`Unexpected native kernel for ${fixture.id}`)
   if (!result.bounds || !finite(result.bounds.min) || !finite(result.bounds.max)) throw new Error(`Missing bounds for ${fixture.id}`)
   if (result.meshes.length < (fixture.expected.minMeshes ?? 1)) throw new Error(`Missing meshes for ${fixture.id}`)
   for (const mesh of result.meshes) {
@@ -179,7 +171,7 @@ for (const fixture of fixtures) {
     bounds: { min: result.bounds.min.map(quantize), max: result.bounds.max.map(quantize) },
     meshes: result.meshes.map(mesh => ({
       ...mesh, positions: mesh.positions.map(quantize), normals: mesh.normals.map(quantize),
-      edges: mesh.edges.map(edge => edge.map(quantize)), vertices: mesh.vertices.map(quantize),
+      edges: mesh.edges.map(edge => edge.map(quantize)), vertices: mesh.vertices?.map(quantize),
     })),
   }
   await writeFile(join(modelDirectory, `${fixture.id}.json`), `${JSON.stringify(model)}\n`)
@@ -188,13 +180,13 @@ for (const fixture of fixtures) {
   catalog.push({
     id: fixture.id, title: fixture.title, category: fixture.category,
     description: descriptions[fixture.id] ?? `Native ${fixture.title} CAD example.`,
-    modelUrl: `/models/${fixture.id}.json`, thumbnailUrl: `/thumbnails/${fixture.id}.png`,
+    modelUrl: `/browser-models/${fixture.id}.json`, thumbnailUrl: `/thumbnails/${fixture.id}.png`,
     source: sourceFor(fixture), plan: fixture.plan, stats,
   })
 }
-await writeFile(join(sandbox, 'src/catalog.json'), `${JSON.stringify(catalog, null, 2)}\n`)
+await writeFile(catalogFile, `${JSON.stringify(catalog, null, 2)}\n`)
 const manifest = {
-  kernel: 'build123d 0.13.0 / OpenCascade',
+  kernel: nativeResults.values().next().value.kernel,
   generator: 'sandbox/scripts/generate-models.mjs',
   tolerance, angularTolerance, coordinatePrecision: 0.000001,
   fixtureCount: catalog.length,
@@ -202,4 +194,4 @@ const manifest = {
   models: catalog.map(({ id, stats }) => ({ id, ...stats })),
 }
 await writeFile(join(modelDirectory, 'manifest.json'), `${JSON.stringify(manifest, null, 2)}\n`)
-console.log(`Generated ${catalog.length} native CAD examples, ${catalog.reduce((sum, fixture) => sum + fixture.stats.meshCount, 0)} meshes, and ${catalog.reduce((sum, fixture) => sum + fixture.stats.triangles, 0).toLocaleString()} triangles.`)
+console.log(`Generated ${catalog.length} browser OpenCascade examples, ${catalog.reduce((sum, fixture) => sum + fixture.stats.meshCount, 0)} meshes, and ${catalog.reduce((sum, fixture) => sum + fixture.stats.triangles, 0).toLocaleString()} triangles.`)
