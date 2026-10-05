@@ -19,6 +19,7 @@ const fixtureBundle = await build({
 })
 const { visualFixtures } = await import(`data:text/javascript;base64,${Buffer.from(fixtureBundle.outputFiles[0].text).toString('base64')}`)
 const catalog = JSON.parse(await readFile(resolve(root, 'sandbox/src/catalog.json'), 'utf8'))
+const browserBaseline = JSON.parse(await readFile(resolve(root, 'tests/browser-geometry-baseline.json'), 'utf8'))
 assert.equal(catalog.length, visualFixtures.length, 'Sandbox must offer every native visual example')
 assert.deepEqual(new Set(catalog.map(example => example.id)), new Set(visualFixtures.map(example => example.id)))
 await mkdir(artifacts, { recursive: true })
@@ -30,7 +31,7 @@ if (!baseUrl) {
   const contentTypes = {
     '.html': 'text/html', '.js': 'application/javascript', '.css': 'text/css',
     '.json': 'application/json', '.png': 'image/png', '.svg': 'image/svg+xml',
-    '.woff2': 'font/woff2', '.ico': 'image/x-icon',
+    '.woff2': 'font/woff2', '.ico': 'image/x-icon', '.wasm': 'application/wasm',
   }
   server = createServer(async (request, response) => {
     try {
@@ -46,7 +47,7 @@ if (!baseUrl) {
   baseUrl = `http://127.0.0.1:${server.address().port}`
 }
 baseUrl = baseUrl.replace(/\/$/, '')
-const report = { baseUrl, browser: '', modelCount: 0, geometry: [], screenshots: [], browserErrors: [], failedRequests: [], httpErrors: [], interactions: [] }
+const report = { baseUrl, browser: '', modelCount: 0, geometry: [], screenshots: [], browserErrors: [], failedRequests: [], httpErrors: [], serviceRequests: [], precomputedModelRequests: [], computedGeometry: [], interactions: [] }
 const screenshots = []
 const transport = process.env.SANDBOX_NODE_TRANSPORT === '1'
 let browser
@@ -130,7 +131,7 @@ try {
     report.geometry.push(validateGeometry(example, visualFixtures.find(fixture => fixture.id === example.id), await response.json()))
   }
   report.modelCount = report.geometry.length
-  console.log(`Verified ${report.modelCount} native model assets over HTTP`)
+  console.log(`Verified ${report.modelCount} historical native comparison assets`)
 
   browser = await chromium.launch({
     headless: true, executablePath: process.env.CHROMIUM_PATH,
@@ -155,6 +156,7 @@ try {
   }
   report.transport = transport ? 'Node TLS-verified fetch for the exact deployment origin' : 'Direct Chromium requests'
   page.on('pageerror', error => report.browserErrors.push(error.message))
+  page.on('request', request => { if (/\/(render|rpc|health)(?:[?/#]|$)/.test(request.url())) report.serviceRequests.push(request.url()); if (/\/(?:browser-)?models\/[^/]+\.json/.test(request.url())) report.precomputedModelRequests.push(request.url()) })
   page.on('console', message => { if (message.type() === 'error') report.browserErrors.push(message.text()) })
   page.on('requestfailed', request => { if (request.failure()?.errorText !== 'net::ERR_ABORTED') report.failedRequests.push(`${request.url()}: ${request.failure()?.errorText}`) })
   page.on('response', response => { if (response.status() >= 400) report.httpErrors.push(`${response.status()} ${response.url()}`) })
@@ -193,10 +195,23 @@ try {
     await waitForModel(example.id)
     assert.equal(new URL(page.url()).searchParams.get('example'), example.id, `${example.id}: shareable example URL`)
     assert.equal(Number(await page.locator('.cad-viewer').getAttribute('data-mesh-count')), example.stats.meshCount)
+    await page.getByTestId('run-source').click()
+    await page.waitForFunction(() => document.querySelector('[data-testid="run-source"]')?.textContent === 'Run' && !document.querySelector('[data-testid="run-source"]')?.hasAttribute('disabled'), undefined, { timeout: 60_000 })
+    assert.equal(await page.getByTestId('editor-error').count(), 0, example.id + ': JSX regenerates in browser OpenCascade')
+    const regenerated = await page.evaluate(() => window.__CAD_SANDBOX__?.result)
+    assert(regenerated, example.id + ': actual local CAD result is available')
+    assert(regenerated.meshes.every(mesh => mesh.valid), example.id + ': generated BRep is valid')
+    const nativeExpected = report.geometry.find(model => model.id === example.id)
+    const expected = browserBaseline.fixtures[example.id]
+    const volume = regenerated.meshes.reduce((sum, mesh) => sum + mesh.volume, 0)
+    const area = regenerated.meshes.reduce((sum, mesh) => sum + mesh.area, 0)
+    assert(Math.abs(volume - expected.volume) <= Math.max(0.001, expected.volume * 1e-6), example.id + ': browser volume ' + volume + ' matches reviewed WASM ' + expected.volume)
+    assert(Math.abs(area - expected.area) <= Math.max(0.001, expected.area * 1e-6), example.id + ': browser area ' + area + ' matches reviewed WASM ' + expected.area)
+    report.computedGeometry.push({ id: example.id, kernel: regenerated.kernel, volume, area, nativeDelta: { volume: volume - nativeExpected.volume, area: area - nativeExpected.area } })
     assert(await page.getByTestId('jsx-editor').evaluate(field => field.scrollHeight <= field.clientHeight + 2 && field.scrollWidth <= field.clientWidth + 1), `${example.id}: full editable example source fits without internal clipping`)
     const image = await screenshotCanvas(example.id)
     screenshots.push({ id: example.id, title: example.title, image })
-    if ((index + 1) % 10 === 0 || index + 1 === catalog.length) console.log(`Rendered and photographed ${index + 1}/${catalog.length} native examples`)
+    if ((index + 1) % 10 === 0 || index + 1 === catalog.length) console.log(`Regenerated and photographed ${index + 1}/${catalog.length} browser WASM examples`)
   }
   report.interactions.push(`All ${catalog.length} examples selected through the gallery`)
 
@@ -266,6 +281,8 @@ try {
   assert.deepEqual(report.browserErrors, [], 'No browser console or runtime errors')
   assert.deepEqual(report.failedRequests, [], 'No failed browser requests')
   assert.deepEqual(report.httpErrors, [], 'No HTTP asset failures')
+  assert.deepEqual(report.precomputedModelRequests, [], 'Gallery renders from plans instead of loading saved native meshes')
+  assert.deepEqual(report.serviceRequests, [], 'Every example regenerates locally without a geometry service')
 
   const sheet = await context.newPage()
   await sheet.setViewportSize({ width: 1760, height: 1400 })
@@ -274,10 +291,11 @@ try {
   await sheet.screenshot({ path: resolve(artifacts, 'contact-sheet.png'), fullPage: true })
   await sheet.close()
   report.passed = true
-  console.log(`Sandbox passed: ${report.modelCount} real native models, ${report.screenshots.length} geometry screenshots, desktop/mobile navigation and CAD controls`)
+  console.log(`Sandbox passed: ${report.modelCount} browser OpenCascade models, ${report.screenshots.length} geometry screenshots, desktop/mobile navigation and CAD controls`)
 } catch (error) {
   report.passed = false
   report.error = error.stack ?? String(error)
+  report.failureState = await page?.evaluate(() => ({ current: window.__CAD_SANDBOX__, source: document.querySelector('[data-testid="jsx-editor"]')?.value, error: document.querySelector('[data-testid="editor-error"]')?.textContent })).catch(() => undefined)
   await page?.screenshot({ path: resolve(artifacts, 'failure.png'), fullPage: true }).catch(() => {})
   throw error
 } finally {

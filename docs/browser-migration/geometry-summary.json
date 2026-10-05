@@ -1,0 +1,3018 @@
+{
+  "fixtureCount": 73,
+  "engine": "OpenCascade WebAssembly",
+  "supported": 73,
+  "equivalent": 67,
+  "nativeChanged": 6,
+  "regressions": 0,
+  "failed": 0,
+  "fixtures": [
+    {
+      "id": "vertex",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            1,
+            2,
+            3
+          ],
+          "max": [
+            1,
+            2,
+            3
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0,
+        "triangles": 0
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            1,
+            2,
+            3
+          ],
+          "max": [
+            1,
+            2,
+            3
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0
+      }
+    },
+    {
+      "id": "box",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -9,
+            -6,
+            -4
+          ],
+          "max": [
+            9,
+            6,
+            4
+          ]
+        },
+        "meshes": 1,
+        "volume": 1728,
+        "area": 912,
+        "triangles": 12
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -9,
+            -6,
+            -4
+          ],
+          "max": [
+            9,
+            6,
+            4
+          ]
+        },
+        "meshes": 1,
+        "volume": 1728,
+        "area": 912
+      }
+    },
+    {
+      "id": "cylinder",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -7,
+            -7,
+            -6
+          ],
+          "max": [
+            7,
+            7,
+            6
+          ]
+        },
+        "meshes": 1,
+        "volume": 1847.256480310799,
+        "area": 835.6636458548851,
+        "triangles": 332
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -7,
+            -7,
+            -6
+          ],
+          "max": [
+            7,
+            7,
+            6
+          ]
+        },
+        "meshes": 1,
+        "volume": 1847.256480310799,
+        "area": 835.6636458548851
+      }
+    },
+    {
+      "id": "cone",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -8,
+            -8,
+            -7
+          ],
+          "max": [
+            8,
+            8,
+            7
+          ]
+        },
+        "meshes": 1,
+        "volume": 1231.5043202071993,
+        "area": 692.1414372598815,
+        "triangles": 752
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -8,
+            -8,
+            -7
+          ],
+          "max": [
+            8,
+            8,
+            7
+          ]
+        },
+        "meshes": 1,
+        "volume": 1231.504320207199,
+        "area": 692.1414372598814
+      }
+    },
+    {
+      "id": "sphere",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -8,
+            -8,
+            -8
+          ],
+          "max": [
+            8,
+            8,
+            8
+          ]
+        },
+        "meshes": 1,
+        "volume": 2144.6605848506324,
+        "area": 804.247719318987,
+        "triangles": 3536
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -8,
+            -8,
+            -8
+          ],
+          "max": [
+            8,
+            8,
+            8
+          ]
+        },
+        "meshes": 1,
+        "volume": 2144.6605848506324,
+        "area": 804.247719318987
+      }
+    },
+    {
+      "id": "torus",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -13.0000001,
+            -13.0000001,
+            -3.0000001
+          ],
+          "max": [
+            13.0000001,
+            13.0000001,
+            3.0000001
+          ]
+        },
+        "meshes": 1,
+        "volume": 1776.5287921960844,
+        "area": 1184.352528130723,
+        "triangles": 14112
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -13,
+            -13,
+            -3
+          ],
+          "max": [
+            13,
+            13,
+            3
+          ]
+        },
+        "meshes": 1,
+        "volume": 1776.5287921960844,
+        "area": 1184.352528130723
+      }
+    },
+    {
+      "id": "wedge",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -8,
+            -6,
+            -5
+          ],
+          "max": [
+            8,
+            6,
+            5
+          ]
+        },
+        "meshes": 1,
+        "volume": 1272,
+        "area": 734.212721605155,
+        "triangles": 12
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -8,
+            -6,
+            -5
+          ],
+          "max": [
+            8,
+            6,
+            5
+          ]
+        },
+        "meshes": 1,
+        "volume": 1272,
+        "area": 734.2127216051551
+      }
+    },
+    {
+      "id": "sector-cylinder",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -10,
+            -7.5,
+            -4
+          ],
+          "max": [
+            10,
+            7.5,
+            4
+          ]
+        },
+        "meshes": 1,
+        "volume": 1466.076571675237,
+        "area": 819.7344572538566,
+        "triangles": 200
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -10,
+            -7.5,
+            -4
+          ],
+          "max": [
+            10,
+            7.5,
+            4
+          ]
+        },
+        "meshes": 1,
+        "volume": 1466.076571675237,
+        "area": 819.7344572538566
+      }
+    },
+    {
+      "id": "sector-torus",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -13.50000005,
+            -12.595671475544961,
+            -2.5000001
+          ],
+          "max": [
+            13.500000049999999,
+            12.595671475544961,
+            2.5000001
+          ]
+        },
+        "meshes": 1,
+        "volume": 904.7137367665242,
+        "area": 763.040897583092,
+        "triangles": 9572
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -13.5,
+            -12.595671,
+            -2.5
+          ],
+          "max": [
+            13.5,
+            12.595671,
+            2.5
+          ]
+        },
+        "meshes": 1,
+        "volume": 904.7137367665242,
+        "area": 763.040897583092
+      }
+    },
+    {
+      "id": "hemisphere",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -9,
+            -9,
+            -4.5
+          ],
+          "max": [
+            9,
+            9,
+            4.5
+          ]
+        },
+        "meshes": 1,
+        "volume": 1526.8140296446395,
+        "area": 763.4070148223198,
+        "triangles": 1873
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -9,
+            -9,
+            -4.5
+          ],
+          "max": [
+            9,
+            9,
+            4.5
+          ]
+        },
+        "meshes": 1,
+        "volume": 1526.8140296446395,
+        "area": 763.4070148223198
+      }
+    },
+    {
+      "id": "rotated-box",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -9.87158537881462,
+            -9.686868683951644,
+            -6.338337968031733
+          ],
+          "max": [
+            9.871585378814622,
+            9.686868683951644,
+            6.338337968031734
+          ]
+        },
+        "meshes": 1,
+        "volume": 864.0000000000002,
+        "area": 600.0000000000001,
+        "triangles": 12
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -9.871585,
+            -9.686869,
+            -6.338338
+          ],
+          "max": [
+            9.871585,
+            9.686869,
+            6.338338
+          ]
+        },
+        "meshes": 1,
+        "volume": 864,
+        "area": 600
+      }
+    },
+    {
+      "id": "circle",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -9,
+            -9,
+            0
+          ],
+          "max": [
+            9,
+            9,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 254.46900494077326,
+        "triangles": 82
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -9,
+            -9,
+            0
+          ],
+          "max": [
+            9,
+            9,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 254.46900494077323
+      }
+    },
+    {
+      "id": "ellipse",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -12,
+            -7,
+            0
+          ],
+          "max": [
+            12,
+            7,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 263.89378290154264,
+        "triangles": 104
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -12,
+            -7,
+            0
+          ],
+          "max": [
+            12,
+            7,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 263.89378290154264
+      }
+    },
+    {
+      "id": "rectangle",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -10,
+            -6,
+            0
+          ],
+          "max": [
+            10,
+            6,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 239.99999999999994,
+        "triangles": 2
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -10,
+            -6,
+            0
+          ],
+          "max": [
+            10,
+            6,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 239.99999999999994
+      }
+    },
+    {
+      "id": "rounded-rectangle",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -11,
+            -7,
+            0
+          ],
+          "max": [
+            11,
+            7,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 300.27433388230816,
+        "triangles": 86
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -11,
+            -7,
+            0
+          ],
+          "max": [
+            11,
+            7,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 300.2743338823081
+      }
+    },
+    {
+      "id": "polygon",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -10,
+            -9,
+            0
+          ],
+          "max": [
+            12,
+            8.000000000000002,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 263,
+        "triangles": 3
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -10,
+            -9,
+            0
+          ],
+          "max": [
+            12,
+            8,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 263
+      }
+    },
+    {
+      "id": "hexagon",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -10,
+            -8.660254037844386,
+            0
+          ],
+          "max": [
+            10,
+            8.660254037844387,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 259.80762113533154,
+        "triangles": 4
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -10,
+            -8.660254,
+            0
+          ],
+          "max": [
+            10,
+            8.660254,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 259.80762113533154
+      }
+    },
+    {
+      "id": "octagon",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -9.238795325112868,
+            -9.238795325112866,
+            0
+          ],
+          "max": [
+            9.238795325112868,
+            9.238795325112868,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 282.842712474619,
+        "triangles": 6
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -9.238795,
+            -9.238795,
+            0
+          ],
+          "max": [
+            9.238795,
+            9.238795,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 282.842712474619
+      }
+    },
+    {
+      "id": "trapezoid",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -12,
+            -5,
+            0
+          ],
+          "max": [
+            12,
+            5.000000000000002,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 203.28715747069398,
+        "triangles": 2
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -12,
+            -5,
+            0
+          ],
+          "max": [
+            12,
+            5,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 203.28715747069398
+      }
+    },
+    {
+      "id": "slot-center-to-center",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -10.5,
+            -3.5,
+            0
+          ],
+          "max": [
+            10.5,
+            3.5,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 136.48451000647498,
+        "triangles": 84
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -10.5,
+            -3.5,
+            0
+          ],
+          "max": [
+            10.5,
+            3.5,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 136.48451000647498
+      }
+    },
+    {
+      "id": "slot-overall",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -12,
+            -3.5,
+            0
+          ],
+          "max": [
+            12,
+            3.5,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 157.484510006475,
+        "triangles": 84
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -12,
+            -3.5,
+            0
+          ],
+          "max": [
+            12,
+            3.5,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 157.48451000647492
+      }
+    },
+    {
+      "id": "slot-center-point",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -21,
+            -7.000000000000001,
+            0
+          ],
+          "max": [
+            9.000000000000002,
+            7.000000000000001,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 180.0636615703904,
+        "triangles": 84
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -21,
+            -7,
+            0
+          ],
+          "max": [
+            9,
+            7,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 180.06366157039037
+      }
+    },
+    {
+      "id": "text",
+      "status": "changed",
+      "differences": [
+        "area: 70.74948120117188 vs native 70.70768264928705"
+      ],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -12.240234475,
+            -4.32421885,
+            -1e-7
+          ],
+          "max": [
+            12.205078225,
+            4.751953225,
+            1e-7
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 70.74948120117188,
+        "triangles": 268
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -12.240234,
+            -4.324219,
+            0
+          ],
+          "max": [
+            12.205078,
+            4.751953,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 70.70768264928705
+      }
+    },
+    {
+      "id": "line",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -10,
+            -6,
+            0
+          ],
+          "max": [
+            10,
+            6,
+            8
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0,
+        "triangles": 0
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -10,
+            -6,
+            0
+          ],
+          "max": [
+            10,
+            6,
+            8
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0
+      }
+    },
+    {
+      "id": "polyline",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -12,
+            -6,
+            0
+          ],
+          "max": [
+            12,
+            7,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0,
+        "triangles": 0
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -12,
+            -6,
+            0
+          ],
+          "max": [
+            12,
+            7,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0
+      }
+    },
+    {
+      "id": "closed-polyline",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -10,
+            -7,
+            0
+          ],
+          "max": [
+            10,
+            9,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0,
+        "triangles": 0
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -10,
+            -7,
+            0
+          ],
+          "max": [
+            10,
+            9,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0
+      }
+    },
+    {
+      "id": "spline",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -12.0000001,
+            -8.155407438289348,
+            -1e-7
+          ],
+          "max": [
+            12.0000001,
+            9.155407438289352,
+            1e-7
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0,
+        "triangles": 0
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -12,
+            -8.155407,
+            0
+          ],
+          "max": [
+            12,
+            9.155407,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0
+      }
+    },
+    {
+      "id": "bezier",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -12.0000001,
+            -6.0000001,
+            -1e-7
+          ],
+          "max": [
+            12.0000001,
+            6.0000001,
+            1e-7
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0,
+        "triangles": 0
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -12,
+            -6,
+            0
+          ],
+          "max": [
+            12,
+            6,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0
+      }
+    },
+    {
+      "id": "center-arc",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -9.999999999999998,
+            -9.999999999999998,
+            0
+          ],
+          "max": [
+            9.659258262890683,
+            10,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0,
+        "triangles": 0
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -10,
+            -10,
+            0
+          ],
+          "max": [
+            9.659258,
+            10,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0
+      }
+    },
+    {
+      "id": "radius-arc",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -8,
+            0,
+            0
+          ],
+          "max": [
+            8,
+            3.999999999999999,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0,
+        "triangles": 0
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -8,
+            0,
+            0
+          ],
+          "max": [
+            8,
+            4,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0
+      }
+    },
+    {
+      "id": "three-point-arc",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -10.000000000000002,
+            2.220446049250313e-16,
+            0
+          ],
+          "max": [
+            10.000000000000002,
+            9,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0,
+        "triangles": 0
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -10,
+            0,
+            0
+          ],
+          "max": [
+            10,
+            9,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0
+      }
+    },
+    {
+      "id": "sagitta-arc",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -10,
+            -8.881784197001252e-16,
+            0
+          ],
+          "max": [
+            9.999999999999998,
+            4.999999999999997,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0,
+        "triangles": 0
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -10,
+            0,
+            0
+          ],
+          "max": [
+            10,
+            5,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0
+      }
+    },
+    {
+      "id": "polar-line",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -8,
+            -5,
+            0
+          ],
+          "max": [
+            10.02134497435782,
+            7.618681599723013,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0,
+        "triangles": 0
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -8,
+            -5,
+            0
+          ],
+          "max": [
+            10.021345,
+            7.618682,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0
+      }
+    },
+    {
+      "id": "helix",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -6.0000000184570075,
+            -5.999999747319869,
+            -1.000000004440892e-7
+          ],
+          "max": [
+            6.000000100000068,
+            5.999999747319867,
+            20.0000001
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0,
+        "triangles": 0
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -6,
+            -6,
+            0
+          ],
+          "max": [
+            6,
+            6,
+            20
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0
+      }
+    },
+    {
+      "id": "compositional-extrude",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -10,
+            -10,
+            0
+          ],
+          "max": [
+            10,
+            10,
+            8
+          ]
+        },
+        "meshes": 1,
+        "volume": 1608.495438637974,
+        "area": 1206.3715789784806,
+        "triangles": 672
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -10,
+            -10,
+            0
+          ],
+          "max": [
+            10,
+            10,
+            8
+          ]
+        },
+        "meshes": 1,
+        "volume": 1608.495438637974,
+        "area": 1206.3715789784806
+      }
+    },
+    {
+      "id": "compositional-fillet",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -9,
+            -7,
+            -4
+          ],
+          "max": [
+            9,
+            7,
+            4
+          ]
+        },
+        "meshes": 1,
+        "volume": 1943.2632545290421,
+        "area": 910.4424506661588,
+        "triangles": 4260
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -9,
+            -7,
+            -4
+          ],
+          "max": [
+            9,
+            7,
+            4
+          ]
+        },
+        "meshes": 1,
+        "volume": 1943.2632545290421,
+        "area": 910.4424506661588
+      }
+    },
+    {
+      "id": "extrude-circle",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -7,
+            -7,
+            0
+          ],
+          "max": [
+            7,
+            7,
+            12
+          ]
+        },
+        "meshes": 1,
+        "volume": 1847.2564803107985,
+        "area": 835.6636458548851,
+        "triangles": 332
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -7,
+            -7,
+            0
+          ],
+          "max": [
+            7,
+            7,
+            12
+          ]
+        },
+        "meshes": 1,
+        "volume": 1847.256480310799,
+        "area": 835.6636458548851
+      }
+    },
+    {
+      "id": "extrude-taper",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -10.000000000000004,
+            -8.660254037844389,
+            -2.465190328815662e-32
+          ],
+          "max": [
+            10.000000000000002,
+            8.660254037844387,
+            12.000000000000002
+          ]
+        },
+        "meshes": 1,
+        "volume": 2417.995877050305,
+        "area": 1049.9620392930858,
+        "triangles": 20
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -10,
+            -8.660254,
+            0
+          ],
+          "max": [
+            10,
+            8.660254,
+            12
+          ]
+        },
+        "meshes": 1,
+        "volume": 2417.995877050304,
+        "area": 1049.9620392930851
+      }
+    },
+    {
+      "id": "extrude-both",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -12,
+            -4,
+            -5
+          ],
+          "max": [
+            12,
+            4,
+            5
+          ]
+        },
+        "meshes": 1,
+        "volume": 1782.6548245743675,
+        "area": 927.8583772020568,
+        "triangles": 340
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -12,
+            -4,
+            -5
+          ],
+          "max": [
+            12,
+            4,
+            5
+          ]
+        },
+        "meshes": 1,
+        "volume": 1782.6548245743668,
+        "area": 927.8583772020568
+      }
+    },
+    {
+      "id": "extrude-ring",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -10,
+            -10,
+            0
+          ],
+          "max": [
+            10,
+            10,
+            8
+          ]
+        },
+        "meshes": 1,
+        "volume": 1608.495438637974,
+        "area": 1206.3715789784806,
+        "triangles": 672
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -10,
+            -10,
+            0
+          ],
+          "max": [
+            10,
+            10,
+            8
+          ]
+        },
+        "meshes": 1,
+        "volume": 1608.495438637974,
+        "area": 1206.3715789784806
+      }
+    },
+    {
+      "id": "revolve",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -10,
+            -10,
+            -5
+          ],
+          "max": [
+            10,
+            10,
+            6
+          ]
+        },
+        "meshes": 1,
+        "volume": 2597.0499269675624,
+        "area": 1368.5081957621453,
+        "triangles": 1176
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -10,
+            -10,
+            -5
+          ],
+          "max": [
+            10,
+            10,
+            6
+          ]
+        },
+        "meshes": 1,
+        "volume": 2597.0499269675624,
+        "area": 1368.5081957621453
+      }
+    },
+    {
+      "id": "revolve-partial",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -10,
+            -8.660254037844386,
+            -5
+          ],
+          "max": [
+            10,
+            10,
+            5
+          ]
+        },
+        "meshes": 1,
+        "volume": 1759.2918860102843,
+        "area": 1058.2890058721514,
+        "triangles": 452
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -10,
+            -8.660254,
+            -5
+          ],
+          "max": [
+            10,
+            10,
+            5
+          ]
+        },
+        "meshes": 1,
+        "volume": 1759.2918860102843,
+        "area": 1058.2890058721514
+      }
+    },
+    {
+      "id": "loft",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -10.0000001,
+            -10.0000001,
+            -1e-7
+          ],
+          "max": [
+            10.0000001,
+            10.0000001,
+            15.0000001
+          ]
+        },
+        "meshes": 1,
+        "volume": 2971.112642722681,
+        "area": 1203.2308386341604,
+        "triangles": 1112
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -10,
+            -10,
+            0
+          ],
+          "max": [
+            10,
+            10,
+            15
+          ]
+        },
+        "meshes": 1,
+        "volume": 2971.1126426604937,
+        "area": 1203.2308386155923
+      }
+    },
+    {
+      "id": "loft-ruled",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -11.0000001,
+            -9.526279541628824,
+            -1e-7
+          ],
+          "max": [
+            11.0000001,
+            9.526279541628826,
+            14.0000001
+          ]
+        },
+        "meshes": 1,
+        "volume": 2869.640461006964,
+        "area": 1207.9149369028082,
+        "triangles": 336
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -11,
+            -9.52628,
+            0
+          ],
+          "max": [
+            11,
+            9.52628,
+            14
+          ]
+        },
+        "meshes": 1,
+        "volume": 2869.640461006964,
+        "area": 1207.914936902808
+      }
+    },
+    {
+      "id": "sweep",
+      "status": "changed",
+      "differences": [
+        "volume: 298.74799965016166 vs native 298.74985536174887"
+      ],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -1.0000000265302617e-7,
+            -3.161748459273467,
+            -2.0000000999999994
+          ],
+          "max": [
+            21.26082000995593,
+            12.129040355521145,
+            11.640490390576627
+          ]
+        },
+        "meshes": 1,
+        "volume": 298.74799965016166,
+        "area": 350.4810333754147,
+        "triangles": 3678
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            0,
+            -3.161748,
+            -2
+          ],
+          "max": [
+            21.26082,
+            12.12904,
+            11.64049
+          ]
+        },
+        "meshes": 1,
+        "volume": 298.74985536174887,
+        "area": 350.4810135007408
+      }
+    },
+    {
+      "id": "fillet",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -10,
+            -7,
+            -5
+          ],
+          "max": [
+            10,
+            7,
+            5
+          ]
+        },
+        "meshes": 1,
+        "volume": 2659.6341812977835,
+        "area": 1084.3893421169303,
+        "triangles": 4260
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -10,
+            -7,
+            -5
+          ],
+          "max": [
+            10,
+            7,
+            5
+          ]
+        },
+        "meshes": 1,
+        "volume": 2659.6341812977835,
+        "area": 1084.3893421169303
+      }
+    },
+    {
+      "id": "chamfer",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -10,
+            -7,
+            -5
+          ],
+          "max": [
+            10,
+            7,
+            5
+          ]
+        },
+        "meshes": 1,
+        "volume": 2620.0000000000005,
+        "area": 1078.5733053664699,
+        "triangles": 44
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -10,
+            -7,
+            -5
+          ],
+          "max": [
+            10,
+            7,
+            5
+          ]
+        },
+        "meshes": 1,
+        "volume": 2620.0000000000005,
+        "area": 1078.5733053664699
+      }
+    },
+    {
+      "id": "union",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -8,
+            -7,
+            -8
+          ],
+          "max": [
+            8,
+            7,
+            8
+          ]
+        },
+        "meshes": 1,
+        "volume": 2845.593426113058,
+        "area": 1209.2093066780747,
+        "triangles": 580
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -8,
+            -7,
+            -8
+          ],
+          "max": [
+            8,
+            7,
+            8
+          ]
+        },
+        "meshes": 1,
+        "volume": 2845.593426113058,
+        "area": 1209.2093066780747
+      }
+    },
+    {
+      "id": "subtract",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -11,
+            -8,
+            -4
+          ],
+          "max": [
+            11,
+            8,
+            4
+          ]
+        },
+        "meshes": 1,
+        "volume": 2187.681469282041,
+        "area": 1406.247779607694,
+        "triangles": 352
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -11,
+            -8,
+            -4
+          ],
+          "max": [
+            11,
+            8,
+            4
+          ]
+        },
+        "meshes": 1,
+        "volume": 2187.681469282041,
+        "area": 1406.247779607694
+      }
+    },
+    {
+      "id": "intersect",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -8,
+            -8,
+            -4.000000000000002
+          ],
+          "max": [
+            8,
+            8,
+            4
+          ]
+        },
+        "meshes": 1,
+        "volume": 1959.811114494843,
+        "area": 941.4728391080947,
+        "triangles": 644
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -8,
+            -8,
+            -4
+          ],
+          "max": [
+            8,
+            8,
+            4
+          ]
+        },
+        "meshes": 1,
+        "volume": 1959.8111144948598,
+        "area": 941.4728391080996
+      }
+    },
+    {
+      "id": "grid-locations",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -15,
+            -9,
+            -4
+          ],
+          "max": [
+            15,
+            9,
+            4
+          ]
+        },
+        "meshes": 1,
+        "volume": 1357.1680263507908,
+        "area": 1244.0706908215582,
+        "triangles": 1992
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -15,
+            -9,
+            -4
+          ],
+          "max": [
+            15,
+            9,
+            4
+          ]
+        },
+        "meshes": 1,
+        "volume": 1357.1680263507906,
+        "area": 1244.0706908215582
+      }
+    },
+    {
+      "id": "polar-locations",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -15,
+            -13.392304845413264,
+            -4
+          ],
+          "max": [
+            15,
+            13.392304845413264,
+            4
+          ]
+        },
+        "meshes": 1,
+        "volume": 1357.1680263507908,
+        "area": 1244.0706908215582,
+        "triangles": 1992
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -15,
+            -13.392305,
+            -4
+          ],
+          "max": [
+            15,
+            13.392305,
+            4
+          ]
+        },
+        "meshes": 1,
+        "volume": 1357.1680263507903,
+        "area": 1244.0706908215582
+      }
+    },
+    {
+      "id": "counterbore",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -12,
+            -9,
+            0
+          ],
+          "max": [
+            12,
+            9,
+            10
+          ]
+        },
+        "meshes": 1,
+        "volume": 3782.7876562361457,
+        "area": 1892.4955592153876,
+        "triangles": 688
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -12,
+            -9,
+            0
+          ],
+          "max": [
+            12,
+            9,
+            10
+          ]
+        },
+        "meshes": 1,
+        "volume": 3782.7876562361457,
+        "area": 1892.4955592153876
+      }
+    },
+    {
+      "id": "countersink",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -12,
+            -9,
+            0
+          ],
+          "max": [
+            12,
+            9,
+            10
+          ]
+        },
+        "meshes": 1,
+        "volume": 3924.1593256476854,
+        "area": 1814.5330613695064,
+        "triangles": 772
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -12,
+            -9,
+            0
+          ],
+          "max": [
+            12,
+            9,
+            10
+          ]
+        },
+        "meshes": 1,
+        "volume": 3924.159325647686,
+        "area": 1814.5330613695064
+      }
+    },
+    {
+      "id": "text-extrude",
+      "status": "changed",
+      "differences": [
+        "volume: 212.24844360351562 vs native 212.12508353282476",
+        "area: 539.7667610663048 vs native 539.3101347667274"
+      ],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -12.240234475,
+            -4.32421885,
+            -1e-7
+          ],
+          "max": [
+            12.205078225,
+            4.751953225,
+            3.0000001
+          ]
+        },
+        "meshes": 1,
+        "volume": 212.24844360351562,
+        "area": 539.7667610663048,
+        "triangles": 1362
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -12.240234,
+            -4.324219,
+            0
+          ],
+          "max": [
+            12.205078,
+            4.751953,
+            3
+          ]
+        },
+        "meshes": 1,
+        "volume": 212.12508353282476,
+        "area": 539.3101347667274
+      }
+    },
+    {
+      "id": "motor-spacer",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -21,
+            -21,
+            0
+          ],
+          "max": [
+            21,
+            21,
+            10
+          ]
+        },
+        "meshes": 1,
+        "volume": 5113.23910302007,
+        "area": 4104.244255918583,
+        "triangles": 3056
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -21,
+            -21,
+            0
+          ],
+          "max": [
+            21,
+            21,
+            10
+          ]
+        },
+        "meshes": 1,
+        "volume": 5113.23910302007,
+        "area": 4104.244255918583
+      }
+    },
+    {
+      "id": "electronics",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -24,
+            -16,
+            -0.8
+          ],
+          "max": [
+            25,
+            16,
+            8.8
+          ]
+        },
+        "meshes": 19,
+        "volume": 4177.008145963585,
+        "area": 5211.520000000004,
+        "triangles": 1588
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -24,
+            -16,
+            -0.8
+          ],
+          "max": [
+            25,
+            16,
+            8.8
+          ]
+        },
+        "meshes": 19,
+        "volume": 4177.008145963585,
+        "area": 5211.520000000004
+      }
+    },
+    {
+      "id": "transforms",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -15,
+            -4,
+            -13.258330249197702
+          ],
+          "max": [
+            13.964101615137755,
+            8,
+            6.330127018922194
+          ]
+        },
+        "meshes": 2,
+        "volume": 1544.77868423386,
+        "area": 1000.9203070318035,
+        "triangles": 344
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -15,
+            -4,
+            -13.25833
+          ],
+          "max": [
+            13.964102,
+            8,
+            6.330127
+          ]
+        },
+        "meshes": 2,
+        "volume": 1544.77868423386,
+        "area": 1000.9203070318035
+      }
+    },
+    {
+      "id": "airfoil",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -0.0000665362727828471,
+            -0.04237859958743927,
+            -1e-7
+          ],
+          "max": [
+            1.00008391395326,
+            0.07921975811125687,
+            1e-7
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0,
+        "triangles": 0
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -0.000067,
+            -0.042379,
+            0
+          ],
+          "max": [
+            1.000084,
+            0.07922,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0
+      }
+    },
+    {
+      "id": "blend-curve",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            1.9999999,
+            -1e-7,
+            -1e-7
+          ],
+          "max": [
+            5.000000100000005,
+            3.0000001,
+            1e-7
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0,
+        "triangles": 0
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            2,
+            0,
+            0
+          ],
+          "max": [
+            5,
+            3,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0
+      }
+    },
+    {
+      "id": "constrained-lines",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -4.6,
+            -3.97994974842648,
+            0
+          ],
+          "max": [
+            5.299999999999999,
+            3.97994974842648,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0,
+        "triangles": 0
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -4.6,
+            -3.97995,
+            0
+          ],
+          "max": [
+            5.3,
+            3.97995,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0
+      }
+    },
+    {
+      "id": "constrained-arcs",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -0.9999999999999991,
+            -5.23606797749979,
+            0
+          ],
+          "max": [
+            5.000000000000001,
+            5.23606797749979,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0,
+        "triangles": 0
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -1,
+            -5.236068,
+            0
+          ],
+          "max": [
+            5,
+            5.236068,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0
+      }
+    },
+    {
+      "id": "double-tangent",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -9.860761315262648e-32,
+            -4.999999999999999,
+            0
+          ],
+          "max": [
+            5,
+            -8.881784197001252e-16,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0,
+        "triangles": 0
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            0,
+            -5,
+            0
+          ],
+          "max": [
+            5,
+            0,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 0
+      }
+    },
+    {
+      "id": "technical-drawing",
+      "status": "changed",
+      "differences": [
+        "area: 860.0856501702905 vs native 859.0661334908299"
+      ],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -143.5771484375,
+            -97.44140635,
+            -1e-7
+          ],
+          "max": [
+            143.5478515625,
+            97.583984475,
+            1e-7
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 860.0856501702905,
+        "triangles": 7420
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -143.577148,
+            -97.441406,
+            0
+          ],
+          "max": [
+            143.547852,
+            97.583984,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 859.0661334908299
+      }
+    },
+    {
+      "id": "dimension-line",
+      "status": "changed",
+      "differences": [
+        "area: 9.874395536197007 vs native 9.871487464272587"
+      ],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -2.220446049250313e-16,
+            -0.75634775625,
+            -1e-7
+          ],
+          "max": [
+            30,
+            0.75634775625,
+            1e-7
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 9.874395536197007,
+        "triangles": 2070
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            0,
+            -0.756348,
+            0
+          ],
+          "max": [
+            30,
+            0.756348,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 9.871487464272587
+      }
+    },
+    {
+      "id": "extension-line",
+      "status": "changed",
+      "differences": [
+        "area: 17.00327985168773 vs native 17.00205895545807"
+      ],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -0.25,
+            2,
+            -1e-7
+          ],
+          "max": [
+            30.25,
+            7,
+            1e-7
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 17.00327985168773,
+        "triangles": 1183
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -0.25,
+            2,
+            0
+          ],
+          "max": [
+            30.25,
+            7,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 17.00205895545807
+      }
+    },
+    {
+      "id": "draft",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -4,
+            -3,
+            -5
+          ],
+          "max": [
+            4.000000000000001,
+            3.0000000000000004,
+            5.000000000000001
+          ]
+        },
+        "meshes": 1,
+        "volume": 410.2912094429157,
+        "area": 341.81682845623834,
+        "triangles": 12
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -4,
+            -3,
+            -5
+          ],
+          "max": [
+            4,
+            3,
+            5
+          ]
+        },
+        "meshes": 1,
+        "volume": 410.2912094429157,
+        "area": 341.81682845623834
+      }
+    },
+    {
+      "id": "full-round",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -4,
+            -2,
+            0
+          ],
+          "max": [
+            4,
+            2,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 30.28318530717959,
+        "triangles": 43
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -4,
+            -2,
+            0
+          ],
+          "max": [
+            4,
+            2,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 30.283186408381145
+      }
+    },
+    {
+      "id": "brake-formed",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -1e-7,
+            -1e-7,
+            -1e-7
+          ],
+          "max": [
+            10.0000001,
+            5.0000001,
+            5.0000001
+          ]
+        },
+        "meshes": 1,
+        "volume": 35.00000000000001,
+        "area": 129.1459884464753,
+        "triangles": 14
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            0,
+            0,
+            0
+          ],
+          "max": [
+            10,
+            5,
+            5
+          ]
+        },
+        "meshes": 1,
+        "volume": 35.000000000000014,
+        "area": 129.1459884464753
+      }
+    },
+    {
+      "id": "projection",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -2,
+            -3,
+            0
+          ],
+          "max": [
+            2,
+            3,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 24,
+        "triangles": 2
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -2,
+            -3,
+            0
+          ],
+          "max": [
+            2,
+            3,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 24
+      }
+    },
+    {
+      "id": "packed-parts",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            0,
+            0,
+            -4
+          ],
+          "max": [
+            15,
+            6,
+            4
+          ]
+        },
+        "meshes": 2,
+        "volume": 292.5309649148733,
+        "area": 333.66370614359175,
+        "triangles": 344
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            0,
+            0,
+            -4
+          ],
+          "max": [
+            15,
+            6,
+            4
+          ]
+        },
+        "meshes": 2,
+        "volume": 292.5309649148733,
+        "area": 333.66370614359175
+      }
+    },
+    {
+      "id": "native-assembly",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -4,
+            -3,
+            -4
+          ],
+          "max": [
+            14,
+            3,
+            4
+          ]
+        },
+        "meshes": 2,
+        "volume": 292.5309649148733,
+        "area": 333.66370614359175,
+        "triangles": 344
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -4,
+            -3,
+            -4
+          ],
+          "max": [
+            14,
+            3,
+            4
+          ]
+        },
+        "meshes": 2,
+        "volume": 292.5309649148733,
+        "area": 333.66370614359175
+      }
+    },
+    {
+      "id": "compositional-section",
+      "status": "equivalent",
+      "differences": [],
+      "regressionDifferences": [],
+      "actual": {
+        "bounds": {
+          "min": [
+            -4,
+            -3,
+            0
+          ],
+          "max": [
+            4,
+            3,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 48,
+        "triangles": 2
+      },
+      "expected": {
+        "bounds": {
+          "min": [
+            -4,
+            -3,
+            0
+          ],
+          "max": [
+            4,
+            3,
+            0
+          ]
+        },
+        "meshes": 1,
+        "volume": 0,
+        "area": 48
+      }
+    }
+  ],
+  "passed": true
+}

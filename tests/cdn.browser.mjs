@@ -1,8 +1,6 @@
 #!/usr/bin/env node
 import assert from 'node:assert/strict'
-import { spawn } from 'node:child_process'
 import { createServer } from 'node:http'
-import { createServer as createPortProbe } from 'node:net'
 import { mkdir, readFile, writeFile } from 'node:fs/promises'
 import { resolve } from 'node:path'
 
@@ -25,13 +23,17 @@ assert(bundle.includes(Buffer.from(reactUrl)), 'CDN bundle must preserve its pin
 const artifactDir = resolve(root, 'artifacts/cdn')
 await mkdir(artifactDir, { recursive: true })
 
-// Reserve an ephemeral port for the independently started native kernel.
-const probe = createPortProbe()
-await new Promise(resolve => probe.listen(0, '127.0.0.1', resolve))
-const kernelPort = probe.address().port
-await new Promise(resolve => probe.close(resolve))
-const backendUrl = `http://127.0.0.1:${kernelPort}`
-const server = createServer((request, response) => {
+const server = createServer(async (request, response) => {
+  if (request.url === '/dist/DejaVuSans.ttf') {
+    response.writeHead(200, { 'content-type': 'font/ttf' })
+    response.end(await readFile(resolve(root, 'dist/DejaVuSans.ttf')))
+    return
+  }
+  if (request.url === '/dist/opencascade.wasm') {
+    response.writeHead(200, { 'content-type': 'application/wasm' })
+    response.end(await readFile(resolve(root, 'dist/opencascade.wasm')))
+    return
+  }
   if (request.url === '/dist/cdn.js') {
     response.writeHead(200, { 'content-type': 'application/javascript' })
     response.end(bundle)
@@ -41,10 +43,18 @@ const server = createServer((request, response) => {
   response.writeHead(200, { 'content-type': 'text/html' })
   response.end(`<!doctype html><html><body style="margin:0"><div id="app"></div>
     <script type="module">
-      import { React, createDOMRoot, createBuild123dRoot, Build123dView, BuildPart, Box } from '/dist/cdn.js';
+      import { React, createDOMRoot, createBuild123dRoot, Build123dView, BuildPart, Box, Cylinder, Mode, NativeClient } from '/dist/cdn.js';
       window.cdnResult = null;
       window.cdnErrors = [];
       window.cdnReactVersion = React.version;
+      // A minified bundle must classify native topology without class names.
+      const booleanRoot = createBuild123dRoot();
+      const booleanPlan = booleanRoot.render(React.createElement(BuildPart, null,
+        React.createElement(Box, { length: 10, width: 8, height: 6 }),
+        React.createElement(Cylinder, { radius: 2, height: 8, mode: Mode.SUBTRACT })
+      ));
+      booleanRoot.unmount();
+      new NativeClient().render(booleanPlan).then(result => { window.cdnBoolean = result; }, error => window.cdnErrors.push(error.message));
       const Width = React.createContext(2);
       function Model() {
         const width = React.useContext(Width);
@@ -68,7 +78,6 @@ const server = createServer((request, response) => {
         return React.createElement(React.Fragment, null,
           React.createElement('button', { id: 'resize', onClick: () => setWidth(5) }, 'Resize box'),
           React.createElement(Build123dView, {
-            backendUrl: ${JSON.stringify(backendUrl)},
             style: { width: 760, height: 640 },
             onLoad: result => { if (result.meshes.length) window.cdnResult = result; },
             onError: error => window.cdnErrors.push(error.message),
@@ -80,32 +89,13 @@ const server = createServer((request, response) => {
 })
 await new Promise(resolve => server.listen(0, '127.0.0.1', resolve))
 const baseUrl = `http://127.0.0.1:${server.address().port}`
-let kernelLog = ''
-const kernel = spawn(resolve(root, '.venv/bin/python'), ['-m', 'build123d_fiber', '--port', String(kernelPort), '--origin', baseUrl], {
-  cwd: root,
-  env: { ...process.env, PYTHONPATH: resolve(root, 'python') },
-  stdio: ['ignore', 'pipe', 'pipe'],
-})
-kernel.stdout.on('data', chunk => { kernelLog += chunk })
-kernel.stderr.on('data', chunk => { kernelLog += chunk })
-let spawnError
-kernel.on('error', error => { spawnError = error })
 let browser
 let page
 const browserErrors = []
 const failedRequests = []
-let abortedRenderRequests = 0
+const serviceRequests = []
+const wasmRequests = []
 try {
-  let ready = false
-  const deadline = Date.now() + 45_000
-  while (Date.now() < deadline) {
-    if (spawnError) throw spawnError
-    if (kernel.exitCode !== null) throw new Error(`Native kernel exited ${kernel.exitCode}: ${kernelLog}`)
-    try { ready = (await fetch(`${backendUrl}/health`, { signal: AbortSignal.timeout(500) })).ok } catch {}
-    if (ready) break
-    await new Promise(resolve => setTimeout(resolve, 250))
-  }
-  assert(ready, `Native kernel did not start: ${kernelLog}`)
   browser = await chromium.launch({
     headless: true,
     executablePath: process.env.CHROMIUM_PATH,
@@ -124,25 +114,24 @@ try {
     body: reactSource,
   }))
   page.on('pageerror', error => browserErrors.push(error.message))
-  page.on('requestfailed', request => {
-    const failure = request.failure()?.errorText
-    // The viewer deliberately cancels the empty initial plan or an outdated
-    // geometry request when React commits a newer model.
-    if (request.url() === `${backendUrl}/render` && failure === 'net::ERR_ABORTED') {
-      abortedRenderRequests++
-    } else {
-      failedRequests.push(`${request.url()}: ${failure}`)
-    }
-  })
+  page.on('request', request => { if (/\/(render|rpc|health)(?:[?/#]|$)/.test(request.url())) serviceRequests.push(request.url()) })
+  page.on('response', response => { if (response.url().endsWith('opencascade.wasm')) wasmRequests.push(response.status()) })
+  page.on('requestfailed', request => failedRequests.push(request.url() + ': ' + request.failure()?.errorText))
   const loadedModules = []
   page.on('response', response => { if (response.url() === reactUrl) loadedModules.push(response.status()) })
   await page.goto(baseUrl)
   await page.waitForFunction(() => Math.abs((window.cdnResult?.meshes[0]?.volume ?? 0) - 24) < 1e-8, undefined, { timeout: 45_000 })
+  await page.waitForFunction(() => Boolean(window.cdnBoolean), undefined, { timeout: 45_000 })
+  const booleanVolume = await page.evaluate(() => window.cdnBoolean.meshes.reduce((total, mesh) => total + mesh.volume, 0))
+  assert(Math.abs(booleanVolume - (480 - 24 * Math.PI)) < 1e-7, 'Minified builder subtraction volume: ' + booleanVolume + ' vs analytic ' + (480 - 24 * Math.PI))
+  assert(await page.evaluate(() => window.cdnBoolean.meshes[0].valid), 'Minified builder subtraction produces a valid native solid')
   assert.deepEqual(await page.evaluate(() => window.cdnHookSizes), [2, 5])
   await page.locator('canvas').screenshot({ path: resolve(artifactDir, 'before.png') })
   await page.locator('#resize').click()
   await page.waitForFunction(() => Math.abs((window.cdnResult?.meshes[0]?.volume ?? 0) - 60) < 1e-8, undefined, { timeout: 20_000 })
   const result = await page.evaluate(() => window.cdnResult)
+  assert.match(result.kernel, /OpenCascade.*(?:WebAssembly|WASM)/i)
+  assert(wasmRequests.length > 0 && wasmRequests.every(status => status === 200), 'Browser fetched the bundled OpenCascade WASM binary for its local clients')
   assert(result.meshes[0].valid)
   assert(result.meshes[0].indices.length > 0)
   const screenshot = await page.locator('canvas').screenshot()
@@ -157,11 +146,12 @@ try {
   assert.deepEqual(await page.evaluate(() => window.cdnErrors), [])
   assert.deepEqual(browserErrors, [])
   assert.deepEqual(failedRequests, [])
+  assert.deepEqual(serviceRequests, [], 'Geometry must run in browser WASM without a backend')
   assert.deepEqual(loadedModules, [200])
   const report = {
     reactUrl, reactVersion: await page.evaluate(() => window.cdnReactVersion),
     browser: browser.version(), hookSizes: [2, 5], nativeVolume: result.meshes[0].volume,
-    nativeKernel: result.kernel, geometryPixels, browserErrors, failedRequests, abortedRenderRequests,
+    nativeKernel: result.kernel, booleanVolume: await page.evaluate(() => window.cdnBoolean.meshes[0].volume), geometryPixels, browserErrors, failedRequests, serviceRequests, wasmRequests,
     bundleUrl: publishedBundleUrl ?? 'local dist/cdn.js',
     remoteModuleTransport: 'Node TLS-verified fetch, exact Playwright module URL',
   }
@@ -172,16 +162,11 @@ try {
     reactVersion: window.cdnReactVersion,
     hookSizes: window.cdnHookSizes,
     errors: window.cdnErrors,
-    meshVolumes: window.cdnResult?.meshes.map(mesh => mesh.volume),
+    meshVolumes: window.cdnResult?.meshes.map(mesh => mesh.volume), booleanVolumes: window.cdnBoolean?.meshes.map(mesh => mesh.volume),
   })).catch(() => undefined)
   console.error({ browserErrors, failedRequests, state })
   throw error
 } finally {
   await browser?.close()
   await new Promise(resolve => server.close(resolve))
-  if (kernel.exitCode === null) {
-    kernel.kill('SIGTERM')
-    await new Promise(resolve => { kernel.once('exit', resolve); setTimeout(() => { kernel.kill('SIGKILL'); resolve() }, 5_000).unref() })
-  }
-  await writeFile(resolve(artifactDir, 'kernel.log'), kernelLog)
 }

@@ -89,7 +89,7 @@ export async function checkPackagedViewerControls(context) {
       window.unmountViewer = () => flushSync(() => root.unmount())
       window.setViewer({})
     `, resolveDir: root },
-    bundle: true, write: false, platform: 'browser', format: 'iife', jsx: 'automatic',
+    bundle: true, write: false, platform: 'browser', format: 'esm', jsx: 'automatic', external: ['node:*'],
     plugins: [{
       name: 'observe-real-orbit-controls',
       setup(builder) {
@@ -138,7 +138,7 @@ export async function checkPackagedViewerControls(context) {
   }
   try {
     await page.setContent('<style>body{margin:0}</style><div id="app" style="width:640px"></div>')
-    await page.addScriptTag({ content: bundle.outputFiles[0].text })
+    await page.addScriptTag({ type: 'module', content: bundle.outputFiles[0].text })
     await page.waitForFunction(() => document.querySelector('[data-cad-status]')?.getAttribute('data-cad-status') === 'ready')
     await settled()
     for (const view of ['iso', 'top', 'front', 'right']) {

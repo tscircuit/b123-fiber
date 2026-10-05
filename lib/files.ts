@@ -1,11 +1,11 @@
 import type { Build123dPlan, RenderResult } from './types'
 
-export type NativeFileFormat = 'step' | 'stl' | 'brep' | 'svg' | 'dxf'
+export type NativeFileFormat = 'step' | 'stl' | 'brep' | 'svg' | 'dxf' | 'gltf' | 'glb' | 'obj' | '3mf'
 export type NativeBinaryInput = Blob | ArrayBuffer | ArrayBufferView
 export interface NativeFile {
   id: string
   name: string
-  /** Workspace-relative path usable by native file-path APIs on this instance. */
+  /** Virtual filesystem path usable by CAD file-path APIs on this instance. */
   path: string
   size: number
   contentType: string
@@ -23,9 +23,9 @@ export interface NativeExportOptions extends NativeFileOptions {
   kwargs?: Readonly<Record<string, unknown>>
 }
 export interface NativeImportedFile<Value = unknown> {
-  /** Retained native object; its lifetime belongs to the current service process. */
+  /** Retained CAD object; its lifetime belongs to the current kernel instance. */
   value: Value
-  /** Self-contained file content; this plan survives native service restarts. */
+  /** Self-contained file content; this plan survives kernel restarts. */
   plan: Build123dPlan
   result: RenderResult
 }

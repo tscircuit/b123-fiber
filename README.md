@@ -1,117 +1,60 @@
 # b123-fiber
 
-Build precise CAD models with React and build123d. JSX is compiled to a serializable
-plan, executed by **build123d 0.13.0 and OpenCascade 8**, then displayed in a Three.js
-viewer. This follows the component and headless-plan approach of
+Build CAD models with React and a build123d-compatible TypeScript API. JSX becomes
+a serializable plan, OpenCascade WebAssembly constructs and tessellates the
+geometry locally, and Three.js displays the result. This follows the component
+and headless-plan approach of
 [jscad-fiber](https://github.com/tscircuit/jscad-fiber).
 
-The geometry service uses native Python build123d. It is required for geometry
-execution; the browser displays its tessellations. This package does not ship a
-browser WASM port of build123d. Dimensions use build123d units (millimeters by
-default), angles use degrees, and keyword names retain Python's `snake_case`.
-
-## Install from jscdn
-
-Releases are published as `@tscircuit/b123-fiber` to GitHub Packages and served
-through [jscdn](https://jscdn.tscircuit.com). Install the versioned tarball without
-a GitHub token:
-
-```sh
-npm install https://jscdn.tscircuit.com/@tscircuit/b123-fiber/0.2.0.tgz
-```
-
-The package includes the native service. Start it from your application's
-directory, allowing your application's browser origin:
-
-```sh
-uv run --project node_modules/@tscircuit/b123-fiber --frozen build123d-fiber-kernel --origin http://localhost:5173
-```
-
-For a browser without a bundler, use the dedicated CDN entry:
-
-```html
-<div id="app"></div>
-<script type="module">
-  import {
-    React, createDOMRoot, Build123dView, BuildPart, Box,
-  } from 'https://jscdn.tscircuit.com/@tscircuit/b123-fiber/0.2.0/dist/cdn.js'
-
-  createDOMRoot(document.getElementById('app')).render(
-    React.createElement(Build123dView, { style: { width: 760, height: 640 } },
-      React.createElement(BuildPart, null,
-        React.createElement(Box, { length: 20, width: 12, height: 6 }),
-      ),
-    ),
-  )
-</script>
-```
-
-This entry bundles Three.js, ReactDOM and the CAD reconciler, and uses one pinned
-React module. Import `React` and `createDOMRoot` from this entry so hooks share
-the same React instance. The normal package entrypoints continue to use the
-application's peer dependencies. The native geometry service is required for
-both installation methods. See [publishing](docs/PUBLISHING.md) for the release
-workflow and CDN URLs.
+This branch contains the **0.3.0 browser-kernel migration**. The previously
+published 0.2.0 release uses the earlier Python service; 0.3.0 becomes available
+after this PR is merged and published. The browser implementation requires no
+Python runtime or CAD backend. Dimensions use millimeters, angles use degrees,
+and argument names retain build123d's `snake_case` spelling.
 
 ## Run the project
 
-Development requires Node.js 24+ and Python 3.11–3.14. [uv](https://docs.astral.sh/uv/) is used
-below; a standard Python virtual environment also works.
+Development requires Node.js 24+:
 
 ```sh
 npm ci
-uv sync --extra test --frozen
-npm run kernel
+npm run sandbox:dev
 ```
 
-In another terminal, start the interactive example gallery:
-
-```sh
-npm run dev
-```
-
-The kernel listens at `http://127.0.0.1:8765`. The Vite terminal prints the gallery
-URL. Keep the kernel on a trusted local machine; file import/export functions act
-with the kernel process's filesystem permissions.
-
-## Example sandbox
-
-The [sandbox](https://b123.tscircuit.com) contains 73 examples with interactive
-3D views, editable JSX and parameters, and CAD imports/downloads. Browsing uses
-checked-in OpenCascade meshes; regeneration calls the native service. The kernel
-URL can be changed to your local or container service. See the
+The sandbox provides editable JSX and parameters, CAD imports/downloads, and an
+interactive 3D preview. Selecting an example constructs its geometry in the browser. Press
+**Run** to rebuild edited source with OpenCascade. Compilation runs in a
+disposable worker, and CAD runs in a separate persistent worker. See the
 [sandbox guide](sandbox/README.md) and [compatibility matrix](docs/COMPATIBILITY.md).
 
 ```sh
-npm run sandbox:dev
 npm run sandbox:build
 npm run test:sandbox
+npm run test:sandbox:editor
 ```
 
 ## Model with React
 
 ```tsx
 import {
-  Build123dView, BuildPart, Box, Cylinder, Fillet, Mode, Axis, native, expr,
+  Build123dView, BuildPart, Box, Cylinder, Mode,
 } from '@tscircuit/b123-fiber'
 
 export function Mount() {
   return <Build123dView>
     <BuildPart>
       <Box length={20} width={12} height={6} />
-      <Fillet radius={1} objects={expr.method(native.edges(), 'filter_by', [Axis.Z])} />
       <Cylinder radius={3} height={8} mode={Mode.SUBTRACT} />
     </BuildPart>
   </Build123dView>
 }
 ```
 
-Builders execute children in order inside the real native context. The `build123d`
-(or `b`) namespace exposes every renderable symbol with its exact native spelling:
-`b.Box`, `b.BuildSketch`, `b.extrude`, and so on. Named PascalCase operation aliases
-such as `Extrude` and `Fillet` are available too. Function components, fragments,
-arrays and conditional children work; the live renderer also supports hooks,
-context, state, refs, effects and keyed updates.
+Builders evaluate children in order. The `build123d` (or `b`) namespace uses
+upstream symbol spelling, including `b.Box`, `b.BuildSketch`, and `b.extrude`.
+PascalCase operation aliases such as `Extrude` and `Fillet` are also available.
+The live renderer supports React hooks, context, state, refs, effects, and keyed
+updates. The static compiler accepts synchronous components without hooks.
 
 Compile and execute without a viewer:
 
@@ -125,64 +68,93 @@ const result = await client.render(plan)
 console.log(result.meshes[0].volume) // 1440 mm³
 ```
 
-The static compiler requires synchronous components without hooks. Use
-`createBuild123dRoot()` to mount components that need React state or effects.
-Its `render()` and `getPlan()` return serializable plans; `subscribe()` observes
-commits and `unmount()` runs cleanup.
+`NativeClient` retains its name for API compatibility; its methods execute
+in-process. `createBuild123dRoot()` mounts components that need state or effects.
+Its `render()` and `getPlan()` return serializable plans, `subscribe()` observes
+commits, and `unmount()` runs component cleanup.
 
-## API coverage
+## OpenCascade loading
 
-The native client dispatches every public export of the pinned build123d release,
-including geometry and topology classes, builders, objects, operations, selectors,
-joints, importers, exporters, and utility functions. Native object handles expose
-methods, properties, static/class methods, indexing, and explicit Python algebra
-operations. Enums and common geometric values can be serialized in JSX plans.
+The npm package includes **`dist/opencascade.wasm`** and an outline font. The
+JavaScript loader initializes OpenCascade asynchronously when geometry is first
+requested; `await client.ready` can preload it. Geometry operations then execute
+locally. Loading these static assets is the only required network activity.
 
-The generated [API inventory](docs/api-inventory.json) records the exact symbol
-surface and native signatures. [API usage](docs/API.md) explains the native client.
-JavaScript has no Python context managers or overloaded arithmetic; JSX builders
-and explicit native-handle operations provide those behaviors. Abstract base
-classes and type aliases retain their native meaning and are not necessarily
-constructible CAD objects.
+Bundlers can emit the dependency's WASM and this package's font as assets. The
+sandbox does this with Vite `?url` imports. Supply `wasmUrl` and `fontUrl` when
+hosting those assets elsewhere:
 
-API dispatch coverage is distinct from test coverage: the test suites exercise
-representative native behavior and the visual gallery covers a broad range of
-geometry; they do not prove every possible argument combination of every method.
-Unreleased additions on build123d's development branch are outside the pinned
-0.13.0 surface.
+```ts
+const client = new NativeClient({
+  wasmUrl: '/assets/opencascade.wasm',
+  fontUrl: '/assets/DejaVuSans.ttf',
+})
+```
+
+`wasmBinary` and `fontBinary` accept already-loaded bytes. `openCascade` accepts
+an initialized compatible OpenCascade.js instance. A viewer can share a client
+through `<Build123dView client={client}>` or a kernel through its `kernel` prop.
+The default packaged loader resolves assets beside its JavaScript module; static
+hosts must serve those files too. No backend URL, authentication token, or HTTP
+geometry transport is configured.
+
+## API compatibility
+
+Generated TypeScript bindings retain build123d 0.13.0's **203 root exports** and
+its inspected constructor, method, property, and overload signatures. Runtime
+bindings are implemented in TypeScript over OpenCascade.js and Replicad. The
+symbol inventory is an API reference, not a claim of complete Python behavioral
+parity: `await client.inventory()` reports supported and unsupported root
+symbols, and unimplemented operations throw explicit errors.
+
+Native-style handles provide methods, properties, indexing, explicit algebra,
+and lifetime management. JavaScript does not overload arithmetic or implement
+Python context managers; JSX builders and `.operator(...)` provide those
+workflows. [API usage](docs/API.md) explains expressions and typed bindings;
+[file APIs](docs/FILE-TRANSPORT.md) explain local virtual files and streams.
+The [compatibility matrix](docs/COMPATIBILITY.md) describes the implemented
+behavior and remaining differences.
+
+## Packaging and CDN
+
+Releases use GitHub Packages and
+[jscdn](https://jscdn.tscircuit.com). After 0.3.0 is published:
+
+```sh
+npm install https://jscdn.tscircuit.com/@tscircuit/b123-fiber/0.3.0.tgz
+```
+
+The `dist/cdn.js` entry bundles Three.js, ReactDOM, and the CAD reconciler with
+one pinned React module. Import `React` and `createDOMRoot` from that entry so
+hooks share the same React instance. The normal package entrypoints use the
+application's React and Three.js peer dependencies. The WASM/font files must
+remain accessible beside the CDN JavaScript. See [publishing](docs/PUBLISHING.md).
 
 ## Validation
 
-See the [validation report](docs/VALIDATION.md) and
-[visual contact sheet](docs/visual-baseline.png).
-
 ```sh
-npm run generate:api
 npm run typecheck
 npm test
-npm run test:python
 npm run build
-npm run test:visual
+npm run test:kernel:minified
+npm run test:browser:fixtures
+npm run test:visual -- --browser-baselines --report-only
 npm run test:cdn
 ```
 
-Visual tests execute native CAD fixtures, inspect mesh data, render isometric,
-top, front, and right views with Chromium, and compare screenshots against stored
-baselines. Generated screenshots and reports are written to `artifacts/`.
-To intentionally regenerate baselines after inspecting a geometry or viewer
-change, run `npm run test:visual -- --update`.
-Install the browser once with
+Visual tests construct actual WASM geometry, inspect mesh data, and render
+isometric, top, front, and right views in Chromium. Historical native snapshots
+remain available for PR comparisons. Reports and screenshots go to `artifacts/`.
+See the [validation report](docs/VALIDATION.md). Install the browser with
 `PLAYWRIGHT_BROWSERS_PATH=.playwright npx playwright install chromium`.
-The lockfile pins Chromium; screenshots use SwiftShader and DejaVu Sans.
 
-## Architecture
+## Architecture and licenses
 
-`@tscircuit/b123-fiber/headless` compiles synchronous React elements without loading
-Three.js or the modeling kernel. The React reconciler supports live component
-updates. `@tscircuit/b123-fiber/client` handles native RPC. `@tscircuit/b123-fiber/three`
-contains mesh and camera helpers. `Build123dView` is exported from the main
-entrypoint. [Architecture and protocol](ARCHITECTURE.md) describe the
-plan and mesh formats.
+The [architecture](ARCHITECTURE.md) describes plans, local bindings, mesh data,
+and worker boundaries. `headless` compiles without loading Three.js or the
+modeling kernel; `client` exposes local CAD operations; `three` provides mesh and
+camera helpers; the main entrypoint exports `Build123dView`.
 
-The TypeScript renderer is MIT licensed. build123d and OpenCascade retain their
-own upstream licenses.
+The TypeScript renderer is MIT licensed. Replicad, OpenCascade.js, OpenCascade,
+and the bundled font retain their upstream licenses, included with distributed
+assets where required.

@@ -5,13 +5,16 @@ import { createCadControls } from './controls'
 import { createBuild123dRoot, type Build123dRoot } from './renderer'
 import { CAD_BACKGROUND, createCadGroup, disposeCadGroup, frameCadCamera, resizeCadCamera, type CadView } from './three'
 import type { Build123dPlan, RenderResult } from './types'
+import { NativeClient, type NativeClientOptions } from './client'
 
 export interface Build123dViewProps {
   children?: ReactNode
   plan?: Build123dPlan
   result?: RenderResult
-  backendUrl?: string
-  headers?: HeadersInit
+  client?: NativeClient
+  kernel?: NativeClientOptions['kernel']
+  wasmUrl?: NativeClientOptions['wasmUrl']
+  fontUrl?: NativeClientOptions['fontUrl']
   tolerance?: number
   angularTolerance?: number
   view?: CadView
@@ -25,13 +28,13 @@ export interface Build123dViewProps {
 type Stage = { renderer: THREE.WebGLRenderer; scene: THREE.Scene; camera: THREE.OrthographicCamera; controls: OrbitControls; group: THREE.Group | null; resize: () => void; frame: () => void; redraw: () => void }
 
 /** Interactive Z-up viewer for build123d's native OpenCascade tessellations. */
-export function Build123dView({ children, plan, result, backendUrl = 'http://127.0.0.1:8765', headers, tolerance = 0.1, angularTolerance = 0.1, view = 'iso', showEdges = true, className, style, onLoad, onError }: Build123dViewProps) {
+export function Build123dView({ children, plan, result, client, kernel, wasmUrl, fontUrl, tolerance = 0.1, angularTolerance = 0.1, view = 'iso', showEdges = true, className, style, onLoad, onError }: Build123dViewProps) {
   const host = useRef<HTMLDivElement>(null)
   const stage = useRef<Stage | null>(null)
   const cadRoot = useRef<Build123dRoot | null>(null)
   const notifiedPlanError = useRef<unknown>(undefined)
   const [graphicsError, setGraphicsError] = useState<Error>()
-  const headerKey = serializeHeaders(headers)
+  const localClient = useRef<NativeClient | null>(null)
   const [planError, setPlanError] = useState<Error>()
   const [compiledPlan, setCompiledPlan] = useState<Build123dPlan>({ version: 1, children: [] })
   const [rendered, setRendered] = useState<RenderResult | undefined>(result)
@@ -41,6 +44,8 @@ export function Build123dView({ children, plan, result, backendUrl = 'http://127
   callbacks.current = { onLoad, onError }
   const current = useRef({ rendered, view })
   current.current = { rendered, view }
+
+  useEffect(() => { localClient.current = null }, [kernel, wasmUrl, fontUrl])
 
   useEffect(() => {
     if (plan || result) return
@@ -74,14 +79,8 @@ export function Build123dView({ children, plan, result, backendUrl = 'http://127
     setError(undefined)
     async function render() {
       try {
-        const requestHeaders = new Headers(JSON.parse(headerKey) as [string, string][])
-        requestHeaders.set('Content-Type', 'application/json')
-        const response = await fetch(`${backendUrl.replace(/\/$/, '')}/render`, {
-          method: 'POST', headers: requestHeaders, signal: controller.signal,
-          body: JSON.stringify({ plan: plan ?? compiledPlan, tolerance, angularTolerance }),
-        })
-        const data = await response.json()
-        if (!response.ok) throw new Error(typeof data.error === 'string' ? data.error : data.error?.message ?? `CAD service returned ${response.status}`)
+        const nativeClient = client ?? (localClient.current ??= new NativeClient({ kernel, wasmUrl, fontUrl }))
+        const data = await nativeClient.render(plan ?? compiledPlan, { tolerance, angularTolerance, signal: controller.signal })
         if (active) { setRendered(data); setStatus('ready'); callbacks.current.onLoad?.(data) }
       } catch (reason) {
         if (!active || controller.signal.aborted) return
@@ -91,7 +90,7 @@ export function Build123dView({ children, plan, result, backendUrl = 'http://127
     }
     void render()
     return () => { active = false; controller.abort() }
-  }, [result, plan, compiledPlan, planError, backendUrl, headerKey, tolerance, angularTolerance])
+  }, [result, plan, compiledPlan, planError, client, kernel, wasmUrl, fontUrl, tolerance, angularTolerance])
 
   useEffect(() => {
     const container = host.current
@@ -172,9 +171,3 @@ export function Build123dView({ children, plan, result, backendUrl = 'http://127
   </div>
 }
 const overlayStyle: CSSProperties = { position: 'absolute', bottom: 16, left: 16, right: 16, padding: '10px 14px', borderRadius: 8, background: '#ffffffe6', font: '14px system-ui' }
-
-function serializeHeaders(headers?: HeadersInit): string {
-  const entries: [string, string][] = []
-  new Headers(headers).forEach((value, key) => entries.push([key, value]))
-  return JSON.stringify(entries)
-}

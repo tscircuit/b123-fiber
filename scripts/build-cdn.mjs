@@ -27,6 +27,9 @@ await build({
   bundle: true,
   format: 'esm',
   platform: 'browser',
+  // The Emscripten loader has a guarded Node branch. Preserve its built-in
+  // imports; browsers never execute that branch.
+  external: ['node:*'],
   target: 'es2022',
   jsx: 'automatic',
   minify: true,
@@ -48,7 +51,7 @@ await build({
   }],
 })
 
-const licenses = await Promise.all(['react', 'react-dom', 'react-reconciler', 'scheduler', 'three'].map(async name => {
+const licenses = await Promise.all(['react', 'react-dom', 'react-reconciler', 'scheduler', 'three', 'replicad', 'replicad-opencascadejs', 'opentype.js', 'fflate'].map(async name => {
   const directory = resolve(root, 'node_modules', name)
   const packageJson = JSON.parse(await readFile(resolve(directory, 'package.json'), 'utf8'))
   return `=== ${name} ${packageJson.version} ===\n${await readFile(resolve(directory, 'LICENSE'), 'utf8')}`

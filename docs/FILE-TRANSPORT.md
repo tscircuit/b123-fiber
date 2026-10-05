@@ -1,108 +1,120 @@
-# Browser files and native streams
+# Browser files and compatible streams
 
-The file bridge uses the actual native build123d kernel and the same authentication,
-origin policy, and workspace containment as geometry requests.
+CAD file operations run locally in the OpenCascade WASM instance. Browser bytes
+are copied into its virtual filesystem when required by a native OpenCascade
+reader/writer. No HTTP upload, geometry backend, or Python runtime is involved.
 
-## Browser files and downloads
+## Imports and downloads
 
-`NativeClient.importFile(file, { filename?, format?, kwargs?, signal? })` accepts a
-browser `File`/`Blob`, `ArrayBuffer`, or typed byte array. Formats are `step`,
-`stl`, `brep`, `svg`, and `dxf`; the filename extension selects the format when
-it is omitted. The result contains a native `value`, a self-contained `plan`,
-and rendered mesh `result`.
+`client.importFile(input, { filename?, format?, kwargs?, signal? })` accepts a
+browser `File`/`Blob`, `ArrayBuffer`, or typed byte array. The result contains a
+retained compatible `value`, self-contained `plan`, and rendered mesh `result`.
+The filename extension selects a format when `format` is omitted. STEP, STL,
+BREP, SVG, and DXF have import bindings; see compatibility notes for differences.
 
 ```ts
 import { NativeClient, NativeHandle } from '@tscircuit/b123-fiber'
 
-const client = new NativeClient({ url: '/api/kernel' })
-const file = document.querySelector<HTMLInputElement>('#cad-file')!.files![0]!
+const client = new NativeClient()
 const imported = await client.importFile(file)
-const preview = imported.result
 const regenerated = await client.render(imported.plan)
 const step = await client.exportFile(imported.plan, 'step', { filename: 'part.step' })
 
+const url = URL.createObjectURL(step)
 const link = document.createElement('a')
-link.href = URL.createObjectURL(step)
+link.href = url
 link.download = 'part.step'
 link.click()
-setTimeout(() => URL.revokeObjectURL(link.href), 0)
+setTimeout(() => URL.revokeObjectURL(url), 1000)
 
 if (imported.value instanceof NativeHandle) await imported.value.release()
 ```
 
 `exportFile(planOrHandle, format, { filename?, kwargs?, signal? })` returns a
-`Blob`. Native exporter keyword arguments, such as STEP `unit` or STL
-`tolerance`, go in `kwargs`. SVG/DXF use their native exporter constructors;
-DXF `ascii_format` goes to the writer. Preserve native projection/workplane
-semantics when exporting two-dimensional formats.
+browser `Blob`. The file bindings support STEP, STL, BREP, SVG, DXF, and mesh
+exports such as GLTF/GLB, OBJ, and 3MF. These compatibility writers are not a claim
+that every upstream exporter option is implemented. SVG/DXF are two-dimensional
+formats; preserve the intended projection/workplane when preparing geometry.
 
-For direct file-path API calls, `uploadFile(contents, { filename?, signal? })`
-returns `{ id, name, path, size, contentType }`; `path` is workspace-relative.
-`downloadFile(fileOrId)` returns a `Blob`, and `deleteFile(fileOrId)` removes it.
-The service creates its own paths and rejects filename traversal and symlink
-escapes. `nativeFile(file, filename?)` creates an inline `$file` value for a
-symbolic native import argument without contacting the service.
+`uploadFile(input, { filename?, signal? })` stores local bytes and returns
+`{ id, name, path, size, contentType }`. `path` is a virtual filesystem path for
+supported file-path APIs. `downloadFile(fileOrId)` returns a Blob;
+`deleteFile(fileOrId)` removes it. IDs belong to the current kernel instance.
+Names cannot traverse parent directories. The 32 MiB input limit applies locally;
+there are no geometry HTTP payload or serverless response budgets.
 
-File transfer accepts up to 32 MiB locally. The hosted Vercel service has a
-4 MiB HTTP payload budget; embedded base64 and returned mesh JSON count toward
-that budget. The sandbox caps hosted uploads at 2 MiB to leave encoding headroom.
-Large or complex models can exceed the response budget; configure a persistent
-kernel URL for those models. A 4 MiB source file is larger after base64 encoding. See
-[deployment limits](DEPLOYMENT.md).
+`nativeFile(input, filename?)` creates `{ $file: { name, base64 } }` for a symbolic
+import without initializing the kernel. Saved imported plans embed those bytes
+and can be replayed after the worker/browser/kernel is recreated. Base64 expands
+saved file data by approximately one third.
 
-## Native streams and transport values
+## Byte and text streams
 
-Use retained native `BytesIO` or UTF-8 `StringIO` objects where an overload
-supports a Python binary or text stream:
+`BytesIO` and `StringIO` are compatible JavaScript stream objects. They provide
+read/write, seek/tell, getvalue, truncate, and close behavior for supported APIs.
 
 ```ts
 const box = await client.construct('Box', [2, 3, 4])
-const stream = await client.createStream(new Uint8Array()) // BytesIO
+const stream = await client.createStream(new Uint8Array())
 await client.callFunction('export_step', [box, stream])
-const content = await client.readStream(stream)
-if (!(content instanceof Uint8Array)) throw new Error('Expected binary stream')
-const download = new Blob([new Uint8Array(content)], { type: 'application/step' })
+const bytes = await client.readStream(stream)
 await Promise.all([stream.release(), box.release()])
 ```
 
 `createStream('text')` defaults to `StringIO`; `{ kind: 'bytes' | 'text' }`
-overrides inference. `readStream(handle)` returns `Uint8Array` or `string` and
-leaves the native position unchanged. `writeStream(handle, contents)` replaces
-content and rewinds. Native `.call('seek', [0])`, `.call('getvalue')`, and other
-public stream methods are available. Python byte results decode as `Uint8Array`,
-and typed byte arrays passed through RPC encode as `$bytes`.
+overrides that inference. `readStream(handle)` returns `Uint8Array` or `string`
+without moving the stream position. `writeStream(handle, contents)` replaces
+contents and rewinds. Supported public stream methods are available through
+`.call()`. Typed byte arrays passed through local dispatch encode as `$bytes`;
+byte results decode as `Uint8Array`.
 
-Wire values preserve data needed by native overloads:
+`$date` and `$uuid` retain ISO/UUID strings for compatible APIs rather than
+constructing Python date/UUID instances. The root namespace also retains
+auxiliary types such as `ColorIndex`, `BytesIO`, and `StringIO` where signatures
+refer to them.
 
-| Encoding | Python value |
-| --- | --- |
-| `{ $bytes: 'AAH/' }` | `bytes` containing `0, 1, 255` |
-| `{ $file: { name: 'part.step', base64: '...' } }` | A confined, content-addressed file path |
-| `{ $date: '2026-01-02' }` | `datetime.date`; an ISO datetime produces `datetime.datetime` |
-| `{ $uuid: '12345678-1234-5678-1234-567812345678' }` | `uuid.UUID` |
+## Lifetime and worker boundaries
 
-`ColorIndex`, `BytesIO`, and `StringIO` are auxiliary signature dependencies,
-available alongside the exact 203 root exports. `GET /api` reports auxiliary
-symbols separately. Stream support follows each native overload: STEP/BREP and
-SVG/DXF writers accept binary streams; SVG/DXF readers accept their native text
-stream variants. STL uses the browser file bridge because its native APIs require
-paths. Native STL imports retain upstream triangulation behavior and validity
-values rather than becoming analytic BREP solids.
+Handles, file IDs, and streams belong to one local instance. A worker restart
+releases that instance, so use a saved inline-file plan for portable geometry.
+Release retained import values and stream handles when finished. Handles cannot
+be structured-cloned into a different worker; pass plans or file bytes instead.
 
-## Indexed mutation and handle lifetime
+The sandbox worker releases the temporary imported handle before returning its
+plan and meshes to the UI. Exported Blobs can be cloned across that boundary.
+See [architecture](../ARCHITECTURE.md) and [compatibility](COMPATIBILITY.md).
 
-Use `handle.setAt(index, value)` and `handle.deleteAt(index)` for Python indexed
-assignment and deletion. Client-level equivalents are
-`client.setAt(target, index, value)` and `client.deleteAt(target, index)`.
-Explicit `.operator()` calls also support native `round`, `reversed`, and `next`.
-Returned native callable handles support `.invoke(args, kwargs)`; the client
-equivalent is `client.invoke(target, args, kwargs)`. Use `expr.apply(target,
-args, kwargs)` to invoke a native callable within a self-contained plan.
+## Format compatibility
 
-Native handles, uploaded file IDs, and streams live in one service process.
-Serverless requests can reach different workers, so an RPC handle is unsuitable
-for a portable hosted scene. Imported `plan` values embed the source file and
-can be rendered or exported after a cold start. Use those plans in hosted apps;
-release any retained import `value` when it is no longer needed. Native context
-managers are represented by JSX builders, and the bridge does not execute raw
-Python code.
+STEP and BREP use OpenCascade's actual readers and writers inside WASM. STEP
+exports preserve part names and colors. STL imports sew the native triangular
+faces into a shell or solid. Tessellated STL input retains its faceted geometry;
+recovering analytic primitives from those triangles is not implemented.
+
+SVG imports support lines, polylines, polygons, rectangles, circles, ellipses and
+all standard path commands, including native Bézier and elliptical curves.
+Nested closed subpaths preserve holes with `evenodd` and `nonzero` fill rules.
+Intersecting subpaths require boolean simplification first. Text, external
+references (`use`), images, foreign objects, and sheared matrix transforms
+require conversion to ordinary paths before import. These cases fail explicitly.
+SVG planar face export preserves its native outlines; open wires and 3D edges
+are projected to XY with tolerance-controlled sampling.
+
+DXF import supports LINE, CIRCLE, ARC, ELLIPSE, LWPOLYLINE (including bulges),
+legacy straight POLYLINE, POINT, and SPLINE with fit points. Control-point-only
+splines, legacy POLYLINE bulges, text, blocks/INSERT, and other entities require
+conversion to supported entities. DXF export writes lines exactly and samples
+curved edges to polylines; it is not an analytic curve-preserving round trip.
+
+OBJ and GLTF/GLB contain actual OpenCascade tessellation, normals, and native
+face UV coordinates. The UV atlas and gutter packing options are not implemented.
+`Mesher` reads and writes genuine 3MF ZIP archives and STL; 3MF retains units,
+names, colors, part numbers, UUIDs, and model metadata. It supports mesh counts
+and byte-stream export. It uses the JavaScript 3MF writer, so `library_version`
+identifies that writer rather than a native Lib3MF installation. Automatic
+caller-source capture (`add_code_to_metadata`) is not implemented. The 3MF
+reader supports mesh objects, component hierarchies, and affine build transforms.
+
+Exporter layer styling, line patterns, page layout, and advanced schema/options
+do not yet cover every upstream overload. Consult the compatibility inventory
+and verify the exported artifact when depending on a particular advanced option.

@@ -8,7 +8,7 @@ read access to the linked package.
 
 ## Release workflow
 
-Every push to `main` runs TypeScript, native, visual and CDN browser validation.
+Every push to `main` runs TypeScript, local WASM, visual and CDN browser validation.
 Only after validation passes does the CI workflow publish the version in
 `package.json`, using the workflow's `GITHUB_TOKEN` with `packages: write`.
 No npm token, bot token or external deployment secret is required in this
@@ -30,14 +30,16 @@ current version; this also reruns validation. Published versions are immutable.
 
 ## CDN endpoints
 
-For version `0.2.0`:
+The browser migration proposes version `0.3.0`; it is published after the PR is
+merged and validation succeeds. For that version:
 
 | Purpose | URL |
 | --- | --- |
-| Installable tarball | `https://jscdn.tscircuit.com/@tscircuit/b123-fiber/0.2.0.tgz` |
-| Package metadata | `https://jscdn.tscircuit.com/@tscircuit/b123-fiber/0.2.0/package.json` |
-| Browser module | `https://jscdn.tscircuit.com/@tscircuit/b123-fiber/0.2.0/dist/cdn.js` |
-| Browser declarations | `https://jscdn.tscircuit.com/@tscircuit/b123-fiber/0.2.0/dist/cdn.d.ts` |
+| Installable tarball | `https://jscdn.tscircuit.com/@tscircuit/b123-fiber/0.3.0.tgz` |
+| Package metadata | `https://jscdn.tscircuit.com/@tscircuit/b123-fiber/0.3.0/package.json` |
+| Browser module | `https://jscdn.tscircuit.com/@tscircuit/b123-fiber/0.3.0/dist/cdn.js` |
+| Browser declarations | `https://jscdn.tscircuit.com/@tscircuit/b123-fiber/0.3.0/dist/cdn.d.ts` |
+| OpenCascade binary | `https://jscdn.tscircuit.com/@tscircuit/b123-fiber/0.3.0/dist/opencascade.wasm` |
 
 Use explicit versions for repeatable installations. jscdn also supports
 `latest`, cached for ten minutes. The dedicated `dist/cdn.js` browser module
@@ -48,16 +50,17 @@ Three.js peer dependencies. Use the dedicated browser module instead of the
 generic root `+esm` endpoint: the CDN currently rewrites bare dependencies to
 `latest`, and its CommonJS transformation cannot load this reconciler version.
 
-The package contains Python source, `pyproject.toml` and `uv.lock`, so installed
-clients can start the native OpenCascade service. Browser delivery distributes
-the renderer and client; it does not host the geometry service.
+The package ships the OpenCascade WebAssembly binary and the DejaVu Sans outline
+font. The asynchronous runtime loads these assets beside the browser module.
+The normal npm entries depend on the pinned Replicad/OpenCascade.js loader; the
+dedicated CDN entry bundles that loader. Both execute CAD locally.
 
 ## Verification
 
 ```sh
 npm run build
 npm run test:cdn
-B123_CDN_BUNDLE_URL=https://jscdn.tscircuit.com/@tscircuit/b123-fiber/0.2.0/dist/cdn.js npm run test:cdn
+B123_CDN_BUNDLE_URL=https://jscdn.tscircuit.com/@tscircuit/b123-fiber/0.3.0/dist/cdn.js npm run test:cdn
 ```
 
 The browser check loads the actual pinned React CDN module and either the local

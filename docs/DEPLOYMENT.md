@@ -1,27 +1,29 @@
-# Deployment
+# Static deployment
 
-The [sandbox](https://b123.tscircuit.com) is a static Vercel frontend. The
-[native service](https://b123-fiber-kernel.vercel.app/health) runs Python
-build123d 0.13.0/OpenCascade 8 in a separate Vercel project. Browsing examples
-uses the checked-in native meshes; editing and CAD file operations execute
-complete plans on the service.
+The sandbox and browser CAD runtime deploy as static frontend assets. Vercel
+builds the root project with `npm ci` and `npm run sandbox:build`, then serves
+`sandbox/dist`. OpenCascade's WASM binary and the outline font are emitted into
+the build; source compilation and CAD computation run in browser workers.
+There is no Python function, CAD API endpoint, or separate geometry deployment.
 
-The frontend's root `vercel.json` builds `sandbox/dist`. Set `VITE_KERNEL_URL`
-to change its default service, or select a URL in the sandbox's **Kernel**
-settings. Private service tokens can be entered in the browser settings;
-they are not saved in the static build.
+The existing [sandbox](https://b123.tscircuit.com) project is connected to this
+GitHub repository. Pushes to `main` deploy production; this migration can be
+reviewed in its PR preview before merge. The previously published 0.2.0 frontend
+uses the earlier service until the migration is merged and deployed.
 
-See the [native hosting guide](../deployment/kernel/README.md) for Vercel
-configuration, bundled native runtime libraries, font setup, and the tested
-non-root Docker container. The kernel uses the canonical Python package in
-this repository and its pinned dependency lockfile.
+When consuming the npm or CDN package, publish its WASM and font assets alongside
+the JavaScript. Default loading resolves packaged assets relative to the module.
+For a separate asset host, configure `wasmUrl` and `fontUrl`; that host must permit
+browser access. Bytes can also be supplied with `wasmBinary`/`fontBinary`, or an
+initialized compatible instance with `openCascade`. Serve WASM with
+`application/wasm`; version the assets together with their JavaScript loader.
 
-Hosted requests are capped at 4 MiB, and Vercel responses at 4.5 MB. The
-sandbox caps hosted CAD uploads at 2 MiB to allow for base64 in durable plans.
-Large or complex models need a local/container kernel selected in the sandbox.
-The local file bridge accepts files up to 32 MiB.
+The single-threaded kernel does not require cross-origin isolation. Applications
+that need responsive interaction during complex CAD work should use a dedicated
+worker, as the sandbox does. Worker termination provides effective cancellation
+of synchronous native computations; the next request initializes a fresh worker.
 
-Use complete plans for hosted requests. RPC handles, general file IDs and
-native streams belong to one process and can disappear between serverless
-requests. Imported plans embed their source CAD content and survive restarts.
-For persistent RPC sessions and files, run the single-worker container.
+CAD file imports use the local virtual filesystem and a 32 MiB input limit.
+There are no CAD serverless request/response limits or authentication settings.
+Keep self-contained plans when persisting imported files across browser sessions.
+See [file APIs](FILE-TRANSPORT.md) and [architecture](../ARCHITECTURE.md).

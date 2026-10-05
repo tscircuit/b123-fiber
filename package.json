@@ -1,7 +1,7 @@
 {
   "name": "@tscircuit/b123-fiber",
-  "version": "0.2.0",
-  "description": "React CAD renderer for the complete build123d API, powered by OpenCascade",
+  "version": "0.3.0",
+  "description": "React CAD renderer with build123d-compatible bindings and browser OpenCascade WebAssembly",
   "type": "module",
   "license": "MIT",
   "repository": {
@@ -10,12 +10,11 @@
   },
   "files": [
     "dist",
-    "python/build123d_fiber/**/*.py",
-    "pyproject.toml",
-    "uv.lock",
+    "assets",
     "ARCHITECTURE.md",
     "README.md",
-    "docs"
+    "docs",
+    "THIRD_PARTY_NOTICES.md"
   ],
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -43,31 +42,40 @@
     "./cdn": {
       "types": "./dist/cdn.d.ts",
       "import": "./dist/cdn.js"
-    }
+    },
+    "./kernel": {
+      "types": "./dist/kernel/index.d.ts",
+      "import": "./dist/kernel/index.js"
+    },
+    "./opencascade.wasm": "./dist/opencascade.wasm",
+    "./font": "./dist/DejaVuSans.ttf"
   },
   "scripts": {
     "prepare": "npm run build",
-    "build": "tsup lib/index.ts lib/headless.ts lib/three.ts lib/client.ts lib/generated/values.ts --format esm --dts --sourcemap --clean && node scripts/build-cdn.mjs",
+    "build": "tsup lib/index.ts lib/headless.ts lib/three.ts lib/client.ts lib/kernel/index.ts lib/generated/values.ts --format esm --dts --sourcemap --clean && node scripts/copy-kernel-assets.mjs && node scripts/build-cdn.mjs",
     "typecheck": "tsc --noEmit",
     "test": "vitest run --exclude 'tests/visual/**'",
-    "test:python": ".venv/bin/python -m pytest tests/python tests/conformance tests/review -q",
     "test:visual": "node scripts/visual-test.mjs",
     "test:cdn": "node --use-env-proxy tests/cdn.browser.mjs",
-    "generate:api": ".venv/bin/python scripts/generate-api.py",
     "dev": "vite --host 127.0.0.1",
-    "kernel": ".venv/bin/python -m build123d_fiber",
     "sandbox:dev": "vite --config sandbox/vite.config.ts --host 127.0.0.1",
     "sandbox:build": "tsc --noEmit -p sandbox/tsconfig.json && vite build --config sandbox/vite.config.ts",
     "sandbox:generate": "node sandbox/scripts/generate-models.mjs",
     "test:sandbox": "node --use-env-proxy scripts/test-sandbox.mjs",
-    "test:sandbox:editor": "node --use-env-proxy scripts/test-sandbox-editor.mjs"
+    "test:sandbox:editor": "node --use-env-proxy scripts/test-sandbox-editor.mjs",
+    "check:api": "node scripts/check-api.mjs",
+    "test:browser:fixtures": "node scripts/browser-fixture-audit.mjs",
+    "test:kernel:minified": "node scripts/test-minified-kernel.mjs"
   },
   "peerDependencies": {
     "react": "^19.2.0",
     "three": ">=0.170.0"
   },
   "dependencies": {
-    "react-reconciler": "0.33.0"
+    "fflate": "0.8.3",
+    "react-reconciler": "0.33.0",
+    "replicad": "1.1.0",
+    "replicad-opencascadejs": "1.1.0"
   },
   "devDependencies": {
     "@playwright/test": "^1.56.0",
