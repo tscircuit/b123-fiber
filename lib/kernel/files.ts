@@ -251,15 +251,99 @@ export class KernelFileStore {
   }
 }
 
+const export2DLinetypeDefs: Record<string, [string, number[]]> = {
+  CONTINUOUS: ['Solid', [0]],
+  BORDER: ['Border __ __ . __ __ . __ __ . __ __ . __ __ .', [17.5, 5, -2.5, 5, -2.5, 0, -2.5]],
+  BORDER2: ['Border (.5x) __.__.__.__.__.__.__.__.__.__.__.', [8.75, 2.5, -1.25, 2.5, -1.25, 0, -1.25]],
+  BORDERX2: ['Border (2x) ____  ____  .  ____  ____  .  ___', [35, 10, -5, 10, -5, 0, -5]],
+  CENTER: ['Center ____ _ ____ _ ____ _ ____ _ ____ _ ____', [20, 12.5, -2.5, 2.5, -2.5]],
+  CENTER2: ['Center (.5x) ___ _ ___ _ ___ _ ___ _ ___ _ ___', [11.25, 7.5, -1.25, 1.25, -1.25]],
+  CENTERX2: ['Center (2x) ________  __  ________  __  _____', [40, 25, -5, 5, -5]],
+  DASHDOT: ['Dash dot __ . __ . __ . __ . __ . __ . __ . __', [10, 5, -2.5, 0, -2.5]],
+  DASHDOT2: ['Dash dot (.5x) _._._._._._._._._._._._._._._.', [5, 2.5, -1.25, 0, -1.25]],
+  DASHDOTX2: ['Dash dot (2x) ____  .  ____  .  ____  .  ___', [20, 10, -5, 0, -5]],
+  DASHED: ['Dashed __ __ __ __ __ __ __ __ __ __ __ __ __ _', [7.5, 5, -2.5]],
+  DASHED2: ['Dashed (.5x) _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ', [3.75, 2.5, -1.25]],
+  DASHEDX2: ['Dashed (2x) ____  ____  ____  ____  ____  ___', [15, 10, -5]],
+  DIVIDE: ['Divide ____ . . ____ . . ____ . . ____ . . ____', [12.5, 5, -2.5, 0, -2.5, 0, -2.5]],
+  DIVIDE2: ['Divide (.5x) __..__..__..__..__..__..__..__.._', [6.25, 2.5, -1.25, 0, -1.25, 0, -1.25]],
+  DIVIDEX2: ['Divide (2x) ________  .  .  ________  .  .  _', [25, 10, -5, 0, -5, 0, -5]],
+  DOT: ['Dot . . . . . . . . . . . . . . . . . . . . . . . .', [2.5, 0, -2.5]],
+  DOT2: ['Dot (.5x) ........................................', [1.25, 0, -1.25]],
+  DOTX2: ['Dot (2x) .  .  .  .  .  .  .  .  .  .  .  .  .  .', [5, 0, -5]],
+  HIDDEN: ['Hidden __ __ __ __ __ __ __ __ __ __ __ __ __ __', [3.75, 2.5, -1.25]],
+  HIDDEN2: ['Hidden (.5x) _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ ', [1.875, 1.25, -0.625]],
+  HIDDENX2: ['Hidden (2x) ____ ____ ____ ____ ____ ____ ____ ', [7.5, 5, -2.5]],
+  PHANTOM: ['Phantom ______  __  __  ______  __  __  ______ ', [25, 12.5, -2.5, 2.5, -2.5, 2.5, -2.5]],
+  PHANTOM2: ['Phantom (.5x) ___ _ _ ___ _ _ ___ _ _ ___ _ _', [12.5, 6.25, -1.25, 1.25, -1.25, 1.25, -1.25]],
+  PHANTOMX2: ['Phantom (2x) ____________    ____    ____   _', [50, 25, -5, 5, -5, 5, -5]],
+  ACAD_ISO02W100: ['ISO dash __ __ __ __ __ __ __ __ __ __ __ __ __', [5.905511811023622, 4.724409448818897, -1.1811023622047243]],
+  ACAD_ISO03W100: ['ISO dash space __    __    __    __    __    __', [11.811023622047244, 4.724409448818897, -7.086614173228346]],
+  ACAD_ISO04W100: ['ISO long-dash dot ____ . ____ . ____ . ____ . _', [11.811023622047244, 9.448818897637794, -1.1811023622047243, 0, -1.1811023622047243]],
+  ACAD_ISO05W100: ['ISO long-dash double-dot ____ .. ____ .. ____ . ', [12.992125984251969, 9.448818897637794, -1.1811023622047243, 0, -1.1811023622047243, 0, -1.1811023622047243]],
+  ACAD_ISO06W100: ['ISO long-dash triple-dot ____ ... ____ ... ____', [14.173228346456693, 9.448818897637794, -1.1811023622047243, 0, -1.1811023622047243, 0, -1.1811023622047243, 0, -1.1811023622047243]],
+  ACAD_ISO07W100: ['ISO dot . . . . . . . . . . . . . . . . . . . . ', [1.1811023622047243, 0, -1.1811023622047243]],
+  ACAD_ISO08W100: ['ISO long-dash short-dash ____ __ ____ __ ____ _', [14.173228346456693, 9.448818897637794, -1.1811023622047243, 2.3622047244094486, -1.1811023622047243]],
+  ACAD_ISO09W100: ['ISO long-dash double-short-dash ____ __ __ ____', [17.716535433070867, 9.448818897637794, -1.1811023622047243, 2.3622047244094486, -1.1811023622047243, 2.3622047244094486, -1.1811023622047243]],
+  ACAD_ISO10W100: ['ISO dash dot __ . __ . __ . __ . __ . __ . __ . ', [7.086614173228346, 4.724409448818897, -1.1811023622047243, 0, -1.1811023622047243]],
+  ACAD_ISO11W100: ['ISO double-dash dot __ __ . __ __ . __ __ . __ _', [12.992125984251969, 4.724409448818897, -1.1811023622047243, 4.724409448818897, -1.1811023622047243, 0, -1.1811023622047243]],
+  ACAD_ISO12W100: ['ISO dash double-dot __ . . __ . . __ . . __ . . ', [8.26771653543307, 4.724409448818897, -1.1811023622047243, 0, -1.1811023622047243, 0, -1.1811023622047243]],
+  ACAD_ISO13W100: ['ISO double-dash double-dot __ __ . . __ __ . . _', [14.173228346456693, 4.724409448818897, -1.1811023622047243, 4.724409448818897, -1.1811023622047243, 0, -1.1811023622047243, 0, -1.1811023622047243]],
+  ACAD_ISO14W100: ['ISO dash triple-dot __ . . . __ . . . __ . . . _', [9.448818897637794, 4.724409448818897, -1.1811023622047243, 0, -1.1811023622047243, 0, -1.1811023622047243, 0, -1.1811023622047243]],
+  ACAD_ISO15W100: ['ISO double-dash triple-dot __ __ . . . __ __ . .', [15.354330708661417, 4.724409448818897, -1.1811023622047243, 4.724409448818897, -1.1811023622047243, 0, -1.1811023622047243, 0, -1.1811023622047243, 0, -1.1811023622047243]],
+}
+const export2DStaticProperties: Record<string, any> = {
+  DEFAULT_COLOR_INDEX: 'ColorIndex.BLACK',
+  DEFAULT_LINE_TYPE: 'LineType.CONTINUOUS',
+  DEFAULT_LINE_WEIGHT: 0.09,
+  LINETYPE_DEFS: export2DLinetypeDefs,
+  LTYPE_SCALE: { in: 0.1, ft: 1 / 120, mm: 2.54, cm: 0.254, m: 0.00254 },
+  PARAMETRIC_TOLERANCE: 1e-9,
+}
+
 export function fileStore(context: KernelContext): KernelFileStore { return stores.get(context) ?? new KernelFileStore(context) }
 export function registerFileHandlers(context: KernelContext, store = fileStore(context)): Record<string, KernelHandler> {
   const handlers: Record<string, KernelHandler> = {
     BytesIO: (args, kwargs) => new BrowserStream('bytes', args[0] ?? kwargs.initial_bytes ?? new Uint8Array()),
     StringIO: (args, kwargs) => new BrowserStream('text', args[0] ?? kwargs.initial_value ?? ''),
-    ExportSVG: (args, kwargs) => new VectorExporter('svg', store, kwargs),
-    ExportDXF: (args, kwargs) => new VectorExporter('dxf', store, kwargs),
+    Export2D: () => { throw new TypeError('Export2D is an abstract base class; instantiate ExportDXF or ExportSVG instead') },
+    ExportSVG: (args, kwargs) => {
+      const positional = ['unit', 'scale', 'margin', 'fit_to_stroke', 'precision', 'fill_color', 'line_color', 'line_weight', 'line_type', 'dot_length']
+      const options = { ...kwargs }
+      positional.forEach((key, index) => { if (args[index] !== undefined && !(key in options)) options[key] = args[index] })
+      return new VectorExporter('svg', store, options)
+    },
+    ExportDXF: (args, kwargs) => {
+      const positional = ['version', 'unit', 'color', 'line_weight', 'line_type']
+      const options = { ...kwargs }
+      positional.forEach((key, index) => { if (args[index] !== undefined && !(key in options)) options[key] = args[index] })
+      return new VectorExporter('dxf', store, options)
+    },
     Mesher: (args, kwargs) => new BrowserMesher(store, args[0] ?? kwargs.unit ?? 'Unit.MM'),
+    import_svg_as_buildline_code: (args, kwargs) => {
+      const input = args[0] ?? kwargs.file_name ?? kwargs.file_path ?? kwargs.svg_file
+      const precision = Number(args[1] ?? kwargs.precision ?? 6)
+      if (!Number.isInteger(precision) || precision < 0 || precision > 20) throw new RangeError('precision must be an integer between 0 and 20')
+      return importSvgAsBuildlineCode(input, precision, store, context)
+    },
+    export_to_pcbway: (args, kwargs) => {
+      const target = args[0] ?? kwargs.to_export
+      const options = {
+        unit: String(args[1] ?? kwargs.unit ?? 'Unit.MM'),
+        write_pcurves: Boolean(args[2] ?? kwargs.write_pcurves ?? true),
+        precision_mode: String(args[3] ?? kwargs.precision_mode ?? 'PrecisionMode.AVERAGE'),
+      }
+      const step = store.export('step', target, options)
+      if (context.pcbwayUpload) return String(context.pcbwayUpload(step, options))
+      throw new Error('export_to_pcbway external network uploads are disabled in the offline browser kernel; use export_step or supply a pcbwayUpload handler in KernelOptions')
+    },
   }
+  for (const cls of ['Export2D', 'ExportDXF', 'ExportSVG'] as const) {
+    for (const [prop, val] of Object.entries(export2DStaticProperties)) {
+      handlers[`${cls}.${prop}`] = Object.assign(() => val, { property: true })
+    }
+  }
+  handlers['ExportDXF.METRIC_UNITS'] = Object.assign(() => ['Unit.CM', 'Unit.M', 'Unit.MM'], { property: true })
   for (const format of ['step', 'stl', 'brep', 'svg', 'dxf'] as const) handlers[`import_${format}`] = (args, kwargs) => store.import(format, args[0] ?? kwargs.file_name ?? kwargs.file_path ?? kwargs.svg_file ?? kwargs.dxf_file, kwargs)
   for (const format of ['step', 'stl', 'brep', 'gltf', 'obj'] as const) handlers[`export_${format}`] = (args, kwargs) => {
     const target = args[0] ?? kwargs.to_export, output = args[1] ?? kwargs.file_path
@@ -278,7 +362,7 @@ export function callFileMethod(target: unknown, name: string, args: any[], kwarg
     add_meta_data: ['name_space', 'name', 'value', 'metadata_type', 'must_preserve'],
     get_meta_data: [], get_meta_data_by_key: ['name_space', 'name'], get_mesh_properties: [], read: ['file_name'], write: ['file_name'], write_stream: ['stream', 'file_type'],
   } : target instanceof VectorExporter ? {
-    add_shape: ['shape', 'layer'], write: ['file_name'],
+    add_shape: ['shape', 'layer', 'reverse_wires'], write: ['file_name'],
     add_layer: target.kind === 'ExportSVG' ? ['name', 'fill_color', 'line_color', 'line_weight', 'line_type'] : ['name', 'color', 'line_weight', 'line_type'],
   } : { seek: ['offset', 'whence'], read: ['size'], readline: ['size'], write: [target.kind === 'StringIO' ? 's' : 'b'], truncate: ['size'], tell: [], getvalue: [], flush: [], close: [], readable: [], writable: [], seekable: [] }
   const signature = signatures[name]
@@ -401,12 +485,78 @@ class BrowserMesher {
 
 class VectorExporter {
   readonly kind: 'ExportSVG' | 'ExportDXF'
+  readonly DEFAULT_COLOR_INDEX = export2DStaticProperties.DEFAULT_COLOR_INDEX
+  readonly DEFAULT_LINE_TYPE = export2DStaticProperties.DEFAULT_LINE_TYPE
+  readonly DEFAULT_LINE_WEIGHT = export2DStaticProperties.DEFAULT_LINE_WEIGHT
+  readonly LINETYPE_DEFS = export2DStaticProperties.LINETYPE_DEFS
+  readonly LTYPE_SCALE = export2DStaticProperties.LTYPE_SCALE
+  readonly PARAMETRIC_TOLERANCE = export2DStaticProperties.PARAMETRIC_TOLERANCE
+  readonly METRIC_UNITS = ['Unit.CM', 'Unit.M', 'Unit.MM']
   private shapes: KernelShape[] = []
   private layers = new Map<string, Record<string, any>>()
   constructor(private format: 'svg' | 'dxf', private store: KernelFileStore, private options: Record<string, any>) { this.kind = format === 'svg' ? 'ExportSVG' : 'ExportDXF' }
+  get unit() { return this.options.unit ?? 'Unit.MM' }
+  get line_weight() { return this.options.line_weight ?? this.DEFAULT_LINE_WEIGHT }
+  get line_type() { return this.options.line_type ?? this.DEFAULT_LINE_TYPE }
   add_layer(name: string, options: Record<string, any> = {}): this { if (this.layers.has(name)) throw new Error(`Duplicate layer name ${name}`); this.layers.set(name, options); return this }
-  add_shape(shape: unknown, layer = ''): this { if (layer && !this.layers.has(layer)) throw new Error(`Unknown layer ${layer}`); this.shapes.push(...shapeList(shape).map(item => ({ ...item, label: layer || item.label }))); return this }
+  add_shape(shape: unknown, layer = '', _reverse_wires = false): this { if (layer && !this.layers.has(layer)) throw new Error(`Unknown layer ${layer}`); this.shapes.push(...shapeList(shape).map(item => ({ ...item, label: layer || item.label }))); return this }
   write(output: unknown): boolean { this.store.write(output, this.store.export(this.format, this.shapes, { ...this.options, layers: this.layers })); return true }
+}
+
+function importSvgAsBuildlineCode(input: unknown, precision: number, store: KernelFileStore, context: KernelContext): [string, string] {
+  let builderName = 'line'
+  if (typeof input === 'string' && !/<svg\b/i.test(input)) {
+    const stem = input.split(/[\\/]/).at(-1)!.replace(/\.[^.]+$/, '').replace(/[^\w]+/g, '_').replace(/^[^a-zA-Z_]+/, '')
+    if (stem) builderName = stem
+  } else if (input && typeof input === 'object' && '$file' in input) {
+    const stem = String((input as any).$file?.name ?? '').replace(/\.[^.]+$/, '').replace(/[^\w]+/g, '_').replace(/^[^a-zA-Z_]+/, '')
+    if (stem) builderName = stem
+  }
+  const source = typeof input === 'string' && /<svg\b/i.test(input) ? input : decoder.decode(store.read(input))
+  const shapes = importSvg(source, context)
+  const fmt = (value: number) => {
+    const rounded = Number((Math.abs(value) < 1e-12 ? 0 : value).toFixed(precision))
+    return Object.is(rounded, -0) ? '0' : String(rounded)
+  }
+  const pt = (point: any) => {
+    const [x, y] = point?.toTuple ? point.toTuple() : point
+    return `(${fmt(Number(x))}, ${fmt(Number(y))})`
+  }
+  const statements: string[] = []
+  for (const item of shapes) {
+    for (const edge of item.shape.edges) {
+      const kind = String(edge.geomType).replace(/_CURVE$/, '')
+      if (kind === 'LINE') {
+        statements.push(`    Line(${pt(edge.startPoint)}, ${pt(edge.endPoint)})`)
+      } else if (kind === 'CIRCLE') {
+        if (edge.isClosed) {
+          const adaptor = (edge as any)._geomAdaptor(), circle = adaptor.Circle(), loc = circle.Location()
+          try {
+            statements.push(`    CenterArc(${pt([loc.X(), loc.Y()])}, ${fmt(circle.Radius())}, 0, 360)`)
+          } finally { loc.delete(); circle.delete(); adaptor.delete() }
+        } else {
+          statements.push(`    ThreePointArc(${pt(edge.startPoint)}, ${pt(edge.pointAt(0.5))}, ${pt(edge.endPoint)})`)
+        }
+      } else if (kind === 'BEZIER') {
+        const adaptor = (edge as any)._geomAdaptor(), bezier = adaptor.Bezier()
+        try {
+          const poles = Array.from({ length: bezier.NbPoles() }, (_, index) => {
+            const pole = bezier.Pole(index + 1)
+            try { return [pole.X(), pole.Y()] } finally { pole.delete() }
+          })
+          statements.push(`    Bezier(${poles.map(pt).join(', ')})`)
+        } finally { bezier.delete(); adaptor.delete() }
+      } else if (edge.isClosed) {
+        statements.push(
+          `    ThreePointArc(${pt(edge.pointAt(0))}, ${pt(edge.pointAt(0.25))}, ${pt(edge.pointAt(0.5))})`,
+          `    ThreePointArc(${pt(edge.pointAt(0.5))}, ${pt(edge.pointAt(0.75))}, ${pt(edge.pointAt(0))})`,
+        )
+      } else {
+        statements.push(`    Spline(${[0, 0.25, 0.5, 0.75, 1].map(u => pt(edge.pointAt(u))).join(', ')})`)
+      }
+    }
+  }
+  return [`with BuildLine() as ${builderName}:\n${statements.join('\n')}`, builderName]
 }
 
 type Point2 = [number, number]

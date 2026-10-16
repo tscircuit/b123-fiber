@@ -86,9 +86,22 @@ export function replicadPlane(value: any, ctx: KernelContext) {
 type Matrix4 = number[][]
 const identity = (): Matrix4 => [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]
 const multiplyMatrices = (a: Matrix4, b: Matrix4): Matrix4 => a.map((row) => b[0].map((_, c) => row.reduce((sum, v, k) => sum + v * b[k][c], 0)))
-function eulerMatrix(angles: any): Matrix4 {
-  const [x, y, z] = vectorTuple(angles).map(radians), sx = Math.sin(x), sy = Math.sin(y), sz = Math.sin(z), cx = Math.cos(x), cy = Math.cos(y), cz = Math.cos(z)
-  return [[cy * cz, -cy * sz, sy, 0], [cx * sz + sx * sy * cz, cx * cz - sx * sy * sz, -sx * cy, 0], [sx * sz - cx * sy * cz, sx * cz + cx * sy * sz, cx * cy, 0], [0, 0, 0, 1]]
+const validEulerSequences = new Set(['XYZ', 'XZY', 'YZX', 'YXZ', 'ZXY', 'ZYX', 'XYX', 'XZX', 'YZY', 'YXY', 'ZXZ', 'ZYZ'])
+function axisRotationMatrix(axis: string, angle: number): Matrix4 {
+  const c = Math.cos(angle), s = Math.sin(angle)
+  if (axis === 'X') return [[1, 0, 0, 0], [0, c, -s, 0], [0, s, c, 0], [0, 0, 0, 1]]
+  if (axis === 'Y') return [[c, 0, s, 0], [0, 1, 0, 0], [-s, 0, c, 0], [0, 0, 0, 1]]
+  return [[c, -s, 0, 0], [s, c, 0, 0], [0, 0, 1, 0], [0, 0, 0, 1]]
+}
+export function eulerMatrix(angles: any, ordering: any = 'Intrinsic.XYZ'): Matrix4 {
+  if (angles instanceof KernelLocation) return angles.matrix.map(row => [...row])
+  const tuple = typeof angles === 'number' ? [0, 0, angles] : vectorTuple(angles)
+  const raw = String(ordering?.$enum ?? ordering ?? 'Intrinsic.XYZ')
+  const [frame, sequence] = raw.includes('.') ? raw.split('.') : ['Intrinsic', raw]
+  if (!['Intrinsic', 'Extrinsic'].includes(frame!) || !validEulerSequences.has(sequence!)) throw new TypeError(`Unsupported rotation ordering ${raw}`)
+  const [a0, a1, a2] = tuple.map(radians)
+  const m0 = axisRotationMatrix(sequence![0]!, a0!), m1 = axisRotationMatrix(sequence![1]!, a1!), m2 = axisRotationMatrix(sequence![2]!, a2!)
+  return frame === 'Extrinsic' ? multiplyMatrices(multiplyMatrices(m2, m1), m0) : multiplyMatrices(multiplyMatrices(m0, m1), m2)
 }
 function axisAngleMatrix(direction: any, angle: number, origin: any = [0, 0, 0]): Matrix4 {
   const [x, y, z] = normalize(direction).toTuple(), c = Math.cos(radians(angle)), s = Math.sin(radians(angle)), t = 1 - c
@@ -125,8 +138,8 @@ function inverseMatrix(matrix: Matrix4): Matrix4 {
 export class KernelLocation {
   readonly __cadValue = 'Location'
   matrix: Matrix4
-  constructor(position: any = [0, 0, 0], orientation: any = [0, 0, 0], matrix?: Matrix4) {
-    this.matrix = matrix ?? eulerMatrix(orientation)
+  constructor(position: any = [0, 0, 0], orientation: any = [0, 0, 0], matrix?: Matrix4, ordering: any = 'Intrinsic.XYZ') {
+    this.matrix = matrix ?? eulerMatrix(orientation, ordering)
     if (!matrix) vectorTuple(position).forEach((value, index) => { this.matrix[index][3] = value })
   }
   get position() { return new KernelVector(this.matrix[0][3], this.matrix[1][3], this.matrix[2][3]) }
@@ -283,9 +296,16 @@ export function getProperty(target: any, name: string, ctx: KernelContext): any 
       case 'children': return target.children ?? []
       case 'joints': return (target as any).joints ?? ((target as any).joints = {})
       case 'radius': {
-        if (!['CIRCLE', 'CYLINDER', 'SPHERE', 'TORUS'].includes(shapeGeomType(target))) throw new Error('Shape has no constant radius')
-        const adaptor: any = shape._geomAdaptor(), method = { CIRCLE: 'Circle', CYLINDER: 'Cylinder', SPHERE: 'Sphere', TORUS: 'Torus' }[shapeGeomType(target) as 'CIRCLE']
-        try { const surface = adaptor[method](); try { return surface.Radius ? surface.Radius() : surface.MajorRadius() } finally { surface.delete() } } finally { adaptor.delete() }
+        const geom = shapeGeomType(target)
+        if (!['CIRCLE', 'CYLINDER', 'SPHERE', 'TORUS'].includes(geom)) throw new Error('Shape has no constant radius')
+        if (geom === 'TORUS') {
+          const radii = (shape.edges ?? []).filter((e: any) => String(e.geomType).startsWith('CIRCLE')).map((e: any) => { const a = e._geomAdaptor(), c = a.Circle(); try { return c.Radius() } finally { c.delete(); a.delete() } })
+          if (radii.length >= 2) return Math.max(...radii) - Math.min(...radii)
+          const size = shapeBounds(target).size.toArray()
+          return (Math.max(...size) - Math.min(...size)) / 2
+        }
+        const adaptor: any = shape._geomAdaptor(), method = { CIRCLE: 'Circle', CYLINDER: 'Cylinder', SPHERE: 'Sphere' }[geom as 'CIRCLE']
+        try { const surface = adaptor[method](); try { return surface.Radius() } finally { surface.delete() } } finally { adaptor.delete() }
       }
       case 'material': return (target as any).material ?? null
       default: if (name in target) return (target as any)[name]
@@ -431,7 +451,7 @@ export function callMethod(target: any, name: string, args: any[] = [], kwargs: 
       case 'offset': return new KernelPlane(target.origin.add(target.z_dir.multiply(arg(0, 'amount'))), target.x_dir, target.z_dir)
       case 'to_local_coords': { const value = arg(0, 'obj'); if (isKernelShape(value)) return applyLocation(value, new KernelLocation(undefined, undefined, inverseRigid(target.location.matrix)), ctx); return planeCoords(target, value, true) }
       case 'from_local_coords': { const value = arg(0, 'obj'); if (isKernelShape(value)) return applyLocation(value, target.location, ctx); return planeCoords(target, value, false) }
-      case 'rotated': { const [x, y, z] = vectorTuple(arg(0, 'rotation')); const m = multiplyMatrices(target.location.matrix, eulerMatrix([x, y, z])); return new KernelPlane(target.origin, transformPoint(m, [1, 0, 0], true), transformPoint(m, [0, 0, 1], true)) }
+      case 'rotated': { const [x, y, z] = vectorTuple(arg(0, 'rotation')); const m = multiplyMatrices(target.location.matrix, eulerMatrix([x, y, z], arg(1, 'ordering', 'Intrinsic.XYZ'))); return new KernelPlane(target.origin, transformPoint(m, [1, 0, 0], true), transformPoint(m, [0, 0, 1], true)) }
       case 'shift_origin': return new KernelPlane(arg(0, 'locator'), target.x_dir, target.z_dir)
       case 'move': case 'moved': { const loc = args[0] instanceof KernelLocation ? args[0] : new KernelLocation(args[0]); return new KernelPlane(transformPoint(loc.matrix, target.origin), transformPoint(loc.matrix, target.x_dir, true), transformPoint(loc.matrix, target.z_dir, true)) }
       case 'contains': { const value = arg(0, 'obj'); if (value instanceof KernelAxis) return Math.abs(target.z_dir.dot(value.direction)) < EPS && Math.abs(target.z_dir.dot(value.position.sub(target.origin))) < EPS; return Math.abs(target.z_dir.dot(vector(value).sub(target.origin))) < arg(1, 'tolerance', EPS) }
@@ -497,7 +517,18 @@ export function callMethod(target: any, name: string, args: any[] = [], kwargs: 
       case 'locate': setProperty(target, 'location', arg(0, 'loc'), ctx); return target
       case 'translate': return applyLocation(target, new KernelLocation(arg(0, 'vector')), ctx)
       case 'rotate': { const axis = arg(0, 'axis'); return applyLocation(target, new KernelLocation(undefined, undefined, axisAngleMatrix(axis.direction, arg(1, 'angle'), axis.position)), ctx) }
-      case 'scale': { const factor = arg(0, 'factor'); if (Array.isArray(factor)) return unsupported('nonuniform affine shape scaling'); const scale = (value: KernelShape): KernelShape => { const scaled = value.shape.clone().scale(factor, vectorTuple(arg(1, 'about', [0, 0, 0]))); return shapeValue(scaled, value.kind, { ...value, shape: scaled, children: value.children?.map(scale) }) }; return scale(target) }
+      case 'scale': {
+        const rawFactor = arg(0, 'factor')
+        let factor = rawFactor
+        if (typeof rawFactor !== 'number') {
+          const [sx, sy, sz] = vectorTuple(rawFactor)
+          if (Math.abs(sx - sy) > EPS || Math.abs(sy - sz) > EPS) return unsupported('nonuniform affine shape scaling')
+          factor = sx
+        }
+        if (!Number.isFinite(factor) || factor === 0) throw new Error('Scale factor must be finite and nonzero')
+        const scale = (value: KernelShape): KernelShape => { const scaled = value.shape.clone().scale(factor, vectorTuple(arg(1, 'about', [0, 0, 0]))); return shapeValue(scaled, value.kind, { ...value, shape: scaled, children: value.children?.map(scale) }) }
+        return scale(target)
+      }
       case 'mirror': { const plane = replicadPlane(arg(0, 'mirror_plane', new KernelPlane()), ctx); const mirror = (value: KernelShape): KernelShape => { const mirrored = value.shape.clone().mirror(plane); return shapeValue(mirrored, value.kind, { ...value, shape: mirrored, children: value.children?.map(mirror) }) }; return mirror(target) }
       case 'distance_to': return shapeDistance(target, arg(0, 'other'), ctx)
       case 'distance': return shapeDistance(target, arg(0, 'other'), ctx)
@@ -528,10 +559,13 @@ export function callMethod(target: any, name: string, args: any[] = [], kwargs: 
     }
   }
   if (target?.__cadValue?.endsWith('Joint') && ['connect_to', 'relative_to'].includes(name)) {
+    const loc = computeJointRelativeLocation(target, args, kwargs)
+    if (name === 'relative_to') return loc
     const other = arg(0, 'other')
-    if (name === 'relative_to') { const first = target.location instanceof KernelLocation ? target.location : new KernelLocation(), second = other.location instanceof KernelLocation ? other.location : new KernelLocation(); return new KernelLocation(undefined, undefined, multiplyMatrices(first.matrix, inverseRigid(second.matrix))) }
-    if (args.length > 1 || Object.keys(kwargs).some(key => key !== 'other')) return unsupported('joint angular and linear motion constraints')
-    return target.connect_to(other)
+    if (other?.parent) setProperty(other.parent, 'location', loc, ctx)
+    target.connected_to = other
+    if (other) other.connected_to = target
+    return null
   }
   if (target && typeof target[name] === 'function') { if (Object.keys(kwargs).length) return unsupported(`${target?.kind ?? target?.__cadValue ?? 'value'}.${name} keyword arguments`); return target[name](...args) }
   return unsupported(`${target?.kind ?? target?.__cadValue ?? 'value'}.${name}`)
@@ -619,10 +653,109 @@ export function applyOperator(name: string, args: any[], ctx: KernelContext): an
   }
 }
 
+function computeJointRelativeLocation(joint: any, args: any[], kwargs: Record<string, any>): KernelLocation {
+  const other = param(args, kwargs, 0, 'other')
+  if (!other || typeof other !== 'object') throw new Error('Joint target is required')
+  const first = joint.location instanceof KernelLocation ? joint.location : new KernelLocation()
+  const second = other.location instanceof KernelLocation ? other.location : new KernelLocation()
+  const motionJoint = joint.__cadValue && joint.__cadValue !== 'RigidJoint' && joint.__cadValue !== 'Joint'
+    ? joint
+    : (other.__cadValue && other.__cadValue !== 'RigidJoint' && other.__cadValue !== 'Joint' ? other : joint)
+  let motionMatrix = identity()
+  const kind = motionJoint.__cadValue
+  if (kind === 'RevoluteJoint') {
+    const angle = param(args, kwargs, 1, 'angle', 0)
+    const [minAngle, maxAngle] = motionJoint.angular_range ?? [0, 360]
+    if (angle < minAngle - EPS || angle > maxAngle + EPS) {
+      throw new Error(`angle (${angle}) must be in range [${minAngle}, ${maxAngle}]`)
+    }
+    motionMatrix = axisAngleMatrix([0, 0, 1], angle)
+  } else if (kind === 'LinearJoint') {
+    const position = param(args, kwargs, 1, 'position', 0)
+    const [minPos, maxPos] = motionJoint.linear_range ?? [-Infinity, Infinity]
+    if (position < minPos - EPS || position > maxPos + EPS) {
+      throw new Error(`position (${position}) must be in range [${minPos}, ${maxPos}]`)
+    }
+    motionMatrix = [[1, 0, 0, 0], [0, 1, 0, 0], [0, 0, 1, position], [0, 0, 0, 1]]
+  } else if (kind === 'CylindricalJoint') {
+    const position = param(args, kwargs, 1, 'position', 0)
+    const angle = param(args, kwargs, 2, 'angle', 0)
+    const [minPos, maxPos] = motionJoint.linear_range ?? [-Infinity, Infinity]
+    const [minAngle, maxAngle] = motionJoint.angular_range ?? [0, 360]
+    if (position < minPos - EPS || position > maxPos + EPS) {
+      throw new Error(`position (${position}) must be in range [${minPos}, ${maxPos}]`)
+    }
+    if (angle < minAngle - EPS || angle > maxAngle + EPS) {
+      throw new Error(`angle (${angle}) must be in range [${minAngle}, ${maxAngle}]`)
+    }
+    motionMatrix = axisAngleMatrix([0, 0, 1], angle)
+    motionMatrix[2][3] = position
+  } else if (kind === 'BallJoint') {
+    const rawAngles = param(args, kwargs, 1, 'angles', [0, 0, 0])
+    const angles = vectorTuple(rawAngles)
+    const ranges = motionJoint.angular_range ?? [[0, 360], [0, 360], [0, 360]]
+    for (let i = 0; i < 3; i++) {
+      const [minAngle, maxAngle] = Array.isArray(ranges[i]) ? ranges[i] : [0, 360]
+      if (angles[i]! < minAngle - EPS || angles[i]! > maxAngle + EPS) {
+        throw new Error(`angles[${i}] (${angles[i]}) must be in range [${minAngle}, ${maxAngle}]`)
+      }
+    }
+    motionMatrix = eulerMatrix(angles, kwargs.ordering)
+  }
+  const parentLoc = joint.parent?.location instanceof KernelLocation ? joint.parent.location.matrix : identity()
+  const worldFirst = multiplyMatrices(parentLoc, first.matrix)
+  return new KernelLocation(undefined, undefined, multiplyMatrices(multiplyMatrices(worldFirst, motionMatrix), inverseRigid(second.matrix)))
+}
+
 function jointHandler(kind: string): KernelHandler {
   return (args, kwargs) => {
-    const label = param(args, kwargs, 0, 'label'), parent = param(args, kwargs, 1, 'to_part'), location = param(args, kwargs, 2, 'joint_location', new KernelLocation())
-    const joint: any = { __cadValue: kind, label, parent, location, relative_to: null, connected_to: null }
+    const label = param(args, kwargs, 0, 'label')
+    const parent = param(args, kwargs, 1, 'to_part')
+    const usesAxis = kind === 'RevoluteJoint' || kind === 'LinearJoint' || kind === 'CylindricalJoint'
+    const rawThird = args[2]
+    const axis = usesAxis
+      ? (rawThird instanceof KernelAxis ? rawThird : kwargs.axis instanceof KernelAxis ? kwargs.axis : rawThird && !(rawThird instanceof KernelLocation) ? new KernelAxis(rawThird.position ?? [0, 0, 0], rawThird.direction ?? [0, 0, 1]) : new KernelAxis([0, 0, 0], [0, 0, 1]))
+      : (kwargs.axis instanceof KernelAxis ? kwargs.axis : new KernelAxis([0, 0, 0], [0, 0, 1]))
+    const angleReference = kind === 'RevoluteJoint' || kind === 'CylindricalJoint'
+      ? param(args, kwargs, 3, 'angle_reference')
+      : kwargs.angle_reference
+    let location: KernelLocation
+    if (kwargs.joint_location instanceof KernelLocation) {
+      location = kwargs.joint_location
+    } else if (rawThird instanceof KernelLocation) {
+      location = rawThird
+    } else if (usesAxis && (rawThird instanceof KernelAxis || kwargs.axis !== undefined)) {
+      const dir = axis.direction
+      const xDir = angleReference ? normalize(angleReference) : (Math.abs(dir.X) < 0.9 ? [1, 0, 0] : [0, 1, 0])
+      location = locationFromPlane(new KernelPlane(axis.position, xDir, dir))
+    } else {
+      const locInput = param(args, kwargs, 2, 'joint_location', new KernelLocation())
+      location = locInput instanceof KernelLocation ? locInput : new KernelLocation(locInput)
+    }
+    const angularRange = kind === 'BallJoint'
+      ? param(args, kwargs, 3, 'angular_range', [[0, 360], [0, 360], [0, 360]])
+      : kind === 'RevoluteJoint'
+        ? param(args, kwargs, 4, 'angular_range', [0, 360])
+        : kind === 'CylindricalJoint'
+          ? param(args, kwargs, 5, 'angular_range', [0, 360])
+          : kwargs.angular_range
+    const linearRange = kind === 'LinearJoint'
+      ? param(args, kwargs, 3, 'linear_range', [-Infinity, Infinity])
+      : kind === 'CylindricalJoint'
+        ? param(args, kwargs, 4, 'linear_range', [-Infinity, Infinity])
+        : kwargs.linear_range
+    const joint: any = {
+      __cadValue: kind,
+      label,
+      parent,
+      location,
+      joint_location: location,
+      axis,
+      angle_reference: angleReference ? vector(angleReference) : undefined,
+      angular_range: angularRange,
+      linear_range: linearRange,
+      connected_to: null,
+    }
     if (parent) { (parent as any).joints ??= {}; (parent as any).joints[label] = joint }
     return joint
   }
@@ -631,14 +764,42 @@ function jointHandler(kind: string): KernelHandler {
 /** Registry for value classes and explicit topology factories. */
 export function registerValues(ctx: KernelContext): Record<string, KernelHandler> {
   const r = ctx.replicad
+  const makeRotation = (a: any[], k: Record<string, any>) => {
+    if (a[0] instanceof KernelAxis || 'axis' in k || (a.length === 2 && typeof a[0] !== 'number' && typeof a[1] === 'number')) {
+      const axisInput = param(a, k, 0, 'axis')
+      const angle = param(a, k, 1, 'angle', 0)
+      return new KernelLocation(undefined, undefined, axisAngleMatrix(axisInput instanceof KernelAxis ? axisInput.direction : axisInput, angle))
+    }
+    const singleNonNumeric = a.length >= 1 && typeof a[0] !== 'number'
+    const orientation = singleNonNumeric
+      ? a[0]
+      : [param(a, k, 0, 'X', k.x ?? 0), param(a, k, 1, 'Y', k.y ?? 0), param(a, k, 2, 'Z', k.z ?? 0)]
+    const ordering = singleNonNumeric ? param(a, k, 1, 'ordering') : param(a, k, 3, 'ordering')
+    return new KernelLocation([0, 0, 0], orientation, undefined, ordering)
+  }
   const handlers: Record<string, KernelHandler> = {
     Vector: (a, k) => a.length > 1 || 'X' in k || 'Y' in k || 'Z' in k ? new KernelVector(param(a, k, 0, 'X', 0), param(a, k, 1, 'Y', 0), param(a, k, 2, 'Z', 0)) : vector(param(a, k, 0, 'v', [0, 0, 0])),
+    VectorLike: (a, k) => a.length > 1 || 'X' in k || 'Y' in k || 'Z' in k ? new KernelVector(param(a, k, 0, 'X', 0), param(a, k, 1, 'Y', 0), param(a, k, 2, 'Z', 0)) : vector(param(a, k, 0, 'v', [0, 0, 0])),
     Axis: (a, k) => new KernelAxis(param(a, k, 0, 'origin', k.position ?? [0, 0, 0]), param(a, k, 1, 'direction', [0, 0, 1])),
     Plane: (a, k) => { const input = param(a, k, 0, 'origin', [0, 0, 0]); if (input instanceof KernelPlane) return new KernelPlane(input.origin, input.x_dir, input.z_dir); if (isKernelShape(input)) { const normal = vector((input.shape as any).normalAt()); const x = Math.abs(normal.X) < 0.9 ? [1, 0, 0] : [0, 1, 0]; return new KernelPlane(shapeCenter(input, ctx), x, normal) } return new KernelPlane(input, param(a, k, 1, 'x_dir', [1, 0, 0]), param(a, k, 2, 'z_dir', [0, 0, 1])) },
-    Location: (a, k) => { const input = param(a, k, 0, 'position', [0, 0, 0]); if (input instanceof KernelLocation) return new KernelLocation(undefined, undefined, input.matrix.map(row => [...row])); if (input instanceof KernelPlane) return input.location; if (a.length >= 3 || 'angle' in k) { const matrix = axisAngleMatrix(param(a, k, 1, 'axis', [0, 0, 1]), param(a, k, 2, 'angle', 0)); vectorTuple(input).forEach((coordinate, i) => { matrix[i][3] = coordinate }); return new KernelLocation(undefined, undefined, matrix) } return new KernelLocation(input, param(a, k, 1, 'orientation', [0, 0, 0])) },
+    Location: (a, k) => {
+      const input = param(a, k, 0, 'position', [0, 0, 0])
+      if (input instanceof KernelLocation) return new KernelLocation(undefined, undefined, input.matrix.map(row => [...row]))
+      if (input instanceof KernelPlane) {
+        const offset = param(a, k, 1, 'plane_offset')
+        return offset === undefined ? input.location : new KernelLocation(undefined, undefined, multiplyMatrices(input.location.matrix, new KernelLocation(offset).matrix))
+      }
+      if ((a.length >= 3 && typeof a[2] === 'number') || 'angle' in k) {
+        const matrix = axisAngleMatrix(param(a, k, 1, 'direction', k.axis ?? [0, 0, 1]), param(a, k, 2, 'angle', 0))
+        vectorTuple(input).forEach((coordinate, i) => { matrix[i][3] = coordinate })
+        return new KernelLocation(undefined, undefined, matrix)
+      }
+      return new KernelLocation(input, param(a, k, 1, 'orientation', k.angles ?? [0, 0, 0]), undefined, param(a, k, 2, 'ordering'))
+    },
     Pos: (a, k) => new KernelLocation(a.length === 1 && typeof a[0] !== 'number' ? a[0] : [param(a, k, 0, 'X', k.x ?? 0), param(a, k, 1, 'Y', k.y ?? 0), param(a, k, 2, 'Z', k.z ?? 0)]),
-    Rot: (a, k) => new KernelLocation([0, 0, 0], a.length === 1 && typeof a[0] !== 'number' ? a[0] : [param(a, k, 0, 'X', k.x ?? 0), param(a, k, 1, 'Y', k.y ?? 0), param(a, k, 2, 'Z', k.z ?? 0)]),
-    Rotation: (a, k) => new KernelLocation([0, 0, 0], a.length === 1 && typeof a[0] !== 'number' ? a[0] : [param(a, k, 0, 'X', 0), param(a, k, 1, 'Y', 0), param(a, k, 2, 'Z', 0)]),
+    Rot: makeRotation,
+    Rotation: makeRotation,
+    RotationLike: makeRotation,
     Matrix: (a, k) => new KernelMatrix(param(a, k, 0, 'matrix')),
     Color: (a, k) => new KernelColor(param(a, k, 0, 'red', k.color ?? 'white'), param(a, k, 1, 'green'), param(a, k, 2, 'blue'), param(a, k, 3, 'alpha', 1)),
     'Color.categorical_set': (a, k) => Array.from({ length: param(a, k, 0, 'color_count', 12) }, (_, index) => { const color = new ThreeColor().setHSL(index * 0.61803398875 % 1, 0.65, 0.55); return new KernelColor(color.getHex()) }),
@@ -733,7 +894,23 @@ export function registerValues(ctx: KernelContext): Record<string, KernelHandler
   for (const name of ['solid', 'face', 'wire', 'edge', 'vertex', 'shell']) handlers[name] = () => { const shapes = handlers[name === 'vertex' ? 'vertices' : `${name}s`]([], {}, ctx); if (shapes.length !== 1) throw new Error(`Expected one ${name}, found ${shapes.length}`); return shapes[0] }
   for (const name of ['Joint', 'RigidJoint', 'RevoluteJoint', 'LinearJoint', 'CylindricalJoint', 'BallJoint']) {
     const handler = jointHandler(name)
-    handlers[name] = (a, k) => { const joint = handler(a, k, ctx); joint.connect_to = (other: any) => { const first = joint.location instanceof KernelLocation ? joint.location : new KernelLocation(), second = other.location instanceof KernelLocation ? other.location : new KernelLocation(); const transformed = applyLocation(wrappedShape(other.parent), new KernelLocation(undefined, undefined, multiplyMatrices(first.matrix, inverseRigid(second.matrix))), ctx); other.parent.shape = transformed.shape; joint.connected_to = other; other.connected_to = joint; return null }; return joint }
+    handlers[name] = (a, k) => {
+      const joint = handler(a, k, ctx)
+      joint.relative_to = (other: any, ...rest: any[]) => {
+        const kw = rest.at(-1) && typeof rest.at(-1) === 'object' && !Array.isArray(rest.at(-1)) && !(rest.at(-1) instanceof KernelLocation) ? rest.pop() : {}
+        return computeJointRelativeLocation(joint, [other, ...rest], kw)
+      }
+      joint.connect_to = (other: any, ...rest: any[]) => {
+        const kw = rest.at(-1) && typeof rest.at(-1) === 'object' && !Array.isArray(rest.at(-1)) && !(rest.at(-1) instanceof KernelLocation) ? rest.pop() : {}
+        const loc = computeJointRelativeLocation(joint, [other, ...rest], kw)
+        if (other?.parent) setProperty(other.parent, 'location', loc, ctx)
+        joint.connected_to = other
+        if (other) other.connected_to = joint
+        return null
+      }
+      return joint
+    }
   }
   return handlers
 }
+

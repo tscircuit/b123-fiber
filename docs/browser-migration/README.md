@@ -12,7 +12,7 @@ The native comparison has **114 exact matches, 178 changed images, and no missin
 
 All 73 examples produce valid geometry. Their bounds and shape counts match the saved native assets; 67 also match area and volume within the existing metric tolerance. Six recorded metric differences involve text/drawing examples and the spline sweep. These are differences from saved assets, rather than proof that freshly computed native geometry differs.
 
-The runtime recognizes **197 of 203 root entries**. The six unavailable roots are the two type aliases `RotationLike` and `VectorLike`, the abstract `Export2D` base, and `detect_primitives`, `import_svg_as_buildline_code`, and `export_to_pcbway`. Method and overload coverage remains partial even for registered roots; [compatibility](../COMPATIBILITY.md) lists those limits.
+The runtime recognizes **203 of 203 root entries** (`unsupported: []`). Method and overload coverage remains partial for registered roots; [compatibility](../COMPATIBILITY.md) lists those limits.
 
 The browser has its own 292 screenshot baselines in `tests/visual/browser-baselines` and 73 metric baselines in `tests/browser-geometry-baseline.json`. Reproduction requires **zero changed screenshot pixels**. The fixture audit also checks independent analytic volumes and native topology invariants. Baseline files are never updated by the test commands.
 
