@@ -22,11 +22,20 @@ export function transformShape(value: KernelShape, options: { position?: any; ro
   const transform = (shape: R.AnyShape) => {
     let result = shape.clone()
     if (options.scale !== undefined) result = result.scale(options.scale,tuple(options.about))
-    const rotation = typeof options.rotation === 'number' ? [0, 0, options.rotation] : tuple(options.rotation)
-    // build123d intrinsic XYZ is the equivalent extrinsic Z, Y, X sequence.
-    if (rotation[2]) result = result.rotate(rotation[2], [0, 0, 0], [0, 0, 1])
-    if (rotation[1]) result = result.rotate(rotation[1], [0, 0, 0], [0, 1, 0])
-    if (rotation[0]) result = result.rotate(rotation[0], [0, 0, 0], [1, 0, 0])
+    if (Array.isArray(options.rotation?.matrix)) {
+      const oc = R.getOC() as any
+      const m = options.rotation.matrix
+      const trsf = new oc.gp_Trsf()
+      trsf.SetValues(m[0][0], m[0][1], m[0][2], 0, m[1][0], m[1][1], m[1][2], 0, m[2][0], m[2][1], m[2][2], 0)
+      const builder = new oc.BRepBuilderAPI_Transform(result.wrapped, trsf, true)
+      try { result = R.cast(builder.Shape()) } finally { builder.delete(); trsf.delete() }
+    } else {
+      const rotation = typeof options.rotation === 'number' ? [0, 0, options.rotation] : tuple(options.rotation)
+      // build123d intrinsic XYZ is the equivalent extrinsic Z, Y, X sequence.
+      if (rotation[2]) result = result.rotate(rotation[2], [0, 0, 0], [0, 0, 1])
+      if (rotation[1]) result = result.rotate(rotation[1], [0, 0, 0], [0, 1, 0])
+      if (rotation[0]) result = result.rotate(rotation[0], [0, 0, 0], [1, 0, 0])
+    }
     if (options.position) result = result.translate(tuple(options.position))
     return result
   }
@@ -104,6 +113,108 @@ function extrudeShape(value: KernelShape, amount: number, direction?: any): Kern
   const normal=input.map(v=>v/length)
   const vector = new (R.getOC() as any).gp_Vec(...normal.map((v: number) => v * amount))
   try { return shapeValue(made(new (R.getOC() as any).BRepPrimAPI_MakePrism(value.shape.wrapped, vector, true, true)), 'Part', metadata(value)) } finally { vector.delete() }
+}
+function extrudeUntilShape(
+  input: KernelShape,
+  untilMode: string,
+  targetShape: KernelShape,
+  rawDir: any,
+  taper: number
+): KernelShape {
+  const oc = R.getOC() as any
+  const baseDir = rawDir
+    ? tuple(rawDir)
+    : input.shape instanceof R.Face
+      ? input.shape.normalAt().toTuple()
+      : input.shape.faces[0]?.normalAt().toTuple() ?? [0, 0, 1]
+  const dirLen = Math.hypot(...baseDir)
+  if (!Number.isFinite(dirLen) || dirLen === 0) throw new Error('Extrusion direction must be a finite nonzero vector')
+  const unitDir = baseDir.map(v => v / dirLen) as [number, number, number]
+  const [fMin, fMax] = input.shape.boundingBox.bounds
+  const [tMin, tMax] = targetShape.shape.boundingBox.bounds
+  const span = Math.hypot(
+    Math.max(tMax[0], fMax[0]) - Math.min(tMin[0], fMin[0]),
+    Math.max(tMax[1], fMax[1]) - Math.min(tMin[1], fMin[1]),
+    Math.max(tMax[2], fMax[2]) - Math.min(tMin[2], fMin[2])
+  ) * 2 + 10
+  const origin = input.shape.boundingBox.center
+
+  const attemptDirection = (sign: 1 | -1): KernelShape | null => {
+    const dirVec: [number, number, number] = [unitDir[0] * sign, unitDir[1] * sign, unitDir[2] * sign]
+    let fullPrism = extrudeShape(input, span, dirVec)
+    if (taper) {
+      const direction = new R.Vector(dirVec as R.Point).normalized()
+      const plane = new R.Plane(input.shape.boundingBox.center, null, direction)
+      fullPrism = draftShape(fullPrism, fullPrism.shape.faces.filter(face => Math.abs(face.normalAt().dot(direction)) < 1e-6), plane, taper)
+    }
+    const effectiveTarget = targetShape.shape instanceof R.Face
+      ? extrudeShape(targetShape, span, dirVec).shape
+      : targetShape.shape
+
+    const projRange = (solid: R.AnyShape): { min: number; max: number } => {
+      const [bMin, bMax] = solid.boundingBox.bounds
+      const corners = [
+        [bMin[0], bMin[1], bMin[2]], [bMin[0], bMin[1], bMax[2]],
+        [bMin[0], bMax[1], bMin[2]], [bMin[0], bMax[1], bMax[2]],
+        [bMax[0], bMin[1], bMin[2]], [bMax[0], bMin[1], bMax[2]],
+        [bMax[0], bMax[1], bMin[2]], [bMax[0], bMax[1], bMax[2]],
+      ]
+      const projs = corners.map(c => (c[0] - origin[0]) * dirVec[0] + (c[1] - origin[1]) * dirVec[1] + (c[2] - origin[2]) * dirVec[2])
+      return { min: Math.min(...projs), max: Math.max(...projs) }
+    }
+
+    const extractSolids = (op: any): R.AnyShape[] => {
+      try {
+        const native = op.Shape()
+        if (native.IsNull()) return []
+        const casted = R.cast(native)
+        if (isEmptyShape(casted)) { casted.delete(); return [] }
+        const solids = casted instanceof R.Solid ? [casted] : casted.solids
+        return solids.slice().sort((a, b) => projRange(a).min - projRange(b).min)
+      } finally {
+        op.delete()
+      }
+    }
+
+    const cutSolids = extractSolids(new oc.BRepAlgoAPI_Cut(fullPrism.shape.wrapped, effectiveTarget.wrapped))
+    const commonSolids = targetShape.shape instanceof R.Face
+      ? []
+      : extractSolids(new oc.BRepAlgoAPI_Common(fullPrism.shape.wrapped, effectiveTarget.wrapped))
+    const boundedCutSolids = cutSolids.filter(s => projRange(s).max < span - 1e-2)
+
+    if (!boundedCutSolids.length && !commonSolids.length) return null
+
+    if (untilMode === 'LAST') {
+      const maxTargetProj = commonSolids.length
+        ? Math.max(...commonSolids.map(s => projRange(s).max))
+        : Math.max(...boundedCutSolids.map(s => projRange(s).max))
+      const pieces = [
+        ...boundedCutSolids.filter(s => projRange(s).max <= maxTargetProj + 1e-2),
+        ...commonSolids,
+      ].map(s => shapeValue(s, 'Part', metadata(input)))
+      return unionShapes(pieces, 'ADD')
+    }
+
+    // NEXT, FIRST, or PREVIOUS:
+    if (boundedCutSolids.length && projRange(boundedCutSolids[0]!).min <= 1e-2) {
+      return shapeValue(boundedCutSolids[0]!, 'Part', metadata(input))
+    }
+    if (commonSolids.length) {
+      if (boundedCutSolids.length && projRange(boundedCutSolids[0]!).min <= projRange(commonSolids[0]!).max + 1e-2) {
+        return unionShapes([
+          shapeValue(commonSolids[0]!, 'Part', metadata(input)),
+          shapeValue(boundedCutSolids[0]!, 'Part', metadata(input)),
+        ], 'ADD')
+      }
+      return shapeValue(commonSolids[0]!, 'Part', metadata(input))
+    }
+    return shapeValue(boundedCutSolids[0]!, 'Part', metadata(input))
+  }
+
+  const primarySign: 1 | -1 = untilMode === 'PREVIOUS' ? -1 : 1
+  const result = attemptDirection(primarySign) ?? (untilMode !== 'PREVIOUS' ? attemptDirection(-1) : null)
+  if (!result) throw new Error(`extrude with until=${untilMode} did not intersect the target shape`)
+  return result
 }
 function draftShape(value: KernelShape, faces: R.Face[], plane: R.Plane, angle: number): KernelShape {
   const oc = R.getOC() as any
@@ -294,6 +405,130 @@ function convexPolyhedron(vertices: any[]): R.Solid {
   return R.makeSolid(faces)
 }
 
+function detectPrimitives(meshInput: any, ctx: KernelContext): [KernelShape[], KernelShape[], string[]] {
+  const shapes = shapeList(meshInput)
+  if (!shapes.length) throw new Error('detect_primitives requires a shape or mesh')
+  const rawFaces = shapes.flatMap(s => s.shape instanceof R.Face ? [s.shape] : s.shape.faces)
+  const fmt = (n: number) => Number(n.toFixed(6)).toString()
+  const detected: R.Face[] = []
+  const leftovers: R.Face[] = []
+  const codes: string[] = []
+  const planarFaces: R.Face[] = []
+
+  for (const face of rawFaces) {
+    const geom = String(face.geomType)
+    const adaptor = (face as any)._geomAdaptor?.()
+    if (geom === 'SPHERE' && adaptor) {
+      const sph = adaptor.Sphere()
+      const r = sph.Radius()
+      detected.push(face)
+      codes.push(`Sphere(${fmt(r)})`)
+    } else if ((geom === 'CYLINDER' || geom === 'CYLINDRE') && adaptor) {
+      const cyl = adaptor.Cylinder()
+      const r = cyl.Radius()
+      const dir = cyl.Position().Direction()
+      const axis = [dir.X(), dir.Y(), dir.Z()]
+      const [bMin, bMax] = face.boundingBox.bounds
+      const corners = [
+        [bMin[0], bMin[1], bMin[2]], [bMin[0], bMin[1], bMax[2]],
+        [bMin[0], bMax[1], bMin[2]], [bMin[0], bMax[1], bMax[2]],
+        [bMax[0], bMin[1], bMin[2]], [bMax[0], bMin[1], bMax[2]],
+        [bMax[0], bMax[1], bMin[2]], [bMax[0], bMax[1], bMax[2]],
+      ]
+      const projs = corners.map(c => c[0] * axis[0] + c[1] * axis[1] + c[2] * axis[2])
+      const h = Math.max(...projs) - Math.min(...projs)
+      detected.push(face)
+      codes.push(`Cylinder(${fmt(r)}, ${fmt(h)})`)
+    } else if (geom === 'CONE') {
+      const circleRadii = face.edges
+        .filter(e => e.geomType === 'CIRCLE')
+        .map(e => (e as any)._geomAdaptor().Circle().Radius())
+      const r0 = circleRadii[0] ?? 0
+      const r1 = circleRadii[1] ?? 0
+      const [bMin, bMax] = face.boundingBox.bounds
+      const h = Math.max(bMax[0] - bMin[0], bMax[1] - bMin[1], bMax[2] - bMin[2])
+      detected.push(face)
+      codes.push(`Cone(${fmt(r0)}, ${fmt(r1)}, ${fmt(h)})`)
+    } else if (geom === 'TORUS') {
+      const circleRadii = face.edges
+        .filter(e => e.geomType === 'CIRCLE')
+        .map(e => (e as any)._geomAdaptor().Circle().Radius())
+      let major = 0, minor = 0
+      if (circleRadii.length >= 2) {
+        minor = Math.min(...circleRadii)
+        major = Math.max(...circleRadii) - minor
+      } else {
+        const [bMin, bMax] = face.boundingBox.bounds
+        minor = (bMax[2] - bMin[2]) / 2
+        major = (bMax[0] - bMin[0]) / 2 - minor
+      }
+      detected.push(face)
+      codes.push(`Torus(${fmt(major)}, ${fmt(minor)})`)
+    } else if (geom === 'PLANE') {
+      planarFaces.push(face)
+    } else {
+      leftovers.push(face)
+    }
+  }
+
+  if (planarFaces.length) {
+    // Group coplanar faces by unit normal and plane offset
+    const groups: { normal: [number, number, number]; offset: number; faces: R.Face[] }[] = []
+    for (const face of planarFaces) {
+      const n = face.normalAt().normalized().toTuple() as [number, number, number]
+      const c = face.center.toTuple()
+      const d = n[0] * c[0] + n[1] * c[1] + n[2] * c[2]
+      const existing = groups.find(g =>
+        Math.abs(g.normal[0] - n[0]) < 1e-3 &&
+        Math.abs(g.normal[1] - n[1]) < 1e-3 &&
+        Math.abs(g.normal[2] - n[2]) < 1e-3 &&
+        Math.abs(g.offset - d) < 1e-3
+      )
+      if (existing) existing.faces.push(face)
+      else groups.push({ normal: n, offset: d, faces: [face] })
+    }
+
+    // Check if the planar groups form a rectangular Box (6 coplanar groups in 3 opposite orthogonal pairs)
+    const isBox = groups.length === 6 && groups.every(g =>
+      groups.some(other =>
+        Math.abs(g.normal[0] + other.normal[0]) < 1e-3 &&
+        Math.abs(g.normal[1] + other.normal[1]) < 1e-3 &&
+        Math.abs(g.normal[2] + other.normal[2]) < 1e-3
+      )
+    )
+    if (isBox) {
+      const allFaces = groups.flatMap(g => g.faces)
+      detected.push(...allFaces)
+      const [bMin, bMax] = shapes[0]!.shape.boundingBox.bounds
+      codes.push(`Box(${fmt(bMax[0] - bMin[0])}, ${fmt(bMax[1] - bMin[1])}, ${fmt(bMax[2] - bMin[2])})`)
+    } else {
+      for (const group of groups) {
+        const isCapOfDetectedAnalytic = detected.some(df => ['CYLINDER', 'CYLINDRE', 'CONE'].includes(String(df.geomType)))
+        if (isCapOfDetectedAnalytic && group.faces.every(f => f.edges.some(e => e.geomType === 'CIRCLE'))) {
+          detected.push(...group.faces)
+          continue
+        }
+        // For triangulated meshes, require at least 2 coplanar triangles or a non-triangle planar face
+        const isSingleTriangle = group.faces.length === 1 && group.faces[0]!.edges.length === 3 && rawFaces.length > 4
+        if (isSingleTriangle) {
+          leftovers.push(...group.faces)
+        } else {
+          detected.push(...group.faces)
+          const c = group.faces[0]!.center.toTuple()
+          const n = group.normal
+          codes.push(`Plane((${fmt(c[0])}, ${fmt(c[1])}, ${fmt(c[2])}), z_dir=(${fmt(n[0])}, ${fmt(n[1])}, ${fmt(n[2])}))`)
+        }
+      }
+    }
+  }
+
+  return [
+    ctx.invoke('ShapeList', [detected.map(f => shapeValue(f, 'Face'))]),
+    ctx.invoke('ShapeList', [leftovers.map(f => shapeValue(f, 'Face'))]),
+    codes,
+  ]
+}
+
 export function registerGeometry(context: KernelContext): Record<string, KernelHandler> {
   const oc = context.oc
   const handlers: Record<string, KernelHandler> = {
@@ -311,14 +546,35 @@ export function registerGeometry(context: KernelContext): Record<string, KernelH
     ConvexPolyhedron: (a,k) => primitive(convexPolyhedron(Array.from(get(a,k,'points',0)??[])),'ConvexPolyhedron',a,{align:get(a,k,'align',2,'NONE'),...k},1,2),
     Vertex: (a,k) => shapeValue(R.makeVertex(k.v !== undefined ? tuple(k.v) : a.length === 1 ? tuple(a[0]) : tuple(a)), 'Vertex'),
     extrude: (a,k,ctx) => {
-      const inputs = requireShapes(operands(a,k,ctx,'to_extrude',0),'extrude'), amount = get(a,k,'amount',1)
-      if (amount === undefined) throw new Error('extrude currently requires amount; until extrusion is unavailable in browser bindings')
+      const inputs = requireShapes(operands(a,k,ctx,'to_extrude',0),'extrude')
+      const amount = get(a,k,'amount',1)
+      const until = get(a,k,'until',3)
+      if (amount === undefined && until === undefined) throw new Error('extrude requires either amount or until')
+      const taper = get(a,k,'taper',6,0)
+      const both = get(a,k,'both',5,false)
+      const dir = get(a,k,'dir',2)
       const results = inputs.map(input => {
-        const taper = get(a,k,'taper',6,0)
+        if (until !== undefined && amount === undefined) {
+          const untilMode = enumName(until) ?? 'NEXT'
+          const rawTarget = get(a,k,'target',4)
+          const targetShapes = rawTarget !== undefined && rawTarget !== null
+            ? shapeList(rawTarget)
+            : ctx.current()?.shape ? [ctx.current()!.shape!] : []
+          if (!targetShapes.length) throw new Error('extrude with until requires a target shape or an active BuildPart body')
+          const combinedTarget = targetShapes.length === 1 ? targetShapes[0]! : unionShapes(targetShapes, 'ADD')!
+          let value = extrudeUntilShape(input, untilMode, combinedTarget, dir, taper)
+          if (both) {
+            const baseDir = dir ? tuple(dir) : input.shape instanceof R.Face ? input.shape.normalAt().toTuple() : input.shape.faces[0]?.normalAt().toTuple() ?? [0, 0, 1]
+            const revDir = baseDir.map(v => -v)
+            const opposite = extrudeUntilShape(input, untilMode, combinedTarget, revDir, taper)
+            value = unionShapes([value, opposite], 'ADD')!
+          }
+          return value
+        }
         const make=(distance:number)=>{
-          let value=extrudeShape(input,distance,get(a,k,'dir',2))
+          let value=extrudeShape(input,distance,dir)
           if(taper){
-            const dir=get(a,k,'dir',2),normal=dir?tuple(dir):input.shape instanceof R.Face?input.shape.normalAt().toTuple():input.shape.faces[0]?.normalAt().toTuple()??[0,0,1]
+            const normal=dir?tuple(dir):input.shape instanceof R.Face?input.shape.normalAt().toTuple():input.shape.faces[0]?.normalAt().toTuple()??[0,0,1]
             const direction=new R.Vector(normal as R.Point).normalized().multiply(Math.sign(distance)||1)
             const plane=new R.Plane(input.shape.boundingBox.center,null,direction)
             value=draftShape(value,value.shape.faces.filter(face=>Math.abs(face.normalAt().dot(direction))<1e-6),plane,taper)
@@ -326,7 +582,7 @@ export function registerGeometry(context: KernelContext): Record<string, KernelH
           return value
         }
         let value=make(amount)
-        if (get(a,k,'both',5,false)) value = unionShapes([value,make(-amount)])!
+        if (both) value = unionShapes([value,make(-amount)])!
         return value
       })
       if (ctx.current()) ctx.current()!.pending = []
@@ -382,7 +638,19 @@ export function registerGeometry(context: KernelContext): Record<string, KernelH
       return shapeValue(made(operation),'Part',metadata(body))
     },
     mirror: (a,k,ctx) => { const plane=asPlane(get(a,k,'about',1)), inputs=requireShapes(operands(a,k,ctx),'mirror'); return inputs.map(v=>shapeValue(v.shape.clone().mirror(plane),'Part',metadata(v))) },
-    scale: (a,k,ctx) => { const factor=get(a,k,'by',1,1); if (typeof factor!=='number') throw new Error('Nonuniform scaling requires a general affine transform and is not available'); if(!Number.isFinite(factor)||factor===0)throw new Error('Scale factor must be finite and nonzero');return operands(a,k,ctx).map(v=>transformShape(v,{scale:factor,about:get(a,k,'about',2)})) },
+    scale: (a,k,ctx) => {
+      const rawFactor=get(a,k,'by',1,1)
+      let factor: number
+      if (typeof rawFactor === 'number') {
+        factor = rawFactor
+      } else {
+        const [sx, sy, sz] = tuple(rawFactor, [NaN, NaN, NaN])
+        if (Math.abs(sx - sy) > 1e-9 || Math.abs(sy - sz) > 1e-9) throw new Error('Nonuniform scaling requires a general affine transform and is not available')
+        factor = sx
+      }
+      if(!Number.isFinite(factor)||factor===0)throw new Error('Scale factor must be finite and nonzero')
+      return operands(a,k,ctx).map(v=>transformShape(v,{scale:factor,about:get(a,k,'about',2)}))
+    },
     split: (a,k,ctx) => { const inputs=requireShapes(operands(a,k,ctx),'split'), plane=asPlane(get(a,k,'bisect_by',1)), keep=enumName(get(a,k,'keep',2,'TOP')); return inputs.flatMap(v=>{const result=v.shape.split(plane); return (keep==='BOTH'?[result.positive,result.negative]:[keep==='BOTTOM'?result.negative:result.positive]).filter(Boolean).map(shape=>shapeValue(shape!,'Part',metadata(v)))}) },
     section: (a,k,ctx) => {
       const inputs = requireShapes(operands(a,k,ctx,'obj',0),'section'), planes=get(a,k,'section_by',1) ?? ctx.current()?.plane; const plane=asPlane(planes)
@@ -410,6 +678,7 @@ export function registerGeometry(context: KernelContext): Record<string, KernelH
     trace: (a,k,ctx) => traceWire(requireShapes(operands(a,k,ctx,'lines',0),'trace'),requirePositive(get(a,k,'line_width',1,1),'line_width'),asPlane(ctx.current()?.plane)),
     full_round: (a,k) => fullRound(get(a,k,'edge',0),get(a,k,'invert',1,false)),
     make_brake_formed: (a,k,ctx) => { const inputs=requireShapes(operands(a,k,ctx,'line',2),'make_brake_formed'); return brakeFormed(inputs[0],requirePositive(get(a,k,'thickness',0),'thickness'),get(a,k,'station_widths',1),get(a,k,'side',3,'LEFT'),get(a,k,'kind',4,'ARC')) },
+    detect_primitives: (a,k,ctx) => detectPrimitives(get(a,k,'mesh',0), ctx),
     add: (a,k,ctx) => operands(a,k,ctx),
     insert: (a,k,ctx) => operands(a,k,ctx),
   }

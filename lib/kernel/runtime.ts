@@ -12,11 +12,18 @@ export interface KernelOptions {
   fontUrl?: string | URL
   fontBinary?: Uint8Array | ArrayBuffer
   locateFile?: (path: string, prefix: string) => string
+  pcbwayUpload?: (step: Uint8Array, options: { unit: string; write_pcurves: boolean; precision_mode: string }) => string
 }
 
 let defaultRuntime: Promise<{ oc: any; replicad: typeof replicad }> | undefined
 
 async function readAsset(url: string | URL): Promise<ArrayBuffer> {
+  if (typeof url === 'string' && /^[a-zA-Z]:[\\/]/.test(url)) {
+    const fsName = 'node:fs/promises'
+    const fs = await import(/* @vite-ignore */ fsName)
+    const bytes: Uint8Array = await fs.readFile(url)
+    return bytes.buffer.slice(bytes.byteOffset, bytes.byteOffset + bytes.byteLength) as ArrayBuffer
+  }
   const target = new URL(String(url), import.meta.url)
   if (target.protocol === 'file:') {
     const fsName = 'node:fs/promises'
@@ -63,7 +70,7 @@ async function bootstrap(options: KernelOptions) {
   const buffer = font instanceof Uint8Array ? font.buffer.slice(font.byteOffset, font.byteOffset + font.byteLength) as ArrayBuffer : font
   await replicad.loadFont(buffer, 'DejaVu Sans', true)
   await replicad.loadFont(buffer, 'default', true)
-  return { oc, replicad }
+  return { oc, replicad, pcbwayUpload: options.pcbwayUpload }
 }
 
 export function initializeOpenCascade(options: KernelOptions = {}) {

@@ -115,7 +115,7 @@ export class BrowserKernel {
 
   private resolve(name: string): any {
     const handler = this.context.handlers[name]
-    if (handler && /^(Axis|Plane)\./.test(name)) return handler([], {}, this.context)
+    if (handler && (/^(Axis|Plane)\./.test(name) || (handler as any).property)) return handler([], {}, this.context)
     if (name.includes('.') && Object.hasOwn(this.context.handlers, name)) return Object.assign((...args: any[]) => this.invoke(name, args), { __cadType: name })
     const [root, ...path] = name.split('.')
     const value = (values as Record<string, any>)[root!]

@@ -22,6 +22,7 @@ export type KernelHandler = (args: any[], kwargs: Record<string, any>, context: 
 export interface KernelContext {
   oc: any
   replicad: typeof Replicad
+  pcbwayUpload?: (step: Uint8Array, options: { unit: string; write_pcurves: boolean; precision_mode: string }) => string
   handlers: Record<string, KernelHandler>
   references: Map<string, any>
   builders: BuilderState[]
